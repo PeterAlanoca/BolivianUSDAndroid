@@ -1,13 +1,34 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
     <style name="Base.Theme.BolivianUSD" parent="Theme.Material3.DayNight.NoActionBar">
-        <!-- Customize your light theme here. -->
-        <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+        <item name="colorPrimary">@color/mirage</item>
+        <item name="colorPrimaryDark">@color/mirage</item>
+        <item name="colorAccent">@color/mirage</item>
+        <item name="colorControlNormal">@color/mirage</item>
+        <item name="colorControlActivated">@color/mirage</item>
+        <item name="colorControlHighlight">@color/mirage</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowTranslucentStatus">true</item>
+        <item name="android:windowBackground">@color/mirage</item>
+        <item name="android:navigationBarColor">@color/mirage</item>
     </style>
 
-    <style name="Theme.BolivianUSD" parent="Base.Theme.BolivianUSD" />
-
     <style name="Theme.Splash" parent="Theme.MaterialComponents.Light.NoActionBar">
+        <item name="colorPrimary">@color/mirage</item>
+        <item name="colorPrimaryDark">@color/mirage</item>
+        <item name="colorAccent">@color/mirage</item>
+        <item name="colorControlNormal">@color/mirage</item>
+        <item name="colorControlActivated">@color/mirage</item>
+        <item name="colorControlHighlight">@color/mirage</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowTranslucentStatus">true</item>
+        <item name="android:windowBackground">@color/mirage</item>
+        <item name="android:navigationBarColor">@color/mirage</item>
+    </style>
+
+    <style name="Theme.Main" parent="Theme.MaterialComponents.Light.NoActionBar">
         <item name="colorPrimary">@color/mirage</item>
         <item name="colorPrimaryDark">@color/mirage</item>
         <item name="colorAccent">@color/mirage</item>
