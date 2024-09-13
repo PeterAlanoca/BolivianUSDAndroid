@@ -3,7 +3,9 @@ package com.bolivianusd.app.core
 import android.os.Build
 import android.window.OnBackInvokedDispatcher
 import androidx.activity.OnBackPressedCallback
+import androidx.annotation.IdRes
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
 
 fun AppCompatActivity.exit() {
     finishAffinity()
@@ -21,4 +23,12 @@ fun AppCompatActivity.onBackPressed(backPressed: (() -> Unit)? = null) {
             }
         })
     }
+}
+
+
+fun AppCompatActivity.replaceFragment(fragment: Fragment, @IdRes containerViewId: Int, tag: String = "Fragment") {
+    supportFragmentManager
+        .beginTransaction()
+        .replace(containerViewId, fragment, tag)
+        .commitAllowingStateLoss()
 }
