@@ -8,10 +8,10 @@
     tools:context=".ui.price.PriceParallelFragment">
 
     <RelativeLayout
-        android:layout_width="55dp"
-        android:layout_height="55dp"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="10dp"
         android:layout_gravity="center_horizontal"
-        android:layout_marginTop="12dp"
         android:background="@drawable/drawable_circle_java">
 
         <com.google.android.material.textview.MaterialTextView
@@ -21,7 +21,7 @@
             android:fontFamily="@font/sfuidisplay_bold"
             android:text="USD"
             android:textColor="@color/white"
-            android:textSize="16sp" />
+            android:textSize="14sp" />
 
     </RelativeLayout>
 
@@ -59,15 +59,25 @@
 
     </RelativeLayout>
 
+
     <com.google.android.material.textview.MaterialTextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginHorizontal="20dp"
         android:fontFamily="@font/sfuidisplay_medium"
         android:text="DOLAR PARALELO"
         android:textAlignment="center"
         android:textColor="@color/white_alpha_65"
         android:textSize="12sp" />
+
+    <androidx.appcompat.widget.SwitchCompat
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="-5dp"
+        android:layout_marginBottom="-10dp"
+        android:thumb="@drawable/thumb"
+        app:showText="false"
+        app:track="@drawable/track" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -176,7 +186,7 @@
                     android:layout_marginHorizontal="-30dp"
                     android:layout_marginVertical="5dp"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintDimensionRatio="H,1:0.35"
+                    app:layout_constraintDimensionRatio="H,1:0.3"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
@@ -322,47 +332,5 @@
 
     </com.google.android.material.card.MaterialCardView>
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-        <com.google.android.material.button.MaterialButton
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="20dp"
-            android:layout_marginEnd="4dp"
-            android:layout_marginBottom="20dp"
-            android:layout_weight="1"
-            android:fontFamily="@font/sfuidisplay_medium"
-            android:maxHeight="54dp"
-            android:minHeight="54dp"
-            android:text="Compra"
-            android:textColor="@color/white"
-            android:textSize="15sp"
-            android:translationZ="5dp"
-            app:backgroundTint="@color/rhino"
-            app:cornerRadius="6dp"
-            app:elevation="20dp" />
-
-        <com.google.android.material.button.MaterialButton
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="4dp"
-            android:layout_marginEnd="20dp"
-            android:layout_marginBottom="20dp"
-            android:layout_weight="1"
-            android:fontFamily="@font/sfuidisplay_medium"
-            android:maxHeight="54dp"
-            android:minHeight="54dp"
-            android:text="Venta"
-            android:textColor="@color/white"
-            android:textSize="15sp"
-            android:translationZ="5dp"
-            app:backgroundTint="@color/maroon_flush"
-            app:cornerRadius="6dp"
-            app:elevation="20dp" />
-
-    </LinearLayout>
 
 </LinearLayout>

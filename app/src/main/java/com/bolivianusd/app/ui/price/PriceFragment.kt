@@ -24,7 +24,7 @@ class PriceFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val titles = listOf("DOLAR PARALELO", "DOLAR OFICIAL")
+        val titles = listOf("Compra", "Venta")
         val fragments = listOf(PriceParallelFragment.newInstance(), PriceOfficialFragment.newInstance())
 
         binding.viewPager.adapter = PagerAdapter(this, fragments)

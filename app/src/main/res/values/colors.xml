@@ -8,9 +8,11 @@
     <color name="green">#77c852</color>
     <color name="red">#f47873</color>
     <color name="yellow">#f7bd33</color>
-
-
-
+    <color name="dove_gray">#6F6F6F</color>
+    <color name="porcelain">#ECEFF1</color>
+    <color name="gray_50">#748C8C8C</color>
+    <color name="malibu">#4DC4FF</color>
+    <color name="de_york">#6BC481</color>
     <color name="mirage">#FF141D26</color>
     <color name="pickled_bluewood">#FF243447</color>
     <color name="maroon_flush">#FFC51F5D</color>
