@@ -1,0 +1,22 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/actionBalances"
+        android:icon="@drawable/ic_menu_chart_24dp"
+        android:title="Cotizacion"
+        app:showAsAction="always|withText" />
+
+    <item
+        android:id="@+id/actionAuthorization"
+        android:icon="@drawable/ic_menu_calculator_24dp"
+        android:title="Calculadora"
+        app:showAsAction="always|withText" />
+
+    <item
+        android:id="@+id/actionTracing"
+        android:icon="@drawable/ic_menu_news_24dp"
+        android:title="Noticias"
+        app:showAsAction="always|withText" />
+
+</menu>

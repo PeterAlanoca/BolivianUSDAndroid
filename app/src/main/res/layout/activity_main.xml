@@ -54,6 +54,26 @@
         android:id="@+id/frameLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_above="@+id/bottomNavigationView"
         android:layout_below="@+id/toolbar" />
+
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottomNavigationView"
+        android:layout_width="match_parent"
+        android:layout_height="65dp"
+        android:layout_alignParentBottom="true"
+        android:background="@color/martinique"
+        android:backgroundTint="@color/martinique"
+        android:elevation="10dp"
+        android:paddingBottom="6dp"
+        android:theme="@style/Theme_BottomNavigation"
+        app:elevation="10dp"
+        app:itemIconSize="24dp"
+        app:itemIconTint="@drawable/selector_nav_item_color"
+        app:itemTextAppearanceActive="@style/Theme.BottomNavigationViewTextAppearanceActive"
+        app:itemTextAppearanceInactive="@style/Theme.BottomNavigationViewTextAppearanceInactive"
+        app:itemTextColor="@drawable/selector_nav_item_color"
+        app:labelVisibilityMode="labeled"
+        app:menu="@menu/menu_items" />
 
 </RelativeLayout>
