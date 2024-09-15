@@ -46,8 +46,8 @@ dependencies {
     implementation(libs.androidx.constraintlayout)
     implementation(libs.lottie)
     implementation(libs.mpandroidchart)
-    implementation("com.github.YvesCheung.RollingText:RollingText:1.3.0")
-
+    implementation(libs.rollingtext)
+    implementation(libs.circleimageview)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

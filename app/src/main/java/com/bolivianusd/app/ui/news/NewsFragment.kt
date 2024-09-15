@@ -23,6 +23,9 @@ class NewsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        val newsItems = listOf(News(), News(), News(), News(), News(), News(), News(), News(), News(), News(), News(), News(), News())
+
+        binding.newsRecyclerView.adapter = NewsAdapter(newsItems)
     }
 
     companion object {
