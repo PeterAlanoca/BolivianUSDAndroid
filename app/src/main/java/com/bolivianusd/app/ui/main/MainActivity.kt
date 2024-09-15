@@ -7,6 +7,7 @@ import com.bolivianusd.app.core.exit
 import com.bolivianusd.app.core.onBackPressed
 import com.bolivianusd.app.core.replaceFragment
 import com.bolivianusd.app.databinding.ActivityMainBinding
+import com.bolivianusd.app.ui.calculator.CalculatorFragment
 import com.bolivianusd.app.ui.price.PriceFragment
 
 
@@ -22,8 +23,8 @@ class MainActivity : AppCompatActivity() {
         onBackPressed { exit() }
 
 
-        val fragment = PriceFragment.newInstance()
-        replaceFragment(fragment, R.id.frameLayout, PriceFragment.TAG)
+        val fragment = CalculatorFragment.newInstance()
+        replaceFragment(fragment, R.id.frameLayout, CalculatorFragment.TAG)
 
     }
 
