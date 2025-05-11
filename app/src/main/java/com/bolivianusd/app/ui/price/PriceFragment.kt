@@ -25,9 +25,9 @@ class PriceFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         val titles = listOf("Compra", "Venta")
-        val fragments = listOf(PriceParallelFragment.newInstance(), PriceOfficialFragment.newInstance())
+        val fragments = listOf(PriceItemPagerFragment.newInstance(), PriceItemPagerFragment.newInstance())
 
-        binding.viewPager.adapter = PagerAdapter(this, fragments)
+        binding.viewPager.adapter = PricePagerAdapter(this, fragments)
 
         TabLayoutMediator(binding.tabLayout, binding.viewPager) { tab, position ->
             tab.text = titles[position]

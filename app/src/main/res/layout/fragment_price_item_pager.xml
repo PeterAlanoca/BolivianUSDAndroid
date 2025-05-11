@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".ui.price.PriceParallelFragment">
+    tools:context=".ui.price.PriceItemPagerFragment">
 
     <RelativeLayout
         android:layout_width="50dp"
@@ -59,7 +59,6 @@
 
     </RelativeLayout>
 
-
     <com.google.android.material.textview.MaterialTextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -69,15 +68,15 @@
         android:textColor="@color/white_alpha_65"
         android:textSize="12sp" />
 
-    <androidx.appcompat.widget.SwitchCompat
+    <com.kyleduo.switchbutton.SwitchButton
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:layout_marginTop="-5dp"
+        android:layout_marginTop="5dp"
         android:layout_marginBottom="-10dp"
-        android:thumb="@drawable/thumb"
-        app:showText="false"
-        app:track="@drawable/track" />
+        app:kswThumbRangeRatio="2"
+        app:kswBackDrawable="@drawable/track"
+        app:kswThumbDrawable="@drawable/thumb"/>
 
     <LinearLayout
         android:layout_width="match_parent"

@@ -9,7 +9,7 @@ import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.bolivianusd.app.R
-import com.bolivianusd.app.databinding.FragmentPriceParallelBinding
+import com.bolivianusd.app.databinding.FragmentPriceItemPagerBinding
 import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.data.LineData
 import com.github.mikephil.charting.data.LineDataSet
@@ -18,9 +18,9 @@ import com.github.mikephil.charting.interfaces.datasets.ILineDataSet
 import com.yy.mobile.rollingtextview.CharOrder
 import kotlin.getValue
 
-class PriceParallelFragment : Fragment() {
+class PriceItemPagerFragment : Fragment() {
 
-    private lateinit var binding: FragmentPriceParallelBinding
+    private lateinit var binding: FragmentPriceItemPagerBinding
 
     private val viewModel: PriceViewModel by activityViewModels()
 
@@ -29,7 +29,7 @@ class PriceParallelFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        binding = FragmentPriceParallelBinding.inflate(inflater, container, false)
+        binding = FragmentPriceItemPagerBinding.inflate(inflater, container, false)
         return binding.root
     }
 
@@ -273,8 +273,8 @@ class PriceParallelFragment : Fragment() {
 
 
     companion object {
-        const val TAG = "PriceParallelFragment"
-        fun newInstance() = PriceParallelFragment()
+        const val TAG = "PriceItemPagerFragment"
+        fun newInstance() = PriceItemPagerFragment()
     }
 
 }
