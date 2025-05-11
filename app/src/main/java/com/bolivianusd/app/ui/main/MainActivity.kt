@@ -2,6 +2,7 @@ package com.bolivianusd.app.ui.main
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.isVisible
 import com.bolivianusd.app.R
 import com.bolivianusd.app.core.exit
 import com.bolivianusd.app.core.onBackPressed
@@ -30,6 +31,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setupBottomNavigationView() = with(binding) {
+        bottomNavigationView.isVisible = false
         bottomNavigationView.setOnItemSelectedListener {
             when (it.itemId) {
                 R.id.actionPrice -> goToPrice()

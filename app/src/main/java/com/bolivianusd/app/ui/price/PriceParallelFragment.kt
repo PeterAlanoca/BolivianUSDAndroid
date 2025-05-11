@@ -33,7 +33,17 @@ class PriceParallelFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         test()
+        loadData()
     }
+
+    private fun loadData() {
+
+    }
+
+
+
+
+
 
     fun test() = with(binding) {
 
