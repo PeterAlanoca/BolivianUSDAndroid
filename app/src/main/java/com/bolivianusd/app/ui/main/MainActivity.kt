@@ -11,7 +11,9 @@ import com.bolivianusd.app.databinding.ActivityMainBinding
 import com.bolivianusd.app.ui.calculator.CalculatorFragment
 import com.bolivianusd.app.ui.news.NewsFragment
 import com.bolivianusd.app.ui.price.PriceFragment
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
     private val binding: ActivityMainBinding by lazy {

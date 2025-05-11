@@ -58,10 +58,14 @@ dependencies {
     implementation(libs.hilt.android)
     kapt(libs.hilt.android.compiler)
 
+
+    implementation(libs.gson)
+
     implementation(libs.lottie)
     implementation(libs.mpandroidchart)
     implementation(libs.rollingtext)
     implementation(libs.circleimageview)
+    implementation(libs.library)
 
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.crashlytics.ktx)

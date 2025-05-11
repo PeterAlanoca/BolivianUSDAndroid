@@ -7,10 +7,8 @@ import android.view.ViewGroup
 import android.view.animation.AccelerateDecelerateInterpolator
 import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
-import androidx.lifecycle.lifecycleScope
+import androidx.fragment.app.activityViewModels
 import com.bolivianusd.app.R
-import com.bolivianusd.app.data.repository.PriceRepository
 import com.bolivianusd.app.databinding.FragmentPriceParallelBinding
 import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.data.LineData
@@ -18,14 +16,13 @@ import com.github.mikephil.charting.data.LineDataSet
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet
 import com.yy.mobile.rollingtextview.CharOrder
+import kotlin.getValue
 
 class PriceParallelFragment : Fragment() {
 
     private lateinit var binding: FragmentPriceParallelBinding
 
-    private val viewModel: PriceViewModel by viewModels() {
-        PriceViewModelFactory(PriceRepository())
-    }
+    private val viewModel: PriceViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -36,7 +33,6 @@ class PriceParallelFragment : Fragment() {
         return binding.root
     }
 
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         test()
@@ -44,25 +40,8 @@ class PriceParallelFragment : Fragment() {
     }
 
     private fun loadData() {
-        /*viewModel.price.observe(viewLifecycleOwner) { priceData ->
-        }
-
-        viewModel.error.observe(viewLifecycleOwner) { errorMsg ->
-            println("naty error ${errorMsg}")
-        }*/
-
-        lifecycleScope.launchWhenStarted {
-            viewModel.price.collect { price ->
-                println("naty priceData")
-            }
-        }
-
-        lifecycleScope.launchWhenStarted {
-            viewModel.error.collect { error ->
-                error?.let {
-                    println("naty error ${error}")
-                }
-            }
+        viewModel.priceBuy.observe(viewLifecycleOwner) { price ->
+            println("naty priceData ${price.toString()}")
         }
     }
 
