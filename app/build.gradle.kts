@@ -63,11 +63,10 @@ dependencies {
     implementation(libs.rollingtext)
     implementation(libs.circleimageview)
 
-
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.crashlytics.ktx)
     implementation(libs.firebase.analytics.ktx)
-
+    implementation(libs.firebase.database)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

@@ -14,6 +14,12 @@ import com.github.mikephil.charting.data.LineData
 import com.github.mikephil.charting.data.LineDataSet
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet
+import com.google.firebase.Firebase
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.ValueEventListener
+import com.google.firebase.database.database
+import com.google.firebase.database.getValue
 import com.yy.mobile.rollingtextview.CharOrder
 
 class PriceParallelFragment : Fragment() {
@@ -37,8 +43,84 @@ class PriceParallelFragment : Fragment() {
     }
 
     private fun loadData() {
+        val database = Firebase.database
+        val myRef = database.getReference("price_buy_usdt")
+        //myRef.keepSynced(true) offline
+        myRef.addValueEventListener(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                val value = snapshot.getValue()
+                println("naty Valor recibido: ${value.toString()}")
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                println("naty Error al leer datos ${error.toException()}")
+            }
+        })
 
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
