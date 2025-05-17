@@ -46,8 +46,11 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun goToPrice() {
-        val fragment = PriceFragment.newInstance()
-        pushFragment(fragment, R.id.frameLayout, PriceFragment.TAG)
+        pushFragment(
+            fragment = PriceFragment.newInstance(),
+            containerViewId = R.id.frameLayout,
+            tag = PriceFragment.TAG
+        )
     }
 
     private fun goToCalculator() {

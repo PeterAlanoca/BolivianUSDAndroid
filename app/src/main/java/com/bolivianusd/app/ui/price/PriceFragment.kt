@@ -1,40 +1,37 @@
 package com.bolivianusd.app.ui.price
 
-import android.os.Bundle
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.Fragment
+import com.bolivianusd.app.core.base.BaseFragment
 import com.bolivianusd.app.databinding.FragmentPriceBinding
 import com.google.android.material.tabs.TabLayoutMediator
+import com.bolivianusd.app.R
 
-class PriceFragment : Fragment() {
+class PriceFragment : BaseFragment<FragmentPriceBinding>() {
 
-    private lateinit var binding: FragmentPriceBinding
-
-    override fun onCreateView(
+    override fun getViewBinding(
         inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        binding = FragmentPriceBinding.inflate(inflater, container, false)
-        return binding.root
+        container: ViewGroup?
+    ) = FragmentPriceBinding.inflate(inflater, container, false)
+
+    override fun initViews() {
+        setupViewPager()
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
-        val titles = listOf("Compra", "Venta")
-        val fragments = listOf(PriceItemPagerFragment.newInstance(), PriceItemPagerFragment.newInstance())
-
-        binding.viewPager.adapter = PricePagerAdapter(this, fragments)
-
+    private fun setupViewPager() = with(binding) {
+        val titles = listOf(
+            getString(R.string.price_view_pager_item_buy),
+            getString(R.string.price_view_pager_item_sell)
+        )
+        val fragments = listOf(
+            PriceItemPagerFragment.newInstance(),
+            PriceItemPagerFragment.newInstance()
+        )
+        viewPager.adapter = PricePagerAdapter(this@PriceFragment, fragments)
         TabLayoutMediator(binding.tabLayout, binding.viewPager) { tab, position ->
             tab.text = titles[position]
         }.attach()
-
     }
-
 
     companion object {
         const val TAG = "PriceFragment"
