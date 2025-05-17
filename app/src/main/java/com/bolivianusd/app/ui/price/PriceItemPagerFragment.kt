@@ -1,15 +1,15 @@
 package com.bolivianusd.app.ui.price
 
-import android.os.Bundle
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AccelerateDecelerateInterpolator
-import androidx.core.content.res.ResourcesCompat
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.bolivianusd.app.R
+import com.bolivianusd.app.core.base.BaseFragment
+import com.bolivianusd.app.core.extensions.getColorRes
+import com.bolivianusd.app.core.extensions.getDrawableRes
 import com.bolivianusd.app.databinding.FragmentPriceItemPagerBinding
+import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.data.LineData
 import com.github.mikephil.charting.data.LineDataSet
@@ -18,24 +18,19 @@ import com.github.mikephil.charting.interfaces.datasets.ILineDataSet
 import com.yy.mobile.rollingtextview.CharOrder
 import kotlin.getValue
 
-class PriceItemPagerFragment : Fragment() {
-
-    private lateinit var binding: FragmentPriceItemPagerBinding
+class PriceItemPagerFragment : BaseFragment<FragmentPriceItemPagerBinding>() {
 
     private val viewModel: PriceViewModel by activityViewModels()
 
-    override fun onCreateView(
+    override fun getViewBinding(
         inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        binding = FragmentPriceItemPagerBinding.inflate(inflater, container, false)
-        return binding.root
-    }
+        container: ViewGroup?
+    ) = FragmentPriceItemPagerBinding.inflate(inflater, container, false)
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        test()
+    override fun initViews() {
+        setupRollingTextView()
+        setupLineChart()
+
         loadData()
     }
 
@@ -45,156 +40,49 @@ class PriceItemPagerFragment : Fragment() {
         }
     }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    fun test() = with(binding) {
-
+    private fun setupRollingTextView() = with(binding) {
         exchangeRateTextView.animationDuration = 1000L
         exchangeRateTextView.addCharOrder(CharOrder.Number);
         exchangeRateTextView.animationInterpolator = AccelerateDecelerateInterpolator()
-
         exchangeRateTextView.setText("11.50")
+    }
 
-        /*lineChartHeartRate.setBackgroundColor(getColorResource(R.color.pickled_bluewood))
-        lineChartHeartRate.description.isEnabled = false
-        lineChartHeartRate.setTouchEnabled(false)
-        lineChartHeartRate.setDrawGridBackground(false)
-        lineChartHeartRate.setDragEnabled(true)
-        lineChartHeartRate.setScaleEnabled(true)
-        lineChartHeartRate.setPinchZoom(false)
-        lineChartHeartRate.description = null
-        lineChartHeartRate.legend.isEnabled = false;
-        lineChartHeartRate.setViewPortOffsets(0f, 0f, 0f, 0f)
-        lineChartHeartRate.xAxis.setDrawAxisLine(false)
-        lineChartHeartRate.xAxis.setDrawGridLines(false)
-        lineChartHeartRate.xAxis.setDrawLabels(false)
-        lineChartHeartRate.xAxis.enableGridDashedLine(10f, 10f, 0f)
-        lineChartHeartRate.axisRight.isEnabled = false
-        lineChartHeartRate.axisRight.setDrawGridLines(false)
-        lineChartHeartRate.axisRight.setDrawLabels(false)
-        lineChartHeartRate.axisLeft.setDrawGridLines(false)
-        lineChartHeartRate.axisLeft.axisLineColor = getColorResource(R.color.pickled_bluewood)
-        lineChartHeartRate.axisLeft.enableGridDashedLine(10f, 10f, 0f)
-        lineChartHeartRate.axisLeft.setDrawLabels(false)*/
-
-        //lineChartHeartRate.setBackgroundColor(getColorResource(R.color.pickled_bluewood))
-
-        lineChartHeartRate.description.isEnabled = false
-        lineChartHeartRate.legend.isEnabled = false
-        lineChartHeartRate.description.isEnabled = false
-        /*lineChartHeartRate.description.textColor = getColorResource(R.color.maroon_flush)
-        lineChartHeartRate.description.textSize = 15f
-        lineChartHeartRate.description.text = "binance"*/
-
-        lineChartHeartRate.setTouchEnabled(false)
-        lineChartHeartRate.setDrawGridBackground(false)
-        lineChartHeartRate.setDragEnabled(true)
-        lineChartHeartRate.setScaleEnabled(true)
-        lineChartHeartRate.setPinchZoom(false)
-
-        //lineChartHeartRate.setViewPortOffsets(20f,40f, 20f, 30f)
-
-        lineChartHeartRate.extraBottomOffset = 7f
-        lineChartHeartRate.extraTopOffset = 10f
-        lineChartHeartRate.minOffset = 0f
-
-
-        lineChartHeartRate.xAxis.setDrawAxisLine(false)
-        lineChartHeartRate.xAxis.setDrawGridLines(false)
-        lineChartHeartRate.xAxis.setDrawLabels(true)
-        lineChartHeartRate.xAxis.textColor = getColorResource(com.bolivianusd.app.R.color.maroon_flush)
-        lineChartHeartRate.xAxis.textSize = 10f
-        lineChartHeartRate.xAxis.position = com.github.mikephil.charting.components.XAxis.XAxisPosition.BOTTOM
-        //lineChartHeartRate.xAxis.enableGridDashedLine(10f, 10f, 0f)
-        //lineChartHeartRate.minOffset = 0f
-
-        //lineChartHeartRate.xAxis.setAvoidFirstLastClipping(true)
-
-        //lineChartHeartRate.xAxis.setAvoidFirstLastClipping(true)
-
+    private fun setupLineChart() = with(binding) {
         val list_of_labels = arrayOf("", "04/09", "05/09", "06/09", "07/09", "08/09", "09/09", "")
-        lineChartHeartRate.xAxis.setLabelCount(list_of_labels.size, true)
-        lineChartHeartRate.xAxis.valueFormatter = IndexAxisValueFormatter(list_of_labels)
+        lineChart.apply {
+            description.isEnabled = false
+            legend.isEnabled = false
+            description.isEnabled = false
 
-        lineChartHeartRate.axisRight.isEnabled = false
-        lineChartHeartRate.axisRight.setDrawGridLines(false)
-        lineChartHeartRate.axisRight.setDrawLabels(false)
+            setTouchEnabled(false)
+            setDrawGridBackground(false)
+            setDragEnabled(true)
+            setScaleEnabled(true)
+            setPinchZoom(false)
 
-        lineChartHeartRate.axisLeft.isEnabled = false
-        lineChartHeartRate.axisLeft.setDrawGridLines(false)
-        lineChartHeartRate.axisLeft.setDrawLabels(false)
+            extraBottomOffset = 7f
+            extraTopOffset = 10f
+            minOffset = 0f
 
+            xAxis.setDrawAxisLine(false)
+            xAxis.setDrawGridLines(false)
+            xAxis.setDrawLabels(true)
+            xAxis.setLabelCount(list_of_labels.size, true)
+            xAxis.textColor = requireContext().getColorRes(R.color.maroon_flush)
+            xAxis.textSize = 10f
+            xAxis.position = XAxis.XAxisPosition.BOTTOM
+            xAxis.valueFormatter = IndexAxisValueFormatter(list_of_labels)
 
+            axisRight.isEnabled = false
+            axisRight.setDrawGridLines(false)
+            axisRight.setDrawLabels(false)
 
-        lineChartHeartRate.axisLeft.setAxisMaximum(14f)
-        lineChartHeartRate.axisLeft.setAxisMinimum(6f)
-
+            axisLeft.isEnabled = false
+            axisLeft.setDrawGridLines(false)
+            axisLeft.setDrawLabels(false)
+            axisLeft.setAxisMaximum(14f)
+            axisLeft.setAxisMinimum(6f)
+        }
         createData()
     }
 
@@ -217,60 +105,38 @@ class PriceItemPagerFragment : Fragment() {
         values.add(Entry(6f, 12.20f))
         values.add(Entry(7f, 12.20f))
 
-        //values.add(Entry(6f, 10.85f))
-        //values.add(Entry(7f, 10.7f))
-        //values.add(Entry(8f, 10.1f))
-
-        /*values.add(Entry(9f, 10.0f))
-        values.add(Entry(10f, 11.5f))
-        values.add(Entry(11f, 11.2f))
-        values.add(Entry(12f, 10.15f))
-        values.add(Entry(13f, 11.11f))
-        values.add(Entry(14f, 12.85f))*/
-
         println(values)
 
+        val colors = arrayOf(
+            requireContext().getColorRes(R.color.red),
+            requireContext().getColorRes(R.color.red),
+            requireContext().getColorRes(R.color.green),
+            requireContext().getColorRes(R.color.green),
+            requireContext().getColorRes(R.color.green),
+            requireContext().getColorRes(R.color.red),
+            requireContext().getColorRes(R.color.green),
+            requireContext().getColorRes(R.color.green)
+        )
 
         val dataSet = LineDataSet(values, "Fuente: binance.com")
         dataSet.setDrawIcons(true)
         dataSet.setDrawValues(true)
-
         dataSet.valueTextSize = 11f
-        val colors = arrayOf(getColorResource(R.color.red), getColorResource(com.bolivianusd.app.R.color.red), getColorResource(
-            com.bolivianusd.app.R.color.green), getColorResource(com.bolivianusd.app.R.color.green), getColorResource(
-            com.bolivianusd.app.R.color.green), getColorResource(com.bolivianusd.app.R.color.red), getColorResource(
-            com.bolivianusd.app.R.color.green), getColorResource(com.bolivianusd.app.R.color.green))
         dataSet.setValueTextColors(colors.toList())
-
-
         dataSet.enableDashedLine(10f, 0f, 0f)
-        dataSet.color = getColorResource(com.bolivianusd.app.R.color.maroon_flush)
-        dataSet.setCircleColor(getColorResource(com.bolivianusd.app.R.color.maroon_flush))
+        dataSet.color = requireContext().getColorRes(R.color.maroon_flush)
+        dataSet.setCircleColor(requireContext().getColorRes(R.color.maroon_flush))
         dataSet.lineWidth = 3f
         dataSet.circleRadius = 4f
         dataSet.setDrawCircleHole(false)
-        //dataSet.enableDashedHighlightLine(10f, 10f, 10f)
         dataSet.setDrawFilled(true)
-        dataSet.mode = com.github.mikephil.charting.data.LineDataSet.Mode.HORIZONTAL_BEZIER
-        dataSet.fillDrawable =
-            androidx.core.content.ContextCompat.getDrawable(requireContext(), com.bolivianusd.app.R.drawable.gradient_chart)
-
-
+        dataSet.mode = LineDataSet.Mode.HORIZONTAL_BEZIER
+        dataSet.fillDrawable = requireContext().getDrawableRes(R.drawable.gradient_chart)
 
         val dataSets = ArrayList<ILineDataSet>()
         dataSets.add(dataSet)
-
-
-        lineChartHeartRate.setData(LineData(dataSets))
-
-
-
+        lineChart.setData(LineData(dataSets))
     }
-
-    fun getColorResource(id: Int): Int {
-        return ResourcesCompat.getColor(resources, id, null) //without theme
-    }
-
 
     companion object {
         const val TAG = "PriceItemPagerFragment"

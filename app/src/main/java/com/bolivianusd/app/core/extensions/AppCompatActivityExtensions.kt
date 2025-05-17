@@ -1,4 +1,4 @@
-package com.bolivianusd.app.core
+package com.bolivianusd.app.core.extensions
 
 import androidx.activity.OnBackPressedCallback
 import androidx.annotation.IdRes

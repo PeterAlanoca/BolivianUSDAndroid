@@ -4,9 +4,9 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import com.bolivianusd.app.R
-import com.bolivianusd.app.core.exit
-import com.bolivianusd.app.core.onBackPressed
-import com.bolivianusd.app.core.pushFragment
+import com.bolivianusd.app.core.extensions.exit
+import com.bolivianusd.app.core.extensions.onBackPressed
+import com.bolivianusd.app.core.extensions.pushFragment
 import com.bolivianusd.app.databinding.ActivityMainBinding
 import com.bolivianusd.app.ui.calculator.CalculatorFragment
 import com.bolivianusd.app.ui.news.NewsFragment
