@@ -3,8 +3,12 @@
     <string name="app_splash_main_transition_name">logo_bcp</string>
     <string name="app_fragment_not_attached_error">El fragmento no está asociado a la actividad.</string>
 
+    <string name="usd">USD</string>
+    <string name="zero_decimal">0.00</string>
+
     <!-- Price -->
     <string name="price_view_pager_item_buy">Compra</string>
     <string name="price_view_pager_item_sell">Venta</string>
+    <string name="price_view_pager_item_parallel_dollar">DOLAR PARALELO</string>
 
 </resources>

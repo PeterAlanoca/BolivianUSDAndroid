@@ -1,84 +1,72 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
+    android:fillViewport="true"
     tools:context=".ui.price.PriceItemPagerFragment">
 
-    <RelativeLayout
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:layout_marginTop="10dp"
-        android:layout_gravity="center_horizontal"
-        android:background="@drawable/drawable_circle_java">
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
-        <com.google.android.material.textview.MaterialTextView
-            android:layout_width="wrap_content"
+        <include
+            android:id="@+id/priceValue"
+            layout="@layout/layout_price_value"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:fontFamily="@font/sfuidisplay_bold"
-            android:text="USD"
-            android:textColor="@color/white"
-            android:textSize="14sp" />
+            android:visibility="gone"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:visibility="visible"/>
 
-    </RelativeLayout>
+        <include
+            android:id="@+id/priceShimmer"
+            layout="@layout/layout_shimmer_price_value"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:visibility="gone" />
 
-    <RelativeLayout
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    <!--LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="16dp"
-        android:orientation="horizontal">
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
-        <com.google.android.material.textview.MaterialTextView
-            android:layout_width="wrap_content"
+        <com.facebook.shimmer.ShimmerFrameLayout
+            android:id="@+id/shimmerLayout"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="14dp"
-            android:layout_marginEnd="8dp"
-            android:layout_toStartOf="@+id/exchangeRateTextView"
-            android:fontFamily="@font/sfuidisplay_medium"
-            android:includeFontPadding="false"
-            android:lineSpacingExtra="0dp"
-            android:text="BOB"
-            android:textColor="@color/white_alpha_65"
-            android:textSize="12sp" />
+            app:shimmer_duration="1000"
+            app:shimmer_intensity="0.5">
 
-        <com.yy.mobile.rollingtextview.RollingTextView
-            android:id="@+id/exchangeRateTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:fontFamily="@font/sfuidisplay_medium"
-            android:includeFontPadding="false"
-            android:lineSpacingExtra="0dp"
-            android:text="6.96"
-            android:textColor="@color/white"
-            android:textSize="50sp" />
+            <TextView
+                android:id="@+id/textView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="#353766"
+                android:lineSpacingExtra="8dp"
+                android:padding="16dp"
+                android:text="Cargando..."
+                android:textSize="16sp" />
 
-    </RelativeLayout>
+        </com.facebook.shimmer.ShimmerFrameLayout>
 
-    <com.google.android.material.textview.MaterialTextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:fontFamily="@font/sfuidisplay_medium"
-        android:text="DOLAR PARALELO"
-        android:textAlignment="center"
-        android:textColor="@color/white_alpha_65"
-        android:textSize="12sp" />
 
-    <com.kyleduo.switchbutton.SwitchButton
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="5dp"
-        android:layout_marginBottom="-10dp"
-        app:kswThumbRangeRatio="2"
-        app:kswBackDrawable="@drawable/track"
-        app:kswThumbDrawable="@drawable/thumb"/>
+    </LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout-->
 
-    <LinearLayout
+
+    <!--LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="20dp"
@@ -329,7 +317,7 @@
 
         </LinearLayout>
 
-    </com.google.android.material.card.MaterialCardView>
+    </com.google.android.material.card.MaterialCardView-->
 
 
-</LinearLayout>
+</androidx.core.widget.NestedScrollView>

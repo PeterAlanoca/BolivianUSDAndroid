@@ -65,7 +65,8 @@ dependencies {
     implementation(libs.mpandroidchart)
     implementation(libs.rollingtext)
     implementation(libs.circleimageview)
-    implementation(libs.library)
+    implementation(libs.switchbutton)
+    implementation(libs.shimmer)
 
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.crashlytics.ktx)

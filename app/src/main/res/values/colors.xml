@@ -2,6 +2,7 @@
 <resources>
     <color name="martinique">#292b4d</color>
     <color name="rhino">#353766</color>
+    <color name="cool_grey">#8789B0</color>
     <color name="java">#17d1e0</color>
     <color name="froly">#F67873</color>
 

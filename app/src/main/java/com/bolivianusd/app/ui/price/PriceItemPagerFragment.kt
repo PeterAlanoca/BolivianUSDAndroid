@@ -1,13 +1,20 @@
 package com.bolivianusd.app.ui.price
 
+import android.os.Handler
+import android.os.Looper
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.view.animation.AccelerateDecelerateInterpolator
+import android.view.animation.Animation
+import android.view.animation.AnimationUtils
 import androidx.fragment.app.activityViewModels
 import com.bolivianusd.app.R
 import com.bolivianusd.app.core.base.BaseFragment
 import com.bolivianusd.app.core.extensions.getColorRes
 import com.bolivianusd.app.core.extensions.getDrawableRes
+import com.bolivianusd.app.core.extensions.gone
+import com.bolivianusd.app.core.extensions.visible
+import com.bolivianusd.app.core.listeners.SimpleAnimationListener
 import com.bolivianusd.app.databinding.FragmentPriceItemPagerBinding
 import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.data.Entry
@@ -28,11 +35,45 @@ class PriceItemPagerFragment : BaseFragment<FragmentPriceItemPagerBinding>() {
     ) = FragmentPriceItemPagerBinding.inflate(inflater, container, false)
 
     override fun initViews() {
-        setupRollingTextView()
-        setupLineChart()
+        Handler(Looper.getMainLooper()).postDelayed({
+            animateShowPriceValue()
+        }, 1200)
 
-        loadData()
+
+        //setupLineChart()
+
+        //loadData()
+
     }
+
+    private fun animateShowPriceValue() = with(binding) {
+        val fadeIn = AnimationUtils.loadAnimation(requireContext(), R.anim.anim_view_fade_in)
+        priceValue.root.visible()
+        priceValue.root.startAnimation(fadeIn)
+        val fadeOut = AnimationUtils.loadAnimation(requireContext(), R.anim.anim_view_fade_out)
+        fadeOut.setAnimationListener(object : SimpleAnimationListener() {
+            override fun onAnimationEnd(animation: Animation?) {
+                animateHidePriceValue()
+                setupRollingTextView()
+            }
+        })
+        priceShimmer.root.startAnimation(fadeOut)
+    }
+
+    private fun animateHidePriceValue() = with(binding) {
+        priceShimmer.shimmerLayout.stopShimmer()
+        priceShimmer.root.gone()
+    }
+
+    private fun setupRollingTextView() = with(binding.priceValue) {
+        exchangeRateTextView.animationDuration = 600L
+        exchangeRateTextView.addCharOrder(CharOrder.Number)
+        exchangeRateTextView.animationInterpolator = AccelerateDecelerateInterpolator()
+        exchangeRateTextView.setText("11.50")
+    }
+
+
+
 
     private fun loadData() {
         viewModel.priceBuy.observe(viewLifecycleOwner) { price ->
@@ -40,14 +81,11 @@ class PriceItemPagerFragment : BaseFragment<FragmentPriceItemPagerBinding>() {
         }
     }
 
-    private fun setupRollingTextView() = with(binding) {
-        exchangeRateTextView.animationDuration = 1000L
-        exchangeRateTextView.addCharOrder(CharOrder.Number);
-        exchangeRateTextView.animationInterpolator = AccelerateDecelerateInterpolator()
-        exchangeRateTextView.setText("11.50")
-    }
 
-    private fun setupLineChart() = with(binding) {
+
+
+
+   /* private fun setupLineChart() = with(binding) {
         val list_of_labels = arrayOf("", "04/09", "05/09", "06/09", "07/09", "08/09", "09/09", "")
         lineChart.apply {
             description.isEnabled = false
@@ -136,10 +174,9 @@ class PriceItemPagerFragment : BaseFragment<FragmentPriceItemPagerBinding>() {
         val dataSets = ArrayList<ILineDataSet>()
         dataSets.add(dataSet)
         lineChart.setData(LineData(dataSets))
-    }
+    }*/
 
     companion object {
-        const val TAG = "PriceItemPagerFragment"
         fun newInstance() = PriceItemPagerFragment()
     }
 
