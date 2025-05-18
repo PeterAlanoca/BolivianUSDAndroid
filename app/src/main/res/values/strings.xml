@@ -4,6 +4,7 @@
     <string name="app_fragment_not_attached_error">El fragmento no está asociado a la actividad.</string>
 
     <string name="usd">USD</string>
+    <string name="bob">BOB</string>
     <string name="zero_decimal">0.00</string>
     <string name="dot">•</string>
 
@@ -17,5 +18,9 @@
     <string name="price_view_pager_item_more_zero">+0.0%</string>
     <string name="price_view_pager_item_bob_zero">BOB 00.00</string>
     <string name="price_view_pager_item_source_binance">Fuente: binance.com</string>
+    <string name="price_view_pager_item_range">Rango de precios</string>
+    <string name="price_view_pager_item_low">Bajo</string>
+    <string name="price_view_pager_item_middle">Medio</string>
+    <string name="price_view_pager_item_high">Alto</string>
 
 </resources>

@@ -75,6 +75,7 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/chartContent"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:layout_constraintEnd_toEndOf="parent"
@@ -105,133 +106,37 @@
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/chartContent">
+
+            <include
+                android:id="@+id/range"
+                layout="@layout/layout_price_range"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:visibility="visible" />
+
+            <include
+                android:id="@+id/rangeShimmer"
+                layout="@layout/layout_price_range_shimmer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="visible"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:visibility="visible" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
     </androidx.constraintlayout.widget.ConstraintLayout>
-
-
-    <!--LinearLayout
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_marginHorizontal="20dp"
-    android:gravity="center_vertical"
-    android:orientation="horizontal">
-
-    <com.google.android.material.textview.MaterialTextView
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:fontFamily="@font/sfuidisplay_bold"
-    android:includeFontPadding="false"
-    android:lineSpacingExtra="0dp"
-    android:text="Rango de precios"
-    android:textColor="@color/white"
-    android:textSize="16sp" />
-
-    <com.google.android.material.textview.MaterialTextView
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:fontFamily="@font/sfuidisplay_medium"
-    android:includeFontPadding="false"
-    android:lineSpacingExtra="0dp"
-    android:text="  • BOB"
-    android:textColor="@color/white_alpha_65"
-    android:textSize="12sp" />
-
-    </LinearLayout>
-
-    <com.google.android.material.card.MaterialCardView
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_marginHorizontal="20dp"
-    android:layout_marginTop="12dp"
-    android:layout_marginBottom="25dp"
-    app:cardBackgroundColor="@color/rhino"
-    app:cardCornerRadius="14dp"
-    app:cardElevation="10dp">
-
-    <LinearLayout
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_marginVertical="14dp"
-    android:orientation="horizontal"
-    android:weightSum="3">
-
-    <LinearLayout
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:gravity="center"
-        android:orientation="vertical">
-
-        <com.google.android.material.textview.MaterialTextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:fontFamily="@font/sfuidisplay_medium"
-            android:text="10.96"
-            android:textColor="@color/white"
-            android:textSize="20sp" />
-
-        <com.google.android.material.textview.MaterialTextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:fontFamily="@font/sfuidisplay_medium"
-            android:text="Bajo"
-            android:textColor="@color/white_alpha_65"
-            android:textSize="13sp" />
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:gravity="center"
-        android:orientation="vertical">
-
-        <com.google.android.material.textview.MaterialTextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:fontFamily="@font/sfuidisplay_medium"
-            android:text="10.96"
-            android:textColor="@color/white"
-            android:textSize="20sp" />
-
-        <com.google.android.material.textview.MaterialTextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:fontFamily="@font/sfuidisplay_medium"
-            android:text="Medio"
-            android:textColor="@color/white_alpha_65"
-            android:textSize="13sp" />
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:gravity="center"
-        android:orientation="vertical">
-
-        <com.google.android.material.textview.MaterialTextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:fontFamily="@font/sfuidisplay_medium"
-            android:text="10.96"
-            android:textColor="@color/white"
-            android:textSize="20sp" />
-
-        <com.google.android.material.textview.MaterialTextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:fontFamily="@font/sfuidisplay_medium"
-            android:text="Alto"
-            android:textColor="@color/white_alpha_65"
-            android:textSize="13sp" />
-
-    </LinearLayout>
-
-    </LinearLayout>
-
-    </com.google.android.material.card.MaterialCardView-->
-
 
 </androidx.core.widget.NestedScrollView>

@@ -1,6 +1,158 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-             android:layout_width="match_parent"
-             android:layout_height="match_parent">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:id="@+id/rangeContent"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/margin_20"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <com.google.android.material.textview.MaterialTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/sfuidisplay_bold"
+            android:includeFontPadding="false"
+            android:lineSpacingExtra="@dimen/line_spacing_extra_0"
+            android:text="@string/price_view_pager_item_range"
+            android:textColor="@color/white"
+            android:textSize="@dimen/text_size_16" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/margin_5"
+            android:fontFamily="@font/sfuidisplay_medium"
+            android:includeFontPadding="false"
+            android:lineSpacingExtra="@dimen/line_spacing_extra_0"
+            android:text="@string/dot"
+            android:textColor="@color/white_alpha_65"
+            android:textSize="@dimen/text_size_14" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/sfuidisplay_medium"
+            android:includeFontPadding="false"
+            android:lineSpacingExtra="@dimen/line_spacing_extra_0"
+            android:text="@string/bob"
+            android:textColor="@color/white_alpha_65"
+            android:textSize="@dimen/text_size_14" />
+
+    </LinearLayout>
+
+    <com.google.android.material.card.MaterialCardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/margin_20"
+        android:layout_marginTop="@dimen/margin_12"
+        android:layout_marginBottom="@dimen/margin_25"
+        app:cardBackgroundColor="@color/rhino"
+        app:cardCornerRadius="@dimen/radius_14"
+        app:cardElevation="@dimen/elevation_12"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/rangeContent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginVertical="@dimen/margin_14"
+            android:orientation="horizontal"
+            android:weightSum="3">
+
+            <LinearLayout
+                android:layout_width="@dimen/dimen_zero"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/sfuidisplay_medium"
+                    android:includeFontPadding="false"
+                    android:text="@string/zero_decimal"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/text_size_20" />
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/sfuidisplay_medium"
+                    android:includeFontPadding="false"
+                    android:text="@string/price_view_pager_item_low"
+                    android:textColor="@color/white_alpha_65"
+                    android:textSize="@dimen/text_size_14" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="@dimen/dimen_zero"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/sfuidisplay_medium"
+                    android:includeFontPadding="false"
+                    android:text="@string/zero_decimal"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/text_size_20" />
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/sfuidisplay_medium"
+                    android:includeFontPadding="false"
+                    android:text="@string/price_view_pager_item_middle"
+                    android:textColor="@color/white_alpha_65"
+                    android:textSize="@dimen/text_size_14" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="@dimen/dimen_zero"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/sfuidisplay_medium"
+                    android:includeFontPadding="false"
+                    android:text="@string/zero_decimal"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/text_size_20" />
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/sfuidisplay_medium"
+                    android:includeFontPadding="false"
+                    android:text="@string/price_view_pager_item_high"
+                    android:textColor="@color/white_alpha_65"
+                    android:textSize="@dimen/text_size_14" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </com.google.android.material.card.MaterialCardView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -49,6 +49,7 @@ class PriceItemPagerFragment : BaseFragment<FragmentPriceItemPagerBinding>() {
             animateShowPriceValue()
             animateShowUpdateTimeView()
             animateShowChartView()
+            animateShowRangeView()
         }, 1200)
         //loadData()
     }
@@ -106,6 +107,24 @@ class PriceItemPagerFragment : BaseFragment<FragmentPriceItemPagerBinding>() {
     private fun hideChartShimmer() = with(binding) {
         chartShimmer.shimmerLayout.stopShimmer()
         chartShimmer.root.gone()
+    }
+
+    private fun animateShowRangeView() = with(binding) {
+        val fadeIn = AnimationUtils.loadAnimation(requireContext(), R.anim.anim_view_fade_in)
+        range.root.visible()
+        range.root.startAnimation(fadeIn)
+        val fadeOut = AnimationUtils.loadAnimation(requireContext(), R.anim.anim_view_fade_out)
+        fadeOut.setAnimationListener(object : SimpleAnimationListener() {
+            override fun onAnimationEnd(animation: Animation?) {
+                hideRangeShimmer()
+            }
+        })
+        rangeShimmer.root.startAnimation(fadeOut)
+    }
+
+    private fun hideRangeShimmer() = with(binding) {
+        rangeShimmer.shimmerLayout.stopShimmer()
+        rangeShimmer.root.gone()
     }
 
     private fun setupLineChartShimmer() = with(binding.chartShimmer) {
@@ -206,7 +225,6 @@ class PriceItemPagerFragment : BaseFragment<FragmentPriceItemPagerBinding>() {
         }
         createData()
     }
-
 
     private fun createData() = with(binding.chart) {
 
