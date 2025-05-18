@@ -50,7 +50,7 @@ class PriceItemPagerFragment : BaseFragment<FragmentPriceItemPagerBinding>() {
             animateShowUpdateTimeView()
             animateShowChartView()
             animateShowRangeView()
-        }, 1200)
+        }, 2200)
         //loadData()
     }
 
