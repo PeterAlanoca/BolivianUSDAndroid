@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingHorizontal="@dimen/padding_20">
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/updateTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/sfuidisplay_bold"
+        android:includeFontPadding="false"
+        android:lineSpacingExtra="@dimen/line_spacing_extra_0"
+        android:text="@string/price_view_pager_item_update"
+        android:textColor="@color/white"
+        android:textSize="@dimen/text_size_16"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/dotTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/margin_5"
+        android:fontFamily="@font/sfuidisplay_medium"
+        android:includeFontPadding="false"
+        android:lineSpacingExtra="@dimen/line_spacing_extra_0"
+        android:text="@string/dot"
+        android:textColor="@color/cool_grey"
+        android:textSize="@dimen/text_size_14"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/updateTextView"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/margin_5"
+        android:fontFamily="@font/sfuidisplay_medium"
+        android:includeFontPadding="false"
+        android:lineSpacingExtra="@dimen/line_spacing_extra_0"
+        android:text="@string/price_view_pager_item_time"
+        android:textColor="@color/white_alpha_65"
+        android:textSize="@dimen/text_size_14"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/dotTextView"
+        app:layout_constraintTop_toTopOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -15,6 +15,12 @@ import com.bolivianusd.app.core.extensions.getDrawableRes
 import com.bolivianusd.app.core.extensions.gone
 import com.bolivianusd.app.core.extensions.visible
 import com.bolivianusd.app.core.listeners.SimpleAnimationListener
+import com.bolivianusd.app.core.formats.AmountValueFormatter
+import com.bolivianusd.app.core.util.ONE
+import com.bolivianusd.app.core.util.ZERO
+import com.bolivianusd.app.core.util.ZERO_F
+import com.bolivianusd.app.core.util.emptyBar
+import com.bolivianusd.app.core.util.emptyString
 import com.bolivianusd.app.databinding.FragmentPriceItemPagerBinding
 import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.data.Entry
@@ -35,15 +41,16 @@ class PriceItemPagerFragment : BaseFragment<FragmentPriceItemPagerBinding>() {
     ) = FragmentPriceItemPagerBinding.inflate(inflater, container, false)
 
     override fun initViews() {
+        setupRollingTextView()
+        setupLineChartShimmer()
+        setupLineChart()
+
         Handler(Looper.getMainLooper()).postDelayed({
             animateShowPriceValue()
+            animateShowUpdateTimeView()
+            animateShowChartView()
         }, 1200)
-
-
-        //setupLineChart()
-
         //loadData()
-
     }
 
     private fun animateShowPriceValue() = with(binding) {
@@ -53,39 +60,115 @@ class PriceItemPagerFragment : BaseFragment<FragmentPriceItemPagerBinding>() {
         val fadeOut = AnimationUtils.loadAnimation(requireContext(), R.anim.anim_view_fade_out)
         fadeOut.setAnimationListener(object : SimpleAnimationListener() {
             override fun onAnimationEnd(animation: Animation?) {
-                animateHidePriceValue()
-                setupRollingTextView()
+                hidePriceShimmer()
+                setExchangeRate()
             }
         })
         priceShimmer.root.startAnimation(fadeOut)
     }
 
-    private fun animateHidePriceValue() = with(binding) {
+    private fun hidePriceShimmer() = with(binding) {
         priceShimmer.shimmerLayout.stopShimmer()
         priceShimmer.root.gone()
     }
 
-    private fun setupRollingTextView() = with(binding.priceValue) {
-        exchangeRateTextView.animationDuration = 600L
-        exchangeRateTextView.addCharOrder(CharOrder.Number)
-        exchangeRateTextView.animationInterpolator = AccelerateDecelerateInterpolator()
-        exchangeRateTextView.setText("11.50")
+    private fun animateShowUpdateTimeView() = with(binding) {
+        val fadeIn = AnimationUtils.loadAnimation(requireContext(), R.anim.anim_view_fade_in)
+        updateTime.root.visible()
+        updateTime.root.startAnimation(fadeIn)
+        val fadeOut = AnimationUtils.loadAnimation(requireContext(), R.anim.anim_view_fade_out)
+        fadeOut.setAnimationListener(object : SimpleAnimationListener() {
+            override fun onAnimationEnd(animation: Animation?) {
+                hideUpdateTimeShimmer()
+            }
+        })
+        updateTimeShimmer.root.startAnimation(fadeOut)
     }
 
+    private fun hideUpdateTimeShimmer() = with(binding) {
+        updateTimeShimmer.shimmerLayout.stopShimmer()
+        updateTimeShimmer.root.gone()
+    }
 
+    private fun animateShowChartView() = with(binding) {
+        val fadeIn = AnimationUtils.loadAnimation(requireContext(), R.anim.anim_view_fade_in)
+        chart.root.visible()
+        chart.root.startAnimation(fadeIn)
+        val fadeOut = AnimationUtils.loadAnimation(requireContext(), R.anim.anim_view_fade_out)
+        fadeOut.setAnimationListener(object : SimpleAnimationListener() {
+            override fun onAnimationEnd(animation: Animation?) {
+                hideChartShimmer()
+            }
+        })
+        chartShimmer.root.startAnimation(fadeOut)
+    }
 
+    private fun hideChartShimmer() = with(binding) {
+        chartShimmer.shimmerLayout.stopShimmer()
+        chartShimmer.root.gone()
+    }
 
-    private fun loadData() {
-        viewModel.priceBuy.observe(viewLifecycleOwner) { price ->
-            println("naty priceData ${price.toString()}")
+    private fun setupLineChartShimmer() = with(binding.chartShimmer) {
+        val labels = List(CHART_DATA_ITEMS_SIZE) { index ->
+            if (index == ZERO || index == CHART_DATA_ITEMS_SIZE - ONE) emptyString else emptyBar
         }
+        val colors = List(CHART_DATA_ITEMS_SIZE) {
+            requireContext().getColorRes(R.color.cool_grey)
+        }
+        val values = List(CHART_DATA_ITEMS_SIZE) { index -> Entry(index.toFloat(), ZERO_F) }
+
+        lineChart.apply {
+            description.isEnabled = false
+            legend.isEnabled = false
+            description.isEnabled = false
+            extraBottomOffset = 7f
+            extraTopOffset = 10f
+            minOffset = 0f
+            setTouchEnabled(false)
+            setDrawGridBackground(false)
+            setDragEnabled(true)
+            setScaleEnabled(true)
+            setPinchZoom(false)
+            xAxis.setDrawAxisLine(false)
+            xAxis.setDrawGridLines(false)
+            xAxis.setDrawLabels(true)
+            xAxis.setLabelCount(labels.size, true)
+            xAxis.textColor = requireContext().getColorRes(R.color.cool_grey)
+            xAxis.textSize = 10f
+            xAxis.position = XAxis.XAxisPosition.BOTTOM
+            xAxis.valueFormatter = IndexAxisValueFormatter(labels)
+            axisRight.isEnabled = false
+            axisRight.setDrawGridLines(false)
+            axisRight.setDrawLabels(false)
+            axisLeft.isEnabled = false
+            axisLeft.setDrawGridLines(false)
+            axisLeft.setDrawLabels(false)
+            axisLeft.setAxisMaximum(6f)
+            axisLeft.setAxisMinimum(-6f)
+        }
+        val dataSet = LineDataSet(values, emptyString)
+        dataSet.apply {
+            valueFormatter = AmountValueFormatter()
+            color = requireContext().getColorRes(R.color.cool_grey)
+            valueTextSize = 11f
+            lineWidth = 3f
+            dataSet.circleRadius = 4f
+            mode = LineDataSet.Mode.HORIZONTAL_BEZIER
+            fillDrawable = requireContext().getDrawableRes(R.drawable.gradient_chart_shimmer)
+            setDrawIcons(true)
+            setDrawValues(true)
+            setValueTextColors(colors)
+            enableDashedLine(10f, 0f, 0f)
+            setCircleColor(requireContext().getColorRes(R.color.cool_grey))
+            setDrawCircleHole(false)
+            setDrawFilled(true)
+        }
+        val dataSets = ArrayList<ILineDataSet>()
+        dataSets.add(dataSet)
+        lineChart.setData(LineData(dataSets))
     }
 
-
-
-
-
-   /* private fun setupLineChart() = with(binding) {
+    private fun setupLineChart() = with(binding.chart) {
         val list_of_labels = arrayOf("", "04/09", "05/09", "06/09", "07/09", "08/09", "09/09", "")
         lineChart.apply {
             description.isEnabled = false
@@ -124,7 +207,8 @@ class PriceItemPagerFragment : BaseFragment<FragmentPriceItemPagerBinding>() {
         createData()
     }
 
-    private fun createData() = with(binding) {
+
+    private fun createData() = with(binding.chart) {
 
         val values: MutableList<Entry> = ArrayList()
 
@@ -159,6 +243,7 @@ class PriceItemPagerFragment : BaseFragment<FragmentPriceItemPagerBinding>() {
         val dataSet = LineDataSet(values, "Fuente: binance.com")
         dataSet.setDrawIcons(true)
         dataSet.setDrawValues(true)
+        dataSet.valueFormatter = AmountValueFormatter()
         dataSet.valueTextSize = 11f
         dataSet.setValueTextColors(colors.toList())
         dataSet.enableDashedLine(10f, 0f, 0f)
@@ -174,9 +259,27 @@ class PriceItemPagerFragment : BaseFragment<FragmentPriceItemPagerBinding>() {
         val dataSets = ArrayList<ILineDataSet>()
         dataSets.add(dataSet)
         lineChart.setData(LineData(dataSets))
-    }*/
+    }
+
+    private fun setupRollingTextView() = with(binding.priceValue) {
+        exchangeRateTextView.animationDuration = 600L
+        exchangeRateTextView.addCharOrder(CharOrder.Number)
+        exchangeRateTextView.animationInterpolator = AccelerateDecelerateInterpolator()
+    }
+
+    private fun setExchangeRate() = with(binding.priceValue) {
+        exchangeRateTextView.setText("11.50")
+    }
+
+    private fun loadData() {
+        viewModel.priceBuy.observe(viewLifecycleOwner) { price ->
+            println("naty priceData ${price.toString()}")
+        }
+    }
 
     companion object {
+        private const val CHART_DATA_ITEMS_SIZE = 8
+
         fun newInstance() = PriceItemPagerFragment()
     }
 

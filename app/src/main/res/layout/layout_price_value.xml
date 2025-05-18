@@ -48,7 +48,8 @@
             android:lineSpacingExtra="@dimen/line_spacing_extra_0"
             android:text="@string/usd"
             android:textColor="@color/white_alpha_65"
-            android:textSize="@dimen/text_size_12" />
+            android:textSize="@dimen/text_size_12"
+            tools:ignore="RelativeOverlap" />
 
         <com.yy.mobile.rollingtextview.RollingTextView
             android:id="@+id/exchangeRateTextView"

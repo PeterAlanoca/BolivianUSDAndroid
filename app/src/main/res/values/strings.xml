@@ -5,10 +5,17 @@
 
     <string name="usd">USD</string>
     <string name="zero_decimal">0.00</string>
+    <string name="dot">•</string>
 
     <!-- Price -->
     <string name="price_view_pager_item_buy">Compra</string>
     <string name="price_view_pager_item_sell">Venta</string>
     <string name="price_view_pager_item_parallel_dollar">DOLAR PARALELO</string>
+    <string name="price_view_pager_item_update">Actualizado</string>
+    <string name="price_view_pager_item_time">00:00 AM - 00:00 AM</string>
+    <string name="price_view_pager_item_price_in_bob">PRECIO EN BOB</string>
+    <string name="price_view_pager_item_more_zero">+0.0%</string>
+    <string name="price_view_pager_item_bob_zero">BOB 00.00</string>
+    <string name="price_view_pager_item_source_binance">Fuente: binance.com</string>
 
 </resources>

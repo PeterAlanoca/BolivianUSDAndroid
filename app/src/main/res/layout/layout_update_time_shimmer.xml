@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.facebook.shimmer.ShimmerFrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/shimmerLayout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    app:shimmer_duration="1000"
+    app:shimmer_intensity="0.5">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingHorizontal="@dimen/padding_20">
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/updateTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/sfuidisplay_bold"
+            android:includeFontPadding="false"
+            android:lineSpacingExtra="@dimen/line_spacing_extra_0"
+            android:text="@string/price_view_pager_item_update"
+            android:textColor="@color/cool_grey"
+            android:textSize="@dimen/text_size_16"
+            android:visibility="visible"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <View
+            android:layout_width="@dimen/dimen_zero"
+            android:layout_height="@dimen/dimen_zero"
+            android:layout_marginTop="@dimen/margin_3"
+            android:layout_marginBottom="@dimen/margin_3"
+            android:background="@drawable/bg_shimmer_cool_grey"
+            app:layout_constraintBottom_toBottomOf="@+id/updateTextView"
+            app:layout_constraintEnd_toEndOf="@+id/updateTextView"
+            app:layout_constraintStart_toStartOf="@+id/updateTextView"
+            app:layout_constraintTop_toTopOf="@+id/updateTextView" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/dotTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/margin_5"
+            android:fontFamily="@font/sfuidisplay_medium"
+            android:includeFontPadding="false"
+            android:lineSpacingExtra="@dimen/line_spacing_extra_0"
+            android:text="@string/dot"
+            android:textColor="@color/cool_grey"
+            android:textSize="@dimen/text_size_14"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/updateTextView"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/timeTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/margin_5"
+            android:fontFamily="@font/sfuidisplay_medium"
+            android:includeFontPadding="false"
+            android:lineSpacingExtra="@dimen/line_spacing_extra_0"
+            android:text="@string/price_view_pager_item_time"
+            android:textColor="@color/cool_grey"
+            android:textSize="@dimen/text_size_14"
+            android:visibility="visible"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/dotTextView"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <View
+            android:layout_width="@dimen/dimen_zero"
+            android:layout_height="@dimen/dimen_zero"
+            android:layout_marginTop="@dimen/margin_3"
+            android:layout_marginBottom="@dimen/margin_3"
+            android:background="@drawable/bg_shimmer_cool_grey"
+            app:layout_constraintBottom_toBottomOf="@+id/timeTextView"
+            app:layout_constraintEnd_toEndOf="@+id/timeTextView"
+            app:layout_constraintStart_toStartOf="@+id/timeTextView"
+            app:layout_constraintTop_toTopOf="@+id/timeTextView" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</com.facebook.shimmer.ShimmerFrameLayout>
