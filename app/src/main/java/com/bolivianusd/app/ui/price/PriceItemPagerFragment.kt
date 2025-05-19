@@ -1,18 +1,19 @@
 package com.bolivianusd.app.ui.price
 
-import android.os.Handler
-import android.os.Looper
+import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.view.animation.AccelerateDecelerateInterpolator
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
+import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
 import com.bolivianusd.app.R
 import com.bolivianusd.app.core.base.BaseFragment
 import com.bolivianusd.app.core.extensions.getColorRes
 import com.bolivianusd.app.core.extensions.getDrawableRes
 import com.bolivianusd.app.core.extensions.gone
+import com.bolivianusd.app.core.extensions.serializable
 import com.bolivianusd.app.core.extensions.visible
 import com.bolivianusd.app.core.listeners.SimpleAnimationListener
 import com.bolivianusd.app.core.formats.AmountValueFormatter
@@ -21,6 +22,9 @@ import com.bolivianusd.app.core.util.ZERO
 import com.bolivianusd.app.core.util.ZERO_F
 import com.bolivianusd.app.core.util.emptyBar
 import com.bolivianusd.app.core.util.emptyString
+import com.bolivianusd.app.data.repository.entity.PriceBuy
+import com.bolivianusd.app.data.repository.entity.enum.OperationType
+import com.bolivianusd.app.data.repository.state.State
 import com.bolivianusd.app.databinding.FragmentPriceItemPagerBinding
 import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.data.Entry
@@ -35,6 +39,15 @@ class PriceItemPagerFragment : BaseFragment<FragmentPriceItemPagerBinding>() {
 
     private val viewModel: PriceViewModel by activityViewModels()
 
+    private val operationType: OperationType by lazy {
+        requireNotNull(arguments?.serializable<OperationType>(OPERATION_TYPE))
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        isNotRecreate = false
+    }
+
     override fun getViewBinding(
         inflater: LayoutInflater,
         container: ViewGroup?
@@ -45,16 +58,49 @@ class PriceItemPagerFragment : BaseFragment<FragmentPriceItemPagerBinding>() {
         setupLineChartShimmer()
         setupLineChart()
 
-        Handler(Looper.getMainLooper()).postDelayed({
+        /*Handler(Looper.getMainLooper()).postDelayed({
             animateShowPriceValue()
             animateShowUpdateTimeView()
             animateShowChartView()
             animateShowRangeView()
-        }, 2200)
-        //loadData()
+        }, 2200)*/
+    }
+
+    override fun initData() {
+        getPrice()
+    }
+
+    private fun getPrice() {
+        viewModel.priceBuy.observe(viewLifecycleOwner) { state ->
+            when (state) {
+                is State.Loading -> showPriceShimmer()
+
+                is State.Success -> {
+                    setDataPriceValue(state.data)
+                    animateShowPriceValue()
+                }
+
+                is State.Error -> Unit
+            }
+        }
+    }
+
+    private fun setDataPriceValue(priceBuy: PriceBuy) = with(binding.priceValue) {
+        with(priceBuy) {
+            originCurrencyTextView.text = origin.currency
+            originAmountTextView.setText(origin.amountLabel)
+            destinationCurrencyTextView.text = destination.currency
+            descriptionTextView.text = priceBuy.label
+        }
+    }
+
+    private fun showPriceShimmer() = with(binding) {
+        priceShimmer.shimmerLayout.startShimmer()
+        priceShimmer.root.visible()
     }
 
     private fun animateShowPriceValue() = with(binding) {
+        if (priceValue.root.isVisible) return@with
         val fadeIn = AnimationUtils.loadAnimation(requireContext(), R.anim.anim_view_fade_in)
         priceValue.root.visible()
         priceValue.root.startAnimation(fadeIn)
@@ -62,7 +108,6 @@ class PriceItemPagerFragment : BaseFragment<FragmentPriceItemPagerBinding>() {
         fadeOut.setAnimationListener(object : SimpleAnimationListener() {
             override fun onAnimationEnd(animation: Animation?) {
                 hidePriceShimmer()
-                setExchangeRate()
             }
         })
         priceShimmer.root.startAnimation(fadeOut)
@@ -280,25 +325,21 @@ class PriceItemPagerFragment : BaseFragment<FragmentPriceItemPagerBinding>() {
     }
 
     private fun setupRollingTextView() = with(binding.priceValue) {
-        exchangeRateTextView.animationDuration = 600L
-        exchangeRateTextView.addCharOrder(CharOrder.Number)
-        exchangeRateTextView.animationInterpolator = AccelerateDecelerateInterpolator()
-    }
-
-    private fun setExchangeRate() = with(binding.priceValue) {
-        exchangeRateTextView.setText("11.50")
-    }
-
-    private fun loadData() {
-        viewModel.priceBuy.observe(viewLifecycleOwner) { price ->
-            println("naty priceData ${price.toString()}")
-        }
+        originAmountTextView.animationDuration = 600L
+        originAmountTextView.addCharOrder(CharOrder.Number)
+        originAmountTextView.animationInterpolator = AccelerateDecelerateInterpolator()
     }
 
     companion object {
+        private const val OPERATION_TYPE = "OPERATION_TYPE"
         private const val CHART_DATA_ITEMS_SIZE = 8
 
-        fun newInstance() = PriceItemPagerFragment()
+        fun newInstance(operationType: OperationType) = PriceItemPagerFragment().apply {
+            val bundle = Bundle().apply {
+                putSerializable(OPERATION_TYPE, operationType)
+            }
+            arguments = bundle
+        }
     }
 
 }

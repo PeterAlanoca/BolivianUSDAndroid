@@ -1,9 +1,8 @@
 package com.bolivianusd.app.data.repository
 
-import com.bolivianusd.app.data.model.PriceBuyModel
+import com.bolivianusd.app.data.repository.entity.PriceBuy
 import kotlinx.coroutines.flow.Flow
 
 interface PriceRepository {
-
-    fun getPriceBuy(): Flow<PriceBuyModel>
+    fun getPriceBuy(): Flow<PriceBuy>
 }

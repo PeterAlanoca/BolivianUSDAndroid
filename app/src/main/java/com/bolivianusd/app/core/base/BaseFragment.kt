@@ -6,7 +6,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.viewbinding.ViewBinding
-import com.bolivianusd.app.R
 
 abstract class BaseFragment<T : ViewBinding> : Fragment() {
 
@@ -14,7 +13,7 @@ abstract class BaseFragment<T : ViewBinding> : Fragment() {
     var isNotRecreate = false
     val binding
         get() = _binding
-            ?: throw IllegalStateException(getString(R.string.app_fragment_not_attached_error))
+            ?: throw IllegalStateException("Fragment not attached or view is null.")
 
     protected abstract fun getViewBinding(
         inflater: LayoutInflater,

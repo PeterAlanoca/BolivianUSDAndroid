@@ -17,6 +17,7 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/destinationCurrencyTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
@@ -38,11 +39,12 @@
         app:layout_constraintTop_toBottomOf="@+id/currencyView">
 
         <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/originCurrencyTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/margin_14"
             android:layout_marginEnd="@dimen/margin_8"
-            android:layout_toStartOf="@+id/exchangeRateTextView"
+            android:layout_toStartOf="@+id/originAmountTextView"
             android:fontFamily="@font/sfuidisplay_medium"
             android:includeFontPadding="false"
             android:lineSpacingExtra="@dimen/line_spacing_extra_0"
@@ -52,7 +54,7 @@
             tools:ignore="RelativeOverlap" />
 
         <com.yy.mobile.rollingtextview.RollingTextView
-            android:id="@+id/exchangeRateTextView"
+            android:id="@+id/originAmountTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
@@ -66,7 +68,7 @@
     </RelativeLayout>
 
     <com.google.android.material.textview.MaterialTextView
-        android:id="@+id/currencyDescriptionTextView"
+        android:id="@+id/descriptionTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:fontFamily="@font/sfuidisplay_medium"
@@ -88,6 +90,6 @@
         app:kswThumbRangeRatio="2"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/currencyDescriptionTextView" />
+        app:layout_constraintTop_toBottomOf="@+id/descriptionTextView" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

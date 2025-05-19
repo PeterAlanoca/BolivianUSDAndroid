@@ -23,18 +23,17 @@
             android:noHistory="true"
             android:windowSoftInputMode="adjustPan">
 
+
+
         </activity>
 
         <activity
             android:name=".ui.main.MainActivity"
             android:configChanges="orientation|keyboardHidden"
             android:screenOrientation="portrait"
-            android:noHistory="true"
             android:theme="@style/Theme.Main"
             android:exported="true"
             android:windowSoftInputMode="adjustPan" >
-
-
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
