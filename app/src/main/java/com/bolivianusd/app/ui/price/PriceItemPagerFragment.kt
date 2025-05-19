@@ -22,7 +22,7 @@ import com.bolivianusd.app.core.util.ZERO
 import com.bolivianusd.app.core.util.ZERO_F
 import com.bolivianusd.app.core.util.emptyBar
 import com.bolivianusd.app.core.util.emptyString
-import com.bolivianusd.app.data.repository.entity.PriceBuy
+import com.bolivianusd.app.data.repository.entity.Price
 import com.bolivianusd.app.data.repository.entity.enum.OperationType
 import com.bolivianusd.app.data.repository.state.State
 import com.bolivianusd.app.databinding.FragmentPriceItemPagerBinding
@@ -71,7 +71,7 @@ class PriceItemPagerFragment : BaseFragment<FragmentPriceItemPagerBinding>() {
     }
 
     private fun getPrice() {
-        viewModel.priceBuy.observe(viewLifecycleOwner) { state ->
+        viewModel.getPriceBuy(operationType).observe(viewLifecycleOwner) { state ->
             when (state) {
                 is State.Loading -> showPriceShimmer()
 
@@ -85,12 +85,22 @@ class PriceItemPagerFragment : BaseFragment<FragmentPriceItemPagerBinding>() {
         }
     }
 
-    private fun setDataPriceValue(priceBuy: PriceBuy) = with(binding.priceValue) {
-        with(priceBuy) {
-            originCurrencyTextView.text = origin.currency
-            originAmountTextView.setText(origin.amountLabel)
-            destinationCurrencyTextView.text = destination.currency
-            descriptionTextView.text = priceBuy.label
+    private fun setDataPriceValue(price: Price) = with(binding.priceValue) {
+        with(price) {
+            when (operationType) {
+                OperationType.BUY -> {
+                    exchangeRateCurrencyTextView.text = origin.currency
+                    exchangeRateAmountTextView.setText(origin.amountLabel)
+                    currencyTextView.text = destination.currency
+                }
+
+                OperationType.SELL -> {
+                    exchangeRateCurrencyTextView.text = destination.currency
+                    exchangeRateAmountTextView.setText(destination.amountLabel)
+                    currencyTextView.text = origin.currency
+                }
+            }
+            descriptionTextView.text = price.label
         }
     }
 
@@ -170,6 +180,12 @@ class PriceItemPagerFragment : BaseFragment<FragmentPriceItemPagerBinding>() {
     private fun hideRangeShimmer() = with(binding) {
         rangeShimmer.shimmerLayout.stopShimmer()
         rangeShimmer.root.gone()
+    }
+
+    private fun setupRollingTextView() = with(binding.priceValue) {
+        exchangeRateAmountTextView.animationDuration = 600L
+        exchangeRateAmountTextView.addCharOrder(CharOrder.Number)
+        exchangeRateAmountTextView.animationInterpolator = AccelerateDecelerateInterpolator()
     }
 
     private fun setupLineChartShimmer() = with(binding.chartShimmer) {
@@ -322,12 +338,6 @@ class PriceItemPagerFragment : BaseFragment<FragmentPriceItemPagerBinding>() {
         val dataSets = ArrayList<ILineDataSet>()
         dataSets.add(dataSet)
         lineChart.setData(LineData(dataSets))
-    }
-
-    private fun setupRollingTextView() = with(binding.priceValue) {
-        originAmountTextView.animationDuration = 600L
-        originAmountTextView.addCharOrder(CharOrder.Number)
-        originAmountTextView.animationInterpolator = AccelerateDecelerateInterpolator()
     }
 
     companion object {

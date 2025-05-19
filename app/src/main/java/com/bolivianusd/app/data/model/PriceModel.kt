@@ -4,7 +4,7 @@ import com.bolivianusd.app.core.util.ZERO_D
 import com.bolivianusd.app.core.util.emptyString
 import com.google.firebase.database.PropertyName
 
-data class PriceBuyModel(
+data class PriceModel(
     @get:PropertyName("origin_currency")
     @set:PropertyName("origin_currency")
     var originCurrency: String = emptyString,

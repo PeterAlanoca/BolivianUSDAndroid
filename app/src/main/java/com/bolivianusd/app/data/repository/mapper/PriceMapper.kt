@@ -1,12 +1,12 @@
 package com.bolivianusd.app.data.repository.mapper
 
 import com.bolivianusd.app.core.extensions.toFormatted
-import com.bolivianusd.app.data.model.PriceBuyModel
-import com.bolivianusd.app.data.repository.entity.PriceBuy
+import com.bolivianusd.app.data.model.PriceModel
+import com.bolivianusd.app.data.repository.entity.Price
 import com.bolivianusd.app.data.repository.entity.PriceValue
 
-fun PriceBuyModel.toPriceBuy(): PriceBuy {
-    return PriceBuy(
+fun PriceModel.toPrice(): Price {
+    return Price(
         origin = PriceValue(
             currency = originCurrency,
             amount = originAmount.toBigDecimal(),

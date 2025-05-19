@@ -23,8 +23,6 @@
             android:noHistory="true"
             android:windowSoftInputMode="adjustPan">
 
-
-
         </activity>
 
         <activity
