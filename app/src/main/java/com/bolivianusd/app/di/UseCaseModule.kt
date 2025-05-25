@@ -1,6 +1,8 @@
 package com.bolivianusd.app.di
 
 import com.bolivianusd.app.data.repository.PriceRepository
+import com.bolivianusd.app.domain.GetChartPriceUsdtUseCase
+import com.bolivianusd.app.domain.GetChartPriceUsdtUseCaseImpl
 import com.bolivianusd.app.domain.GetPriceUsdtUseCase
 import com.bolivianusd.app.domain.GetPriceUsdtUseCaseImpl
 import dagger.Module
@@ -18,6 +20,14 @@ object UseCaseModule {
     fun providesGetPriceUsdtUseCase(
         repository: PriceRepository
     ): GetPriceUsdtUseCase = GetPriceUsdtUseCaseImpl(
+        repository = repository
+    )
+
+    @Singleton
+    @Provides
+    fun providesGetChartPriceUsdtUseCase(
+        repository: PriceRepository
+    ): GetChartPriceUsdtUseCase = GetChartPriceUsdtUseCaseImpl(
         repository = repository
     )
 }

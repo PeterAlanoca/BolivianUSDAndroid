@@ -1,5 +1,6 @@
 package com.bolivianusd.app.core.formats
 
+import com.bolivianusd.app.core.util.emptyString
 import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.formatter.ValueFormatter
 import java.text.DecimalFormat
@@ -10,6 +11,6 @@ class AmountValueFormatter : ValueFormatter() {
     private val format = DecimalFormat("#,##0.00", DecimalFormatSymbols(Locale.US))
 
     override fun getPointLabel(entry: Entry?): String {
-        return if (entry != null) format.format(entry.y) else ""
+        return if (entry != null) format.format(entry.y) else emptyString
     }
 }

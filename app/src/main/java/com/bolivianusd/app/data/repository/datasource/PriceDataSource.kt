@@ -1,5 +1,6 @@
 package com.bolivianusd.app.data.repository.datasource
 
+import com.bolivianusd.app.data.model.ChartDataModel
 import com.bolivianusd.app.data.model.PriceModel
 import com.bolivianusd.app.data.repository.datasource.realtime.database.PriceReference
 import javax.inject.Inject
@@ -14,6 +15,14 @@ class PriceDataSource @Inject constructor(
 
     fun getPriceSell(onSuccess: (PriceModel) -> Unit, onError: (Exception) -> Unit) {
         priceReference.getPriceSell(onSuccess = onSuccess, onError = onError)
+    }
+
+    fun getChartPriceBuy(onSuccess: (ChartDataModel) -> Unit, onError: (Exception) -> Unit) {
+        priceReference.getChartPriceBuy(onSuccess = onSuccess, onError = onError)
+    }
+
+    fun getChartPriceSell(onSuccess: (ChartDataModel) -> Unit, onError: (Exception) -> Unit) {
+        priceReference.getChartPriceSell(onSuccess = onSuccess, onError = onError)
     }
 
 }

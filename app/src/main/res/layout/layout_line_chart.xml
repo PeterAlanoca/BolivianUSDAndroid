@@ -43,6 +43,7 @@
                         android:background="@drawable/drawable_circle_maroon_flush" />
 
                     <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/descriptionTextView"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginHorizontal="@dimen/margin_5"
@@ -55,6 +56,7 @@
                 </LinearLayout>
 
                 <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/variationTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_toStartOf="@+id/priceTextView"
@@ -98,6 +100,7 @@
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/labelTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="@dimen/margin_14"
