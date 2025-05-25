@@ -4,9 +4,7 @@ import android.content.Context
 import com.bolivianusd.app.R
 import com.bolivianusd.app.core.extensions.getColorRes
 import com.bolivianusd.app.core.extensions.toFormatted
-import com.bolivianusd.app.core.util.ZERO
 import com.bolivianusd.app.core.util.ZERO_F
-import com.bolivianusd.app.core.util.emptyString
 import com.bolivianusd.app.core.util.minus
 import com.bolivianusd.app.core.util.plus
 import com.bolivianusd.app.data.model.ChartDataModel
