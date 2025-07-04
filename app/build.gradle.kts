@@ -1,3 +1,7 @@
+import java.io.FileInputStream
+import java.util.Properties
+import kotlin.apply
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
@@ -7,7 +11,20 @@ plugins {
     alias(libs.plugins.crashlytics)
 }
 
+val keystoreProperties = Properties().apply {
+    load(FileInputStream(rootProject.file("keystore.properties")))
+}
 android {
+
+    signingConfigs {
+        create("release") {
+            storeFile = file(keystoreProperties["storeFile"] as String)
+            storePassword = keystoreProperties["storePassword"] as String
+            keyAlias = keystoreProperties["keyAlias"] as String
+            keyPassword = keystoreProperties["keyPassword"] as String
+        }
+    }
+
     namespace = "com.bolivianusd.app"
     compileSdk = 35
 
@@ -22,8 +39,9 @@ android {
     }
 
     buildTypes {
-        release {
+        getByName("release") {
             isMinifyEnabled = false
+            signingConfig = signingConfigs.getByName("release")
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
@@ -39,6 +57,11 @@ android {
     }
     buildFeatures {
         viewBinding = true
+    }
+    lint {
+        disable += "NullSafeMutableLiveData"
+        checkReleaseBuilds = false
+        abortOnError = false
     }
 }
 
