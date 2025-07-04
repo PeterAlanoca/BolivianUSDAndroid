@@ -9,9 +9,11 @@ import com.bolivianusd.app.core.util.minus
 import com.bolivianusd.app.core.util.plus
 import com.bolivianusd.app.data.model.ChartDataModel
 import com.bolivianusd.app.data.model.PriceModel
+import com.bolivianusd.app.data.model.RangePriceModel
 import com.bolivianusd.app.data.repository.entity.ChartData
 import com.bolivianusd.app.data.repository.entity.Price
 import com.bolivianusd.app.data.repository.entity.PriceValue
+import com.bolivianusd.app.data.repository.entity.RangePrice
 import com.github.mikephil.charting.data.Entry
 
 fun PriceModel.toPrice(): Price {
@@ -69,5 +71,23 @@ fun ChartDataModel.toChartData(context: Context): ChartData {
         colors = colors,
         axisMaximum = axisMaximum,
         axisMinimum = axisMinimum
+    )
+}
+
+fun RangePriceModel.toRangePrice(): RangePrice {
+    return RangePrice(
+        currency = this.currency,
+        min = RangePrice.Price(
+            amount = this.min.amount,
+            label = this.min.label
+        ),
+        max = RangePrice.Price(
+            amount = this.max.amount,
+            label = this.max.label
+        ),
+        avg = RangePrice.Price(
+            amount = this.avg.amount,
+            label = this.avg.label
+        )
     )
 }

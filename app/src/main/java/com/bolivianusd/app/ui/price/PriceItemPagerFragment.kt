@@ -33,6 +33,7 @@ import com.bolivianusd.app.core.util.emptyBar
 import com.bolivianusd.app.core.util.emptyString
 import com.bolivianusd.app.data.repository.entity.ChartData
 import com.bolivianusd.app.data.repository.entity.Price
+import com.bolivianusd.app.data.repository.entity.RangePrice
 import com.bolivianusd.app.data.repository.entity.enum.OperationType
 import com.bolivianusd.app.data.repository.state.State
 import com.bolivianusd.app.databinding.FragmentPriceItemPagerBinding
@@ -67,15 +68,14 @@ class PriceItemPagerFragment : BaseFragment<FragmentPriceItemPagerBinding>() {
         setupRollingTextView()
         setupLineChartShimmer()
         setupLineChart()
-
-        Handler(Looper.getMainLooper()).postDelayed({
-            animateShowRangeView()
-        }, 2200)
     }
 
     override fun initData() {
-        getPrice()
-        getChartPrice()
+        Handler(Looper.getMainLooper()).postDelayed({
+            getPrice()
+            getChartPrice()
+            getRangePrice()
+        }, 200)
     }
 
     private fun getPrice() {
@@ -150,7 +150,6 @@ class PriceItemPagerFragment : BaseFragment<FragmentPriceItemPagerBinding>() {
             updatedTextView.text = chartPrice.updated
             animateShowUpdateTimeView()
         }
-
         with(chart) {
             setChartData(chartPrice)
             animateShowChartView()
@@ -163,6 +162,7 @@ class PriceItemPagerFragment : BaseFragment<FragmentPriceItemPagerBinding>() {
     }
 
     private fun animateShowUpdateTimeView() = with(binding) {
+        if (updateTime.root.isVisible) return@with
         val fadeIn = AnimationUtils.loadAnimation(requireContext(), R.anim.anim_view_fade_in)
         updateTime.root.visible()
         updateTime.root.startAnimation(fadeIn)
@@ -227,6 +227,7 @@ class PriceItemPagerFragment : BaseFragment<FragmentPriceItemPagerBinding>() {
     }
 
     private fun animateShowChartView() = with(binding) {
+        if (chart.root.isVisible) return@with
         val fadeIn = AnimationUtils.loadAnimation(requireContext(), R.anim.anim_view_fade_in)
         chart.root.visible()
         chart.root.startAnimation(fadeIn)
@@ -244,7 +245,40 @@ class PriceItemPagerFragment : BaseFragment<FragmentPriceItemPagerBinding>() {
         chartShimmer.root.gone()
     }
 
+    private fun getRangePrice() {
+        viewModel.getRangePrice(operationType).observe(viewLifecycleOwner) { state ->
+            when (state) {
+                is State.Loading -> showRangeShimmer()
+                is State.Success -> setRangePrice(state.data)
+                is State.Error -> Unit
+            }
+        }
+    }
+
+    private fun setRangePrice(rangePrice: RangePrice) = with(binding.range) {
+        currencyTextView.text = rangePrice.currency
+        with(rangePrice.min) {
+            minTextView.text = this.amount
+            minLabelTextView.text = this.label
+        }
+        with(rangePrice.avg) {
+            avgTextView.text = this.amount
+            avgLabelTextView.text = this.label
+        }
+        with(rangePrice.max) {
+            maxTextView.text = this.amount
+            maxLabelTextView.text = this.label
+        }
+        animateShowRangeView()
+    }
+
+    private fun showRangeShimmer() = with(binding) {
+        rangeShimmer.shimmerLayout.startShimmer()
+        rangeShimmer.root.visible()
+    }
+
     private fun animateShowRangeView() = with(binding) {
+        if (range.root.isVisible) return@with
         val fadeIn = AnimationUtils.loadAnimation(requireContext(), R.anim.anim_view_fade_in)
         range.root.visible()
         range.root.startAnimation(fadeIn)
