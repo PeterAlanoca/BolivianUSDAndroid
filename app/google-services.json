@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "716789185800",
+    "firebase_url": "https://bolivianusd-default-rtdb.firebaseio.com",
+    "project_id": "bolivianusd",
+    "storage_bucket": "bolivianusd.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:716789185800:android:b00f144e1832d9f82040bd",
+        "android_client_info": {
+          "package_name": "com.bolivianusd.app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA0xkjtjKA4L8C0FkPcX8P-_CVbvtrbm5M"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

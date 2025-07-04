@@ -38,6 +38,7 @@
             android:textSize="@dimen/text_size_14" />
 
         <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/currencyTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="@font/sfuidisplay_medium"
@@ -78,6 +79,7 @@
                 android:orientation="vertical">
 
                 <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/minTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/sfuidisplay_medium"
@@ -87,6 +89,7 @@
                     android:textSize="@dimen/text_size_20" />
 
                 <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/minLabelTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/margin_2"
@@ -106,6 +109,7 @@
                 android:orientation="vertical">
 
                 <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/avgTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/sfuidisplay_medium"
@@ -115,6 +119,7 @@
                     android:textSize="@dimen/text_size_20" />
 
                 <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/avgLabelTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/margin_2"
@@ -134,6 +139,7 @@
                 android:orientation="vertical">
 
                 <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/maxTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/sfuidisplay_medium"
@@ -143,6 +149,7 @@
                     android:textSize="@dimen/text_size_20" />
 
                 <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/maxLabelTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/margin_2"
