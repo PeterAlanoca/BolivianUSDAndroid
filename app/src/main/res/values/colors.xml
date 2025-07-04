@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="martinique">#292b4d</color>
+    <color name="rhino">#353766</color>
+    <color name="cool_grey">#8789B0</color>
+    <color name="java">#17d1e0</color>
+    <color name="froly">#F67873</color>
+
+    <color name="green">#77c852</color>
+    <color name="red">#f47873</color>
+    <color name="yellow">#f7bd33</color>
+    <color name="dove_gray">#6F6F6F</color>
+    <color name="porcelain">#ECEFF1</color>
+    <color name="gray_50">#748C8C8C</color>
+    <color name="malibu">#4DC4FF</color>
+    <color name="de_york">#6BC481</color>
+    <color name="mirage">#FF141D26</color>
+    <color name="pickled_bluewood">#FF243447</color>
+    <color name="maroon_flush">#FFC51F5D</color>
+
+    <color name="white_alpha_65">#A6FFFFFF</color>
+    <color name="white_alpha_80">#CBFFFFFF</color>
+    <color name="white">#FFFFFFFF</color>
+    <color name="black">#FF000000</color>
+
+</resources>
+
+

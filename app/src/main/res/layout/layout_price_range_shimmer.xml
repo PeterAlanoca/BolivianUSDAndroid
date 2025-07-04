@@ -1,0 +1,300 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.facebook.shimmer.ShimmerFrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/shimmerLayout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    app:shimmer_duration="1000"
+    app:shimmer_intensity="0.5">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/rangeContent"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/margin_20"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/rangeTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/sfuidisplay_bold"
+                android:includeFontPadding="false"
+                android:lineSpacingExtra="@dimen/line_spacing_extra_0"
+                android:text="@string/price_view_pager_item_range"
+                android:textColor="@color/cool_grey"
+                android:textSize="@dimen/text_size_16"
+                android:visibility="invisible"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <View
+                android:layout_width="@dimen/dimen_zero"
+                android:layout_height="@dimen/dimen_zero"
+                android:layout_marginTop="@dimen/margin_3"
+                android:layout_marginBottom="@dimen/margin_1"
+                android:background="@drawable/bg_shimmer_cool_grey"
+                app:layout_constraintBottom_toBottomOf="@+id/rangeTextView"
+                app:layout_constraintEnd_toEndOf="@+id/rangeTextView"
+                app:layout_constraintStart_toStartOf="@+id/rangeTextView"
+                app:layout_constraintTop_toTopOf="@+id/rangeTextView" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/dotTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/margin_5"
+                android:fontFamily="@font/sfuidisplay_medium"
+                android:includeFontPadding="false"
+                android:lineSpacingExtra="@dimen/line_spacing_extra_0"
+                android:text="@string/dot"
+                android:textColor="@color/cool_grey"
+                android:textSize="@dimen/text_size_14"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/rangeTextView"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/currencyTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/margin_5"
+                android:fontFamily="@font/sfuidisplay_medium"
+                android:includeFontPadding="false"
+                android:lineSpacingExtra="@dimen/line_spacing_extra_0"
+                android:text="@string/bob"
+                android:textColor="@color/cool_grey"
+                android:textSize="@dimen/text_size_14"
+                android:visibility="invisible"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/dotTextView"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <View
+                android:layout_width="@dimen/dimen_zero"
+                android:layout_height="@dimen/dimen_zero"
+                android:layout_marginTop="@dimen/margin_3"
+                android:layout_marginBottom="@dimen/margin_3"
+                android:background="@drawable/bg_shimmer_cool_grey"
+                app:layout_constraintBottom_toBottomOf="@+id/currencyTextView"
+                app:layout_constraintEnd_toEndOf="@+id/currencyTextView"
+                app:layout_constraintStart_toStartOf="@+id/currencyTextView"
+                app:layout_constraintTop_toTopOf="@+id/currencyTextView" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/margin_20"
+            android:layout_marginTop="@dimen/margin_12"
+            android:layout_marginBottom="@dimen/margin_25"
+            app:cardBackgroundColor="@color/rhino"
+            app:cardCornerRadius="@dimen/radius_14"
+            app:cardElevation="@dimen/elevation_12"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/rangeContent">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginVertical="@dimen/margin_14"
+                android:orientation="horizontal"
+                android:weightSum="3">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="@dimen/dimen_zero"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1">
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/lowTextView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/sfuidisplay_medium"
+                        android:includeFontPadding="false"
+                        android:text="@string/zero_decimal"
+                        android:textColor="@color/cool_grey"
+                        android:textSize="@dimen/text_size_20"
+                        android:visibility="invisible"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <View
+                        android:layout_width="@dimen/dimen_zero"
+                        android:layout_height="@dimen/dimen_zero"
+                        android:layout_marginTop="@dimen/margin_4"
+                        android:layout_marginBottom="@dimen/margin_4"
+                        android:background="@drawable/bg_shimmer_cool_grey"
+                        app:layout_constraintBottom_toBottomOf="@+id/lowTextView"
+                        app:layout_constraintEnd_toEndOf="@+id/lowTextView"
+                        app:layout_constraintStart_toStartOf="@+id/lowTextView"
+                        app:layout_constraintTop_toTopOf="@+id/lowTextView" />
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/lowLabel"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/margin_2"
+                        android:fontFamily="@font/sfuidisplay_medium"
+                        android:includeFontPadding="false"
+                        android:text="@string/price_view_pager_item_low"
+                        android:textColor="@color/cool_grey"
+                        android:textSize="@dimen/text_size_14"
+                        android:visibility="invisible"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/lowTextView" />
+
+                    <View
+                        android:layout_width="@dimen/dimen_zero"
+                        android:layout_height="@dimen/dimen_zero"
+                        android:layout_marginTop="@dimen/margin_3"
+                        android:layout_marginBottom="@dimen/margin_3"
+                        android:background="@drawable/bg_shimmer_cool_grey"
+                        app:layout_constraintBottom_toBottomOf="@+id/lowLabel"
+                        app:layout_constraintEnd_toEndOf="@+id/lowLabel"
+                        app:layout_constraintStart_toStartOf="@+id/lowLabel"
+                        app:layout_constraintTop_toTopOf="@+id/lowLabel" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="@dimen/dimen_zero"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1">
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/middleTextView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/sfuidisplay_medium"
+                        android:includeFontPadding="false"
+                        android:text="@string/zero_decimal"
+                        android:textColor="@color/cool_grey"
+                        android:textSize="@dimen/text_size_20"
+                        android:visibility="invisible"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <View
+                        android:layout_width="@dimen/dimen_zero"
+                        android:layout_height="@dimen/dimen_zero"
+                        android:layout_marginTop="@dimen/margin_4"
+                        android:layout_marginBottom="@dimen/margin_4"
+                        android:background="@drawable/bg_shimmer_cool_grey"
+                        app:layout_constraintBottom_toBottomOf="@+id/middleTextView"
+                        app:layout_constraintEnd_toEndOf="@+id/middleTextView"
+                        app:layout_constraintStart_toStartOf="@+id/middleTextView"
+                        app:layout_constraintTop_toTopOf="@+id/middleTextView" />
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/middleLabel"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/margin_2"
+                        android:fontFamily="@font/sfuidisplay_medium"
+                        android:includeFontPadding="false"
+                        android:text="@string/price_view_pager_item_middle"
+                        android:textColor="@color/cool_grey"
+                        android:textSize="@dimen/text_size_14"
+                        android:visibility="invisible"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/middleTextView" />
+
+                    <View
+                        android:layout_width="@dimen/dimen_zero"
+                        android:layout_height="@dimen/dimen_zero"
+                        android:layout_marginTop="@dimen/margin_3"
+                        android:layout_marginBottom="@dimen/margin_3"
+                        android:background="@drawable/bg_shimmer_cool_grey"
+                        app:layout_constraintBottom_toBottomOf="@+id/middleLabel"
+                        app:layout_constraintEnd_toEndOf="@+id/middleLabel"
+                        app:layout_constraintStart_toStartOf="@+id/middleLabel"
+                        app:layout_constraintTop_toTopOf="@+id/middleLabel" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="@dimen/dimen_zero"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1">
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/highTextView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/sfuidisplay_medium"
+                        android:includeFontPadding="false"
+                        android:text="@string/zero_decimal"
+                        android:textColor="@color/cool_grey"
+                        android:textSize="@dimen/text_size_20"
+                        android:visibility="invisible"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <View
+                        android:layout_width="@dimen/dimen_zero"
+                        android:layout_height="@dimen/dimen_zero"
+                        android:layout_marginTop="@dimen/margin_4"
+                        android:layout_marginBottom="@dimen/margin_4"
+                        android:background="@drawable/bg_shimmer_cool_grey"
+                        app:layout_constraintBottom_toBottomOf="@+id/highTextView"
+                        app:layout_constraintEnd_toEndOf="@+id/highTextView"
+                        app:layout_constraintStart_toStartOf="@+id/highTextView"
+                        app:layout_constraintTop_toTopOf="@+id/highTextView" />
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/highLabel"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/margin_2"
+                        android:fontFamily="@font/sfuidisplay_medium"
+                        android:includeFontPadding="false"
+                        android:text="@string/price_view_pager_item_high"
+                        android:textColor="@color/cool_grey"
+                        android:textSize="@dimen/text_size_14"
+                        android:visibility="invisible"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/highTextView" />
+
+                    <View
+                        android:layout_width="@dimen/dimen_zero"
+                        android:layout_height="@dimen/dimen_zero"
+                        android:layout_marginTop="@dimen/margin_3"
+                        android:layout_marginBottom="@dimen/margin_3"
+                        android:background="@drawable/bg_shimmer_cool_grey"
+                        app:layout_constraintBottom_toBottomOf="@+id/highLabel"
+                        app:layout_constraintEnd_toEndOf="@+id/highLabel"
+                        app:layout_constraintStart_toStartOf="@+id/highLabel"
+                        app:layout_constraintTop_toTopOf="@+id/highLabel" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+            </LinearLayout>
+
+        </com.google.android.material.card.MaterialCardView>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</com.facebook.shimmer.ShimmerFrameLayout>

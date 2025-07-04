@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.main.MainActivity">
+
+    <com.google.android.material.appbar.MaterialToolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?android:attr/actionBarSize"
+        android:layout_marginTop="22dp"
+        android:background="@android:color/transparent"
+        app:contentInsetEnd="0dp"
+        app:contentInsetLeft="0dp"
+        app:contentInsetRight="0dp"
+        app:contentInsetStart="0dp"
+        app:contentInsetStartWithNavigation="0dp"
+        app:title="">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <com.airbnb.lottie.LottieAnimationView
+                android:id="@+id/lottieAnimationView"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_centerVertical="true"
+                android:layout_marginHorizontal="7dp"
+                android:paddingStart="5dp"
+                android:transitionName="@string/app_splash_main_transition_name"
+                app:lottie_autoPlay="true"
+                app:lottie_rawRes="@raw/lottie_logo_splash" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:layout_marginHorizontal="20dp"
+                android:fontFamily="@font/sfuidisplay_medium"
+                android:paddingTop="6dp"
+                android:text="Lun, Feb 20"
+                android:textColor="@color/white_alpha_65"
+                android:textSize="14sp" />
+
+        </RelativeLayout>
+
+    </com.google.android.material.appbar.MaterialToolbar>
+
+    <FrameLayout
+        android:id="@+id/frameLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/bottomNavigationView"
+        android:layout_below="@+id/toolbar" />
+
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottomNavigationView"
+        android:layout_width="match_parent"
+        android:layout_height="65dp"
+        android:layout_alignParentBottom="true"
+        android:background="@color/martinique"
+        android:backgroundTint="@color/martinique"
+        android:elevation="10dp"
+        android:paddingBottom="2dp"
+        android:theme="@style/Theme_BottomNavigation"
+        app:elevation="10dp"
+        app:itemIconSize="24dp"
+        app:itemIconTint="@drawable/selector_nav_item_color"
+        app:itemTextAppearanceActive="@style/Theme.BottomNavigationViewTextAppearanceActive"
+        app:itemTextAppearanceInactive="@style/Theme.BottomNavigationViewTextAppearanceInactive"
+        app:itemTextColor="@drawable/selector_nav_item_color"
+        app:labelVisibilityMode="labeled"
+        app:menu="@menu/menu_items" />
+
+</RelativeLayout>
