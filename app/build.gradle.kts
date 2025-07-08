@@ -71,7 +71,7 @@ android {
 }
 
 play {
-    serviceAccountCredentials.set(file("play-upload.json"))
+    serviceAccountCredentials.set(file("${rootDir}/play-upload.json"))
     defaultToAppBundles.set(true)
     track.set("internal")
 }
