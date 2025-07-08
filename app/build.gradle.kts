@@ -56,8 +56,6 @@ android {
     productFlavors {
         create("production") {
             dimension = "env"
-            applicationIdSuffix = ".prod"
-            versionNameSuffix = "-prod"
         }
         create("certification") {
             dimension = "env"
