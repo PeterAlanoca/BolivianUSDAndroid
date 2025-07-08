@@ -10,6 +10,8 @@ plugins {
     alias(libs.plugins.google.services)
     alias(libs.plugins.crashlytics)
     id("org.jlleitschuh.gradle.ktlint").version("11.6.1")
+    id("com.github.triplet.play") version "3.8.6"
+
 }
 
 val keystoreProperties = Properties().apply {
@@ -66,6 +68,12 @@ android {
         checkTestSources = false
         quiet = true
     }
+}
+
+play {
+    serviceAccountCredentials.set(file("play-upload.json"))
+    defaultToAppBundles.set(true)
+    track.set("internal")
 }
 
 dependencies {
