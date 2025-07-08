@@ -35,7 +35,7 @@ android {
         applicationId = "com.bolivianusd.app"
         minSdk = 23
         targetSdk = 34
-        versionCode = System.getenv("BUILD_NUMBER")?.toIntOrNull() ?: 5
+        versionCode = System.getenv("BUILD_NUMBER")?.toIntOrNull() ?: 6
         versionName = "1.0"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
