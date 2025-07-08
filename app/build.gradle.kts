@@ -9,6 +9,7 @@ plugins {
     alias(libs.plugins.hilt)
     alias(libs.plugins.google.services)
     alias(libs.plugins.crashlytics)
+    id("org.jlleitschuh.gradle.ktlint").version("11.6.1")
 }
 
 val keystoreProperties = Properties().apply {
