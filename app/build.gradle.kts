@@ -63,6 +63,8 @@ android {
         disable += "NullSafeMutableLiveData"
         checkReleaseBuilds = false
         abortOnError = false
+        checkTestSources = false
+        quiet = true
     }
 }
 
