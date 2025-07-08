@@ -1,6 +1,7 @@
 import java.io.FileInputStream
 import java.util.Properties
 import kotlin.apply
+import com.github.triplet.gradle.androidpublisher.ReleaseStatus
 
 plugins {
     alias(libs.plugins.android.application)
@@ -74,6 +75,7 @@ play {
     serviceAccountCredentials.set(file("${rootDir}/play-upload.json"))
     defaultToAppBundles.set(true)
     track.set("internal")
+    releaseStatus.set(ReleaseStatus.DRAFT)
 }
 
 dependencies {
