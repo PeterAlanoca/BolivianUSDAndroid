@@ -12,13 +12,15 @@ plugins {
     alias(libs.plugins.crashlytics)
     id("org.jlleitschuh.gradle.ktlint").version("11.6.1")
     id("com.github.triplet.play") version "3.8.6"
-
 }
 
 val keystoreProperties = Properties().apply {
     load(FileInputStream(rootProject.file("keystore.properties")))
 }
+
 android {
+    namespace = "com.bolivianusd.app"
+    compileSdk = 35
 
     signingConfigs {
         create("release") {
@@ -29,16 +31,12 @@ android {
         }
     }
 
-    namespace = "com.bolivianusd.app"
-    compileSdk = 35
-
     defaultConfig {
         applicationId = "com.bolivianusd.app"
         minSdk = 23
         targetSdk = 34
-        versionCode = 2
+        versionCode = System.getenv("BUILD_NUMBER")?.toIntOrNull() ?: 6
         versionName = "1.0"
-
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
@@ -50,6 +48,26 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+        }
+    }
+
+    flavorDimensions += "env"
+
+    productFlavors {
+        create("production") {
+            dimension = "env"
+            applicationIdSuffix = ".prod"
+            versionNameSuffix = "-prod"
+        }
+        create("certification") {
+            dimension = "env"
+            applicationIdSuffix = ".cert"
+            versionNameSuffix = "-cert"
+        }
+        create("develop") {
+            dimension = "env"
+            applicationIdSuffix = ".dev"
+            versionNameSuffix = "-dev"
         }
     }
     compileOptions {
@@ -93,7 +111,6 @@ dependencies {
 
     implementation(libs.hilt.android)
     kapt(libs.hilt.android.compiler)
-
 
     implementation(libs.gson)
 
