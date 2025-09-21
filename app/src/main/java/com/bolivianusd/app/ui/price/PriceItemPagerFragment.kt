@@ -1,5 +1,7 @@
 package com.bolivianusd.app.ui.price
 
+import android.graphics.Color
+import android.graphics.Paint
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -37,11 +39,16 @@ import com.bolivianusd.app.data.repository.entity.RangePrice
 import com.bolivianusd.app.data.repository.entity.enum.OperationType
 import com.bolivianusd.app.data.repository.state.State
 import com.bolivianusd.app.databinding.FragmentPriceItemPagerBinding
+import com.github.mikephil.charting.components.Legend
 import com.github.mikephil.charting.components.XAxis
+import com.github.mikephil.charting.data.CandleData
+import com.github.mikephil.charting.data.CandleDataSet
+import com.github.mikephil.charting.data.CandleEntry
 import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.data.LineData
 import com.github.mikephil.charting.data.LineDataSet
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
+import com.github.mikephil.charting.formatter.ValueFormatter
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet
 import com.yy.mobile.rollingtextview.CharOrder
 import kotlin.getValue
@@ -181,7 +188,112 @@ class PriceItemPagerFragment : BaseFragment<FragmentPriceItemPagerBinding>() {
     }
 
     private fun setChartData(chartData: ChartData) = with(binding.chart) {
-        val labels = chartData.labels
+        val entries = listOf(
+            CandleEntry(0f, 13.0f, 12.0f, 12.5f, 12.8f),
+            CandleEntry(1f, 12.9f, 11.8f, 12.1f, 12.3f),
+            CandleEntry(2f, 12.7f, 11.9f, 12.2f, 12.0f),
+            CandleEntry(3f, 12.5f, 11.7f, 12.0f, 11.9f),
+            CandleEntry(4f, 12.4f, 11.6f, 11.9f, 11.7f),
+            CandleEntry(5f, 12.2f, 11.5f, 11.8f, 12.0f),
+            CandleEntry(6f, 12.6f, 11.9f, 12.1f, 12.4f),
+            CandleEntry(7f, 12.8f, 12.0f, 12.3f, 12.6f),
+            CandleEntry(8f, 13.1f, 12.2f, 12.5f, 12.9f),
+            CandleEntry(9f, 13.3f, 12.4f, 12.8f, 13.0f)
+        )
+        val set = CandleDataSet(entries, "USDT - BOB")
+
+        set.barSpace = 0.3f   // 🔥 velas delgadas
+        set.shadowWidth = 1f
+        set.shadowColorSameAsCandle = true // <-- hace que la sombra tenga el mismo color que la vela
+        set.decreasingColor = requireContext().getColorRes(R.color.red)
+        set.decreasingPaintStyle = Paint.Style.FILL
+        set.increasingColor = requireContext().getColorRes(R.color.green)
+        set.increasingPaintStyle = Paint.Style.FILL
+        set.neutralColor = Color.BLUE
+        set.setDrawValues(false)
+
+
+        val data = CandleData(set)
+                        
+        chart.description.isEnabled = false
+        chart.description = null
+
+
+        chart.setDrawBorders(false)       // quitar borde del gráfico
+
+        // Eje Y izquierdo
+        chart.axisLeft.setDrawGridLines(false)
+        chart.axisLeft.isEnabled = false  // opcional, si quieres quitar eje izquierdo
+
+        // Eje Y derecho
+        chart.axisRight.setDrawAxisLine(false) // oculta la línea del eje Y derecho
+        chart.axisRight.setDrawLabels(true)    // mantiene los valores visibles
+        chart.axisRight.setDrawGridLines(true)
+        chart.axisRight.textColor = requireContext().getColorRes(R.color.white_alpha_65)
+        chart.axisRight.textSize = 8f
+        chart.axisRight.setDrawGridLines(true)
+        chart.axisRight.gridColor = requireContext().getColorRes(R.color.white_alpha_05)
+        chart.axisRight.gridLineWidth = 1f         // 🔹 grosor de línea (opcional)
+        chart.axisRight.valueFormatter = object : ValueFormatter() {
+            override fun getFormattedValue(value: Float): String {
+                return "BOB " + String.format("%.2f", value)
+            }
+        }
+
+        // Eje X derecho
+        val fechas = listOf(
+            "20/09",
+            "21/09",
+            "22/09",
+            "23/09",
+            "24/09",
+            "25/09",
+            "26/09",
+            "27/09",
+            "28/09",
+            "29/09"
+        )
+        chart.xAxis.position = XAxis.XAxisPosition.BOTTOM
+        chart.xAxis.setDrawLabels(true)  // mostrar etiquetas
+        chart.xAxis.setDrawGridLines(false) // quitar líneas de cuadrícula
+        chart.xAxis.setDrawAxisLine(false) // oculta la línea del eje X derecho
+        chart.xAxis.labelCount = fechas.size
+        chart.xAxis.textSize = 8f
+        chart.xAxis.textColor = requireContext().getColorRes(R.color.white_alpha_65)
+        chart.xAxis.valueFormatter = object : ValueFormatter() {
+            override fun getFormattedValue(value: Float): String {
+                val index = value.toInt()
+                return if (index >= 0 && index < fechas.size) fechas[index] else ""
+            }
+        }
+
+
+        // Establecer mínimo y máximo
+        //chart.axisRight.axisMinimum = 2f   // mínimo del eje Y
+        //chart.axisRight.axisMaximum = 24f   // máximo del eje Y
+
+        chart.data = data
+
+        chart.legend.isEnabled = true
+        chart.legend.textSize = 9f
+        chart.legend.textColor = requireContext().getColorRes(R.color.white_alpha_65)
+        chart.legend.verticalAlignment = Legend.LegendVerticalAlignment.TOP
+        chart.legend.horizontalAlignment = Legend.LegendHorizontalAlignment.LEFT
+        chart.legend.orientation = Legend.LegendOrientation.HORIZONTAL
+
+        chart.setExtraOffsets(0f, 0f, 0f, 0f)
+
+        chart.setTouchEnabled(false)       // ❌ desactiva todos los eventos táctiles
+        chart.setDragEnabled(false)        // ❌ desactiva el drag (mover con dedo)
+        chart.setScaleEnabled(false)       // ❌ desactiva pinch zoom
+        chart.setPinchZoom(false)          // ❌ desactiva pinch-to-zoom combinado
+        chart.isDoubleTapToZoomEnabled = false // ❌ desactiva zoom con doble tap
+        chart.isHighlightPerTapEnabled = false   // ❌ evita que seleccione una vela al tocar
+
+
+        chart.invalidate()
+
+        /*val labels = chartData.labels
         val values = chartData.values
         val colors = chartData.colors
         val label = chartData.label
@@ -218,7 +330,7 @@ class PriceItemPagerFragment : BaseFragment<FragmentPriceItemPagerBinding>() {
             clear()
             setData(LineData(dataSets))
             invalidate()
-        }
+        }*/
     }
 
     private fun showChartShimmer() = with(binding) {
@@ -355,7 +467,7 @@ class PriceItemPagerFragment : BaseFragment<FragmentPriceItemPagerBinding>() {
     }
 
     private fun setupLineChart() = with(binding.chart) {
-        lineChart.apply {
+        /*lineChart.apply {
             description.isEnabled = false
             legend.isEnabled = false
             extraBottomOffset = SEVEN_F
@@ -378,7 +490,7 @@ class PriceItemPagerFragment : BaseFragment<FragmentPriceItemPagerBinding>() {
             axisLeft.isEnabled = false
             axisLeft.setDrawGridLines(false)
             axisLeft.setDrawLabels(false)
-        }
+        }*/
     }
 
     companion object {

@@ -7,10 +7,10 @@
 
     <RelativeLayout
         android:id="@+id/currencyView"
-        android:layout_width="@dimen/dimen_sixty"
-        android:layout_height="@dimen/dimen_sixty"
+        android:layout_width="@dimen/dimen_fifty"
+        android:layout_height="@dimen/dimen_fifty"
         android:layout_gravity="center_horizontal"
-        android:layout_marginTop="@dimen/margin_10"
+        android:layout_marginTop="@dimen/margin_5"
         android:background="@drawable/drawable_circle_java"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -24,7 +24,7 @@
             android:fontFamily="@font/sfuidisplay_bold"
             android:text="@string/usd"
             android:textColor="@color/white"
-            android:textSize="@dimen/text_size_14" />
+            android:textSize="@dimen/text_size_12" />
 
     </RelativeLayout>
 
@@ -33,7 +33,7 @@
         android:layout_width="@dimen/dimen_zero"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:layout_marginTop="@dimen/margin_16"
+        android:layout_marginTop="@dimen/margin_4"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/currencyView">

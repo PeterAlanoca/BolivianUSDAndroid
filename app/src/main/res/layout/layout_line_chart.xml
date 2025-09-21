@@ -25,7 +25,7 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <RelativeLayout
+            <!--RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="@dimen/margin_14"
@@ -79,13 +79,14 @@
                     android:textColor="@color/white_alpha_65"
                     android:textSize="@dimen/text_size_11" />
 
-            </RelativeLayout>
+            </RelativeLayout-->
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+                android:layout_marginTop="@dimen/margin_4">
 
-                <com.github.mikephil.charting.charts.LineChart
+                <!--com.github.mikephil.charting.charts.LineChart
                     android:id="@+id/lineChart"
                     android:layout_width="@dimen/dimen_zero"
                     android:layout_height="@dimen/dimen_zero"
@@ -95,21 +96,41 @@
                     app:layout_constraintDimensionRatio="H,1:0.34"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" /-->
+
+
+                <com.github.mikephil.charting.charts.CandleStickChart
+                    android:id="@+id/chart"
+                    android:layout_width="@dimen/dimen_zero"
+                    android:layout_height="@dimen/dimen_zero"
+                    android:layout_marginTop="@dimen/margin_2"
+                    android:layout_marginBottom="@dimen/margin_4"
+                    android:background="@android:color/transparent"
+                    android:layout_marginEnd="@dimen/margin_4"
+                    android:layout_marginStart="@dimen/negative_margin_5"
+                    app:layout_constraintBottom_toTopOf="@+id/labelTextView"
+                    app:layout_constraintDimensionRatio="H,1:0.66"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/labelTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="@dimen/margin_14"
+                    android:layout_marginBottom="@dimen/margin_10"
+                    android:fontFamily="@font/sfuidisplay_regular"
+                    android:includeFontPadding="false"
+                    android:text="@string/price_view_pager_item_source_binance"
+                    android:textColor="@color/java"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    android:textSize="@dimen/text_size_10" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
-            <com.google.android.material.textview.MaterialTextView
-                android:id="@+id/labelTextView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="@dimen/margin_14"
-                android:layout_marginBottom="@dimen/margin_12"
-                android:fontFamily="@font/sfuidisplay_regular"
-                android:includeFontPadding="false"
-                android:text="@string/price_view_pager_item_source_binance"
-                android:textColor="@color/java"
-                android:textSize="@dimen/text_size_11" />
+
 
         </LinearLayout>
 

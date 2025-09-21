@@ -18,6 +18,7 @@
     <color name="pickled_bluewood">#FF243447</color>
     <color name="maroon_flush">#FFC51F5D</color>
 
+    <color name="white_alpha_05">#0DFFFFFF</color>
     <color name="white_alpha_65">#A6FFFFFF</color>
     <color name="white_alpha_80">#CBFFFFFF</color>
     <color name="white">#FFFFFFFF</color>
