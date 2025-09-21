@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".ui.price.PriceFragment">
+    tools:context=".feature.price.presentation.ui.PriceFragment">
 
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/tabLayout"
