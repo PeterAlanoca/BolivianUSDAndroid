@@ -6,7 +6,7 @@ import android.view.ViewGroup
 import com.bolivianusd.app.R
 import com.bolivianusd.app.core.base.BaseFragment
 import com.bolivianusd.app.databinding.FragmentPriceBinding
-import com.bolivianusd.app.feature.price.data.repository.entity.enum.OperationType
+import com.bolivianusd.app.feature.price.domain.model.enum.OperationType
 import com.bolivianusd.app.feature.price.presentation.adapter.PricePagerAdapter
 import com.google.android.material.tabs.TabLayoutMediator
 

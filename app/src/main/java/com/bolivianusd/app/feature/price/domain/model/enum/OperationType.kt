@@ -1,4 +1,4 @@
-package com.bolivianusd.app.feature.price.data.repository.entity.enum
+package com.bolivianusd.app.feature.price.domain.model.enum
 
 import java.io.Serializable
 

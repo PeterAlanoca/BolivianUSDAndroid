@@ -1,4 +1,4 @@
-package com.bolivianusd.app.feature.price.data.repository.state
+package com.bolivianusd.app.shared.data.state
 
 sealed class State<out T> {
     data object Loading : State<Nothing>()

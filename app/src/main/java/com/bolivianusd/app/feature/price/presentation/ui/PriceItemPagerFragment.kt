@@ -33,11 +33,11 @@ import com.bolivianusd.app.core.util.ZERO_F
 import com.bolivianusd.app.core.util.emptyBar
 import com.bolivianusd.app.core.util.emptyString
 import com.bolivianusd.app.databinding.FragmentPriceItemPagerBinding
-import com.bolivianusd.app.feature.price.data.repository.entity.ChartData
-import com.bolivianusd.app.feature.price.data.repository.entity.Price
-import com.bolivianusd.app.feature.price.data.repository.entity.RangePrice
-import com.bolivianusd.app.feature.price.data.repository.entity.enum.OperationType
-import com.bolivianusd.app.feature.price.data.repository.state.State
+import com.bolivianusd.app.feature.price.domain.model.ChartData
+import com.bolivianusd.app.feature.price.domain.model.Price
+import com.bolivianusd.app.feature.price.domain.model.RangePrice
+import com.bolivianusd.app.feature.price.domain.model.enum.OperationType
+import com.bolivianusd.app.shared.data.state.State
 import com.bolivianusd.app.feature.price.presentation.viewmodel.PriceViewModel
 import com.github.mikephil.charting.components.Legend
 import com.github.mikephil.charting.components.XAxis

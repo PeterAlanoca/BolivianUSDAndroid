@@ -3,9 +3,9 @@ package com.bolivianusd.app.feature.price.domain.usecase
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.liveData
 import com.bolivianusd.app.feature.price.data.repository.PriceRepository
-import com.bolivianusd.app.feature.price.data.repository.entity.ChartData
-import com.bolivianusd.app.feature.price.data.repository.entity.enum.OperationType
-import com.bolivianusd.app.feature.price.data.repository.state.State
+import com.bolivianusd.app.feature.price.domain.model.ChartData
+import com.bolivianusd.app.feature.price.domain.model.enum.OperationType
+import com.bolivianusd.app.shared.data.state.State
 import kotlinx.coroutines.Dispatchers
 import javax.inject.Inject
 

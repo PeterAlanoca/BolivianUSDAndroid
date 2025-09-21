@@ -7,16 +7,16 @@ import com.bolivianusd.app.core.extensions.toFormatted
 import com.bolivianusd.app.core.util.ZERO_F
 import com.bolivianusd.app.core.util.minus
 import com.bolivianusd.app.core.util.plus
-import com.bolivianusd.app.feature.price.data.model.ChartDataModel
-import com.bolivianusd.app.feature.price.data.model.PriceModel
-import com.bolivianusd.app.feature.price.data.model.RangePriceModel
-import com.bolivianusd.app.feature.price.data.repository.entity.ChartData
-import com.bolivianusd.app.feature.price.data.repository.entity.Price
-import com.bolivianusd.app.feature.price.data.repository.entity.PriceValue
-import com.bolivianusd.app.feature.price.data.repository.entity.RangePrice
+import com.bolivianusd.app.feature.price.data.entity.ChartDataEntity
+import com.bolivianusd.app.feature.price.data.entity.PriceEntity
+import com.bolivianusd.app.feature.price.data.entity.RangePriceEntity
+import com.bolivianusd.app.feature.price.domain.model.ChartData
+import com.bolivianusd.app.feature.price.domain.model.Price
+import com.bolivianusd.app.feature.price.domain.model.PriceValue
+import com.bolivianusd.app.feature.price.domain.model.RangePrice
 import com.github.mikephil.charting.data.Entry
 
-fun PriceModel.toPrice(): Price {
+fun PriceEntity.toPrice(): Price {
     return Price(
         origin = PriceValue(
             currency = originCurrency,
@@ -33,7 +33,7 @@ fun PriceModel.toPrice(): Price {
     )
 }
 
-fun ChartDataModel.toChartData(context: Context): ChartData {
+fun ChartDataEntity.toChartData(context: Context): ChartData {
     val offset = 4f
 
     val variationColor = when {
@@ -74,7 +74,7 @@ fun ChartDataModel.toChartData(context: Context): ChartData {
     )
 }
 
-fun RangePriceModel.toRangePrice(): RangePrice {
+fun RangePriceEntity.toRangePrice(): RangePrice {
     return RangePrice(
         currency = this.currency,
         min = RangePrice.Price(

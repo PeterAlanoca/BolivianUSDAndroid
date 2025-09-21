@@ -1,8 +1,8 @@
 package com.bolivianusd.app.feature.price.data.repository.datasource.realtime.database
 
-import com.bolivianusd.app.feature.price.data.model.ChartDataModel
-import com.bolivianusd.app.feature.price.data.model.PriceModel
-import com.bolivianusd.app.feature.price.data.model.RangePriceModel
+import com.bolivianusd.app.feature.price.data.entity.ChartDataEntity
+import com.bolivianusd.app.feature.price.data.entity.PriceEntity
+import com.bolivianusd.app.feature.price.data.entity.RangePriceEntity
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
@@ -13,12 +13,12 @@ class PriceReference @Inject constructor(
     private val firebaseDatabase: FirebaseDatabase
 ) {
 
-    fun getPriceBuy(onSuccess: (PriceModel) -> Unit, onError: (Exception) -> Unit) {
+    fun getPriceBuy(onSuccess: (PriceEntity) -> Unit, onError: (Exception) -> Unit) {
         val reference = firebaseDatabase.getReference(KEY_PRICE_BUY_USDT)
         //reference.keepSynced(true)
         reference.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
-                snapshot.getValue(PriceModel::class.java)?.let {
+                snapshot.getValue(PriceEntity::class.java)?.let {
                     onSuccess(it)
                 }
             }
@@ -29,12 +29,12 @@ class PriceReference @Inject constructor(
         })
     }
 
-    fun getPriceSell(onSuccess: (PriceModel) -> Unit, onError: (Exception) -> Unit) {
+    fun getPriceSell(onSuccess: (PriceEntity) -> Unit, onError: (Exception) -> Unit) {
         val reference = firebaseDatabase.getReference(KEY_PRICE_SELL_USDT)
         //reference.keepSynced(true)
         reference.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
-                snapshot.getValue(PriceModel::class.java)?.let {
+                snapshot.getValue(PriceEntity::class.java)?.let {
                     onSuccess(it)
                 }
             }
@@ -45,12 +45,12 @@ class PriceReference @Inject constructor(
         })
     }
 
-    fun getChartPriceBuy(onSuccess: (ChartDataModel) -> Unit, onError: (Exception) -> Unit) {
+    fun getChartPriceBuy(onSuccess: (ChartDataEntity) -> Unit, onError: (Exception) -> Unit) {
         val reference = firebaseDatabase.getReference(KEY_CHART_PRICE_BUY_USDT)
         //reference.keepSynced(true)
         reference.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
-                snapshot.getValue(ChartDataModel::class.java)?.let {
+                snapshot.getValue(ChartDataEntity::class.java)?.let {
                     onSuccess(it)
                 }
             }
@@ -61,12 +61,12 @@ class PriceReference @Inject constructor(
         })
     }
 
-    fun getChartPriceSell(onSuccess: (ChartDataModel) -> Unit, onError: (Exception) -> Unit) {
+    fun getChartPriceSell(onSuccess: (ChartDataEntity) -> Unit, onError: (Exception) -> Unit) {
         val reference = firebaseDatabase.getReference(KEY_CHART_PRICE_SELL_USDT)
         //reference.keepSynced(true)
         reference.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
-                snapshot.getValue(ChartDataModel::class.java)?.let {
+                snapshot.getValue(ChartDataEntity::class.java)?.let {
                     onSuccess(it)
                 }
             }
@@ -77,12 +77,12 @@ class PriceReference @Inject constructor(
         })
     }
 
-    fun getRangePriceBuy(onSuccess: (RangePriceModel) -> Unit, onError: (Exception) -> Unit) {
+    fun getRangePriceBuy(onSuccess: (RangePriceEntity) -> Unit, onError: (Exception) -> Unit) {
         val reference = firebaseDatabase.getReference(KEY_RANGE_PRICE_BUY_USDT)
         //reference.keepSynced(true)
         reference.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
-                snapshot.getValue(RangePriceModel::class.java)?.let {
+                snapshot.getValue(RangePriceEntity::class.java)?.let {
                     onSuccess(it)
                 }
             }
@@ -93,12 +93,12 @@ class PriceReference @Inject constructor(
         })
     }
 
-    fun getRangePriceSell(onSuccess: (RangePriceModel) -> Unit, onError: (Exception) -> Unit) {
+    fun getRangePriceSell(onSuccess: (RangePriceEntity) -> Unit, onError: (Exception) -> Unit) {
         val reference = firebaseDatabase.getReference(KEY_RANGE_PRICE_SELL_USDT)
         //reference.keepSynced(true)
         reference.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
-                snapshot.getValue(RangePriceModel::class.java)?.let {
+                snapshot.getValue(RangePriceEntity::class.java)?.let {
                     onSuccess(it)
                 }
             }

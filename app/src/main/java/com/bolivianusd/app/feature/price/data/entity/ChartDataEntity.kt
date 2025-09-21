@@ -1,10 +1,10 @@
-package com.bolivianusd.app.feature.price.data.model
+package com.bolivianusd.app.feature.price.data.entity
 
 import com.bolivianusd.app.core.util.ZERO_D
 import com.bolivianusd.app.core.util.emptyString
 import com.google.firebase.database.PropertyName
 
-data class ChartDataModel(
+data class ChartDataEntity(
     @get:PropertyName("updated")
     @set:PropertyName("updated")
     var updated: String = emptyString,

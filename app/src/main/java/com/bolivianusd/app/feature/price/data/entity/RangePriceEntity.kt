@@ -1,9 +1,9 @@
-package com.bolivianusd.app.feature.price.data.model
+package com.bolivianusd.app.feature.price.data.entity
 
 import com.bolivianusd.app.core.util.emptyString
 import com.google.firebase.database.PropertyName
 
-data class RangePriceModel(
+data class RangePriceEntity(
     @get:PropertyName("avg")
     @set:PropertyName("avg")
     var avg: Price = Price(),

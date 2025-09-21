@@ -1,7 +1,7 @@
 package com.bolivianusd.app.feature.price.presentation.viewmodel
 
 import androidx.lifecycle.ViewModel
-import com.bolivianusd.app.feature.price.data.repository.entity.enum.OperationType
+import com.bolivianusd.app.feature.price.domain.model.enum.OperationType
 import com.bolivianusd.app.feature.price.domain.usecase.GetChartPriceUsdtUseCase
 import com.bolivianusd.app.feature.price.domain.usecase.GetPriceUsdtUseCase
 import com.bolivianusd.app.feature.price.domain.usecase.GetRangePriceUsdtUseCase
