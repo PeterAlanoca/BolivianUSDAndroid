@@ -1,20 +1,20 @@
-package com.bolivianusd.app.feature.price.data.repository.datasource
+package com.bolivianusd.app.feature.price.data.old.repository.datasource
 
-import com.bolivianusd.app.feature.price.data.entity.ChartDataEntity
-import com.bolivianusd.app.feature.price.data.entity.PriceEntity
-import com.bolivianusd.app.feature.price.data.entity.RangePriceEntity
-import com.bolivianusd.app.feature.price.data.repository.datasource.realtime.database.PriceReference
+import com.bolivianusd.app.feature.price.data.old.entity.ChartDataEntity
+import com.bolivianusd.app.feature.price.data.remote.firebase.dto.PriceRealtimeDto
+import com.bolivianusd.app.feature.price.data.old.entity.RangePriceEntity
+import com.bolivianusd.app.feature.price.data.old.repository.datasource.realtime.database.PriceReference
 import javax.inject.Inject
 
 class PriceDataSource @Inject constructor(
     private val priceReference: PriceReference
 ) {
 
-    fun getPriceBuy(onSuccess: (PriceEntity) -> Unit, onError: (Exception) -> Unit) {
+    fun getPriceBuy(onSuccess: (PriceRealtimeDto) -> Unit, onError: (Exception) -> Unit) {
         priceReference.getPriceBuy(onSuccess = onSuccess, onError = onError)
     }
 
-    fun getPriceSell(onSuccess: (PriceEntity) -> Unit, onError: (Exception) -> Unit) {
+    fun getPriceSell(onSuccess: (PriceRealtimeDto) -> Unit, onError: (Exception) -> Unit) {
         priceReference.getPriceSell(onSuccess = onSuccess, onError = onError)
     }
 

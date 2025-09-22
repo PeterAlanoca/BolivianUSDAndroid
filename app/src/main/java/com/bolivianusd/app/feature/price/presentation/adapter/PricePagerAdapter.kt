@@ -16,3 +16,4 @@ class PricePagerAdapter(
         return fragments.size
     }
 }
+

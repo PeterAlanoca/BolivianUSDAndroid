@@ -1,8 +1,8 @@
-package com.bolivianusd.app.feature.price.data.repository.datasource.realtime.database
+package com.bolivianusd.app.feature.price.data.old.repository.datasource.realtime.database
 
-import com.bolivianusd.app.feature.price.data.entity.ChartDataEntity
-import com.bolivianusd.app.feature.price.data.entity.PriceEntity
-import com.bolivianusd.app.feature.price.data.entity.RangePriceEntity
+import com.bolivianusd.app.feature.price.data.old.entity.ChartDataEntity
+import com.bolivianusd.app.feature.price.data.remote.firebase.dto.PriceRealtimeDto
+import com.bolivianusd.app.feature.price.data.old.entity.RangePriceEntity
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
@@ -13,12 +13,12 @@ class PriceReference @Inject constructor(
     private val firebaseDatabase: FirebaseDatabase
 ) {
 
-    fun getPriceBuy(onSuccess: (PriceEntity) -> Unit, onError: (Exception) -> Unit) {
+    fun getPriceBuy(onSuccess: (PriceRealtimeDto) -> Unit, onError: (Exception) -> Unit) {
         val reference = firebaseDatabase.getReference(KEY_PRICE_BUY_USDT)
         //reference.keepSynced(true)
         reference.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
-                snapshot.getValue(PriceEntity::class.java)?.let {
+                snapshot.getValue(PriceRealtimeDto::class.java)?.let {
                     onSuccess(it)
                 }
             }
@@ -29,12 +29,12 @@ class PriceReference @Inject constructor(
         })
     }
 
-    fun getPriceSell(onSuccess: (PriceEntity) -> Unit, onError: (Exception) -> Unit) {
+    fun getPriceSell(onSuccess: (PriceRealtimeDto) -> Unit, onError: (Exception) -> Unit) {
         val reference = firebaseDatabase.getReference(KEY_PRICE_SELL_USDT)
         //reference.keepSynced(true)
         reference.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
-                snapshot.getValue(PriceEntity::class.java)?.let {
+                snapshot.getValue(PriceRealtimeDto::class.java)?.let {
                     onSuccess(it)
                 }
             }

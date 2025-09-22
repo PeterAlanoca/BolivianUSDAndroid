@@ -12,8 +12,13 @@ import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import com.bolivianusd.app.R
 import com.bolivianusd.app.core.base.BaseFragment
+import com.bolivianusd.app.core.extensions.collectFlow
+import com.bolivianusd.app.core.extensions.collectFlows
 import com.bolivianusd.app.core.extensions.getColorRes
 import com.bolivianusd.app.core.extensions.getDrawableRes
 import com.bolivianusd.app.core.extensions.gone
@@ -39,6 +44,7 @@ import com.bolivianusd.app.feature.price.domain.model.RangePrice
 import com.bolivianusd.app.feature.price.domain.model.enum.OperationType
 import com.bolivianusd.app.shared.data.state.State
 import com.bolivianusd.app.feature.price.presentation.viewmodel.PriceViewModel
+import com.bolivianusd.app.shared.data.state.UiState
 import com.github.mikephil.charting.components.Legend
 import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.data.CandleData
@@ -51,6 +57,7 @@ import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
 import com.github.mikephil.charting.formatter.ValueFormatter
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet
 import com.yy.mobile.rollingtextview.CharOrder
+import kotlinx.coroutines.launch
 
 class PriceItemPagerFragment : BaseFragment<FragmentPriceItemPagerBinding>() {
 
@@ -71,6 +78,9 @@ class PriceItemPagerFragment : BaseFragment<FragmentPriceItemPagerBinding>() {
     ) = FragmentPriceItemPagerBinding.inflate(inflater, container, false)
 
     override fun initViews() {
+        setupObservers()
+
+
         setupRollingTextView()
         setupLineChartShimmer()
         setupLineChart()
@@ -84,7 +94,35 @@ class PriceItemPagerFragment : BaseFragment<FragmentPriceItemPagerBinding>() {
         }, 200)
     }
 
+    private fun setupObservers() {
+        collectFlow(viewModel.priceState) { state ->
+            when (state) {
+                is UiState.Loading -> println("naty Loading...")
+                is UiState.Success -> println("naty Success: ${state.data}")
+                is UiState.Error -> println("naty Error: ${state.throwable}")
+            }
+        }
+
+        // O para múltiples flows:
+        collectFlows {
+            /*launch {
+                viewModel.priceState.collect { state ->
+                    // manejar estado de precio
+                }
+            }
+            launch {
+                viewModel.userState.collect { user ->
+                    // manejar estado de usuario
+                }
+            }*/
+        }
+    }
+
+
     private fun getPrice() {
+        viewModel.setPriceType("buy")
+
+
         viewModel.getPriceBuy(operationType).observe(viewLifecycleOwner) { state ->
             when (state) {
                 is State.Loading -> showPriceShimmer()
@@ -505,3 +543,4 @@ class PriceItemPagerFragment : BaseFragment<FragmentPriceItemPagerBinding>() {
     }
 
 }
+

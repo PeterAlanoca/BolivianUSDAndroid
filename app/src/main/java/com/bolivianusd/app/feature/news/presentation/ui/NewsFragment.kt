@@ -49,3 +49,4 @@ class NewsFragment : Fragment() {
         fun newInstance() = NewsFragment()
     }
 }
+

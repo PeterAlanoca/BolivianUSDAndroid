@@ -1,71 +1,51 @@
 package com.bolivianusd.app.feature.price.di
 
-import android.content.Context
-import com.bolivianusd.app.feature.price.data.repository.PriceRepository
-import com.bolivianusd.app.feature.price.data.repository.datasource.PriceDataSource
-import com.bolivianusd.app.feature.price.data.repository.datasource.PriceRepositoryImpl
-import com.bolivianusd.app.feature.price.data.repository.datasource.realtime.database.PriceReference
-import com.bolivianusd.app.feature.price.domain.usecase.GetChartPriceUsdtUseCase
-import com.bolivianusd.app.feature.price.domain.usecase.GetChartPriceUsdtUseCaseImpl
-import com.bolivianusd.app.feature.price.domain.usecase.GetPriceUsdtUseCase
-import com.bolivianusd.app.feature.price.domain.usecase.GetPriceUsdtUseCaseImpl
-import com.bolivianusd.app.feature.price.domain.usecase.GetRangePriceUsdtUseCase
-import com.bolivianusd.app.feature.price.domain.usecase.GetRangePriceUsdtUseCaseImpl
+import com.bolivianusd.app.feature.price.data.remote.firebase.firestore.PriceUsdFirestoreDataSource
+import com.bolivianusd.app.feature.price.data.remote.firebase.realtime.PriceUsdtRealtimeDataSource
+import com.bolivianusd.app.feature.price.data.repository.PriceRepositoryImpl
+import com.bolivianusd.app.feature.price.domain.repository.PriceRepository
+import com.bolivianusd.app.feature.price.domain.usecase.ObservePriceUseCase
+import com.bolivianusd.app.feature.price.domain.usecase.ObservePriceUseCaseImpl
 import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.firestore.FirebaseFirestore
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
-import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-object DataSourceModule {
+object PriceModule {
 
     @Provides
     @Singleton
-    fun providePriceReference(firebaseDatabase: FirebaseDatabase) =
-        PriceReference(firebaseDatabase)
+    fun providePriceUsdtRealtimeDataSource(firebaseDatabase: FirebaseDatabase) =
+        PriceUsdtRealtimeDataSource(firebaseDatabase = firebaseDatabase)
 
     @Provides
     @Singleton
-    fun providePriceDataSource(priceReference: PriceReference) =
-        PriceDataSource(priceReference = priceReference)
+    fun providePriceUsdFirestoreDataSource(firebaseFirestore: FirebaseFirestore) =
+        PriceUsdFirestoreDataSource(firebaseFirestore = firebaseFirestore)
 
     @Singleton
     @Provides
     fun providePriceRepository(
-        @ApplicationContext context: Context,
-        priceDataSource: PriceDataSource
+        priceUsdtRealtimeDataSource: PriceUsdtRealtimeDataSource,
+        priceUsdFirestoreDataSource: PriceUsdFirestoreDataSource
     ): PriceRepository =
         PriceRepositoryImpl(
-            context = context,
-            priceDataSource = priceDataSource
+            priceUsdtRealtimeDataSource = priceUsdtRealtimeDataSource,
+            priceUsdFirestoreDataSource = priceUsdFirestoreDataSource
         )
 
     @Singleton
     @Provides
-    fun providesGetPriceUsdtUseCase(
-        repository: PriceRepository
-    ): GetPriceUsdtUseCase = GetPriceUsdtUseCaseImpl(
-        repository = repository
-    )
-
-    @Singleton
-    @Provides
-    fun providesGetChartPriceUsdtUseCase(
-        repository: PriceRepository
-    ): GetChartPriceUsdtUseCase = GetChartPriceUsdtUseCaseImpl(
-        repository = repository
-    )
-
-    @Singleton
-    @Provides
-    fun providesGetRangePriceUsdtUseCase(
-        repository: PriceRepository
-    ): GetRangePriceUsdtUseCase = GetRangePriceUsdtUseCaseImpl(
-        repository = repository
-    )
+    fun provideObservePriceUseCase(
+        priceRepository: PriceRepository
+    ): ObservePriceUseCase =
+        ObservePriceUseCaseImpl(
+            priceRepository = priceRepository
+        )
 
 }

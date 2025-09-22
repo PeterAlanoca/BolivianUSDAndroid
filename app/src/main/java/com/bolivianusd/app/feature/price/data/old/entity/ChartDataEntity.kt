@@ -1,4 +1,4 @@
-package com.bolivianusd.app.feature.price.data.entity
+package com.bolivianusd.app.feature.price.data.old.entity
 
 import com.bolivianusd.app.core.util.ZERO_D
 import com.bolivianusd.app.core.util.emptyString

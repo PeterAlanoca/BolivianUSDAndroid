@@ -1,10 +1,10 @@
-package com.bolivianusd.app.feature.price.data.entity
+package com.bolivianusd.app.feature.price.data.remote.firebase.dto
 
 import com.bolivianusd.app.core.util.ZERO_D
 import com.bolivianusd.app.core.util.emptyString
 import com.google.firebase.database.PropertyName
 
-data class PriceEntity(
+data class PriceRealtimeDto(
     @get:PropertyName("origin_currency")
     @set:PropertyName("origin_currency")
     var originCurrency: String = emptyString,

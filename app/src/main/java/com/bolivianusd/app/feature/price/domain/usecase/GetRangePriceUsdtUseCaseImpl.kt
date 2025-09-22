@@ -2,7 +2,7 @@ package com.bolivianusd.app.feature.price.domain.usecase
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.liveData
-import com.bolivianusd.app.feature.price.data.repository.PriceRepository
+import com.bolivianusd.app.feature.price.data.old.repository.PriceRepository
 import com.bolivianusd.app.feature.price.domain.model.RangePrice
 import com.bolivianusd.app.feature.price.domain.model.enum.OperationType
 import kotlinx.coroutines.Dispatchers

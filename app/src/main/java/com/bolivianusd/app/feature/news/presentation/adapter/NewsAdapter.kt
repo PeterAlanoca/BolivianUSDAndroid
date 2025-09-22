@@ -37,3 +37,4 @@ class NewsAdapter(private val newsItems: List<News> = emptyList()) :
 
 
 }
+

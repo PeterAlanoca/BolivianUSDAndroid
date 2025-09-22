@@ -1,13 +1,13 @@
-package com.bolivianusd.app.feature.price.data.repository.datasource
+package com.bolivianusd.app.feature.price.data.old.repository.datasource
 
 import android.content.Context
-import com.bolivianusd.app.feature.price.data.repository.PriceRepository
+import com.bolivianusd.app.feature.price.data.old.repository.PriceRepository
 import com.bolivianusd.app.feature.price.domain.model.ChartData
 import com.bolivianusd.app.feature.price.domain.model.Price
 import com.bolivianusd.app.feature.price.domain.model.RangePrice
-import com.bolivianusd.app.feature.price.data.repository.mapper.toChartData
-import com.bolivianusd.app.feature.price.data.repository.mapper.toPrice
-import com.bolivianusd.app.feature.price.data.repository.mapper.toRangePrice
+import com.bolivianusd.app.feature.price.data.mappers.toChartData
+import com.bolivianusd.app.feature.price.data.mappers.toPrice
+import com.bolivianusd.app.feature.price.data.mappers.toRangePrice
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow

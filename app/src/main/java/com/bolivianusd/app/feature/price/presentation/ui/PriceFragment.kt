@@ -49,3 +49,4 @@ class PriceFragment : BaseFragment<FragmentPriceBinding>() {
         fun newInstance() = PriceFragment()
     }
 }
+

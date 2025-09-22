@@ -1,4 +1,4 @@
-package com.bolivianusd.app.feature.price.data.repository
+package com.bolivianusd.app.feature.price.data.old.repository
 
 import com.bolivianusd.app.feature.price.domain.model.ChartData
 import com.bolivianusd.app.feature.price.domain.model.Price
