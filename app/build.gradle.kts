@@ -10,7 +10,7 @@ plugins {
     alias(libs.plugins.kotlin.kapt)
     alias(libs.plugins.hilt)
     alias(libs.plugins.google.services)
-    //alias(libs.plugins.crashlytics)
+    alias(libs.plugins.crashlytics)
     id("org.jlleitschuh.gradle.ktlint").version("11.6.1")
     id("com.github.triplet.play") version "3.8.6"
 }
@@ -21,7 +21,7 @@ val keystoreProperties = Properties().apply {
 
 android {
     namespace = "com.bolivianusd.app"
-    compileSdk = 35
+    compileSdk = 36
 
     signingConfigs {
         create("release") {
@@ -39,6 +39,7 @@ android {
         versionCode = System.getenv("BUILD_NUMBER")?.toIntOrNull() ?: 8
         versionName = "1.0"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        multiDexEnabled  = true
     }
 
     buildTypes {
@@ -70,11 +71,11 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
-    kotlinOptions {
-        jvmTarget = "11"
+    kotlin {
+        jvmToolchain(17)
     }
     buildFeatures {
         viewBinding = true
@@ -107,6 +108,7 @@ dependencies {
     implementation(libs.androidx.security.crypto)
     implementation(libs.androidx.biometric)
     implementation(libs.androidx.lifecycle.livedata.ktx)
+    implementation(libs.androidx.multidex)
 
     implementation(libs.hilt.android)
     kapt(libs.hilt.android.compiler)
@@ -121,8 +123,9 @@ dependencies {
     implementation(libs.shimmer)
 
     implementation(platform(libs.firebase.bom))
-    implementation(libs.firebase.crashlytics.ktx)
-    implementation(libs.firebase.analytics.ktx)
+    implementation(libs.firebase.analytics)
+    implementation(libs.firebase.crashlytics)
+
     implementation(libs.firebase.database)
     implementation(libs.firebase.firestore)
 
