@@ -10,6 +10,9 @@ plugins {
     alias(libs.plugins.hilt)
     alias(libs.plugins.google.services)
     alias(libs.plugins.crashlytics)
+
+    kotlin("plugin.serialization") version "2.0.21"
+
     id("org.jlleitschuh.gradle.ktlint").version("11.6.1")
     id("com.github.triplet.play") version "3.8.6"
 }
@@ -124,6 +127,12 @@ dependencies {
     implementation(libs.firebase.analytics.ktx)
     implementation(libs.firebase.database)
     implementation(libs.firebase.firestore)
+
+
+    implementation(platform("io.github.jan-tennert.supabase:bom:2.0.0"))
+    implementation("io.github.jan-tennert.supabase:postgrest-kt")
+    implementation("io.ktor:ktor-client-android:2.3.5")
+
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

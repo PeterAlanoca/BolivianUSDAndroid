@@ -44,5 +44,4 @@ class PriceUsdFirestoreDataSource @Inject constructor(
         }
     }
 
-
 }

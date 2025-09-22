@@ -2,6 +2,7 @@ package com.bolivianusd.app.feature.price.di
 
 import com.bolivianusd.app.feature.price.data.remote.firebase.firestore.PriceUsdFirestoreDataSource
 import com.bolivianusd.app.feature.price.data.remote.firebase.realtime.PriceUsdtRealtimeDataSource
+import com.bolivianusd.app.feature.price.data.remote.supabase.postgrest.DailyCandleUsdtPostgrestDataSource
 import com.bolivianusd.app.feature.price.data.repository.PriceRepositoryImpl
 import com.bolivianusd.app.feature.price.domain.repository.PriceRepository
 import com.bolivianusd.app.feature.price.domain.usecase.ObservePriceUseCase
@@ -12,6 +13,7 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import io.github.jan.supabase.postgrest.Postgrest
 import javax.inject.Singleton
 
 @Module
@@ -28,24 +30,27 @@ object PriceModule {
     fun providePriceUsdFirestoreDataSource(firebaseFirestore: FirebaseFirestore) =
         PriceUsdFirestoreDataSource(firebaseFirestore = firebaseFirestore)
 
+    @Provides
+    @Singleton
+    fun provideDailyCandleUsdtPostgrestDataSource(postgrest: Postgrest) =
+        DailyCandleUsdtPostgrestDataSource(postgrest = postgrest)
+
     @Singleton
     @Provides
     fun providePriceRepository(
         priceUsdtRealtimeDataSource: PriceUsdtRealtimeDataSource,
         priceUsdFirestoreDataSource: PriceUsdFirestoreDataSource
-    ): PriceRepository =
-        PriceRepositoryImpl(
-            priceUsdtRealtimeDataSource = priceUsdtRealtimeDataSource,
-            priceUsdFirestoreDataSource = priceUsdFirestoreDataSource
-        )
+    ): PriceRepository = PriceRepositoryImpl(
+        priceUsdtRealtimeDataSource = priceUsdtRealtimeDataSource,
+        priceUsdFirestoreDataSource = priceUsdFirestoreDataSource
+    )
 
     @Singleton
     @Provides
     fun provideObservePriceUseCase(
         priceRepository: PriceRepository
-    ): ObservePriceUseCase =
-        ObservePriceUseCaseImpl(
-            priceRepository = priceRepository
-        )
+    ): ObservePriceUseCase = ObservePriceUseCaseImpl(
+        priceRepository = priceRepository
+    )
 
 }
