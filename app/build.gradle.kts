@@ -6,13 +6,11 @@ import com.github.triplet.gradle.androidpublisher.ReleaseStatus
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.kotlin.kapt)
     alias(libs.plugins.hilt)
     alias(libs.plugins.google.services)
-    alias(libs.plugins.crashlytics)
-
-    kotlin("plugin.serialization") version "2.0.21"
-
+    //alias(libs.plugins.crashlytics)
     id("org.jlleitschuh.gradle.ktlint").version("11.6.1")
     id("com.github.triplet.play") version "3.8.6"
 }
@@ -128,11 +126,10 @@ dependencies {
     implementation(libs.firebase.database)
     implementation(libs.firebase.firestore)
 
+    implementation(platform(libs.supabase.bom))
+    implementation(libs.supabase.postgrest.kt)
 
-    implementation(platform("io.github.jan-tennert.supabase:bom:2.0.0"))
-    implementation("io.github.jan-tennert.supabase:postgrest-kt")
-    implementation("io.ktor:ktor-client-android:2.3.5")
-
+    implementation(libs.ktor.client.android)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

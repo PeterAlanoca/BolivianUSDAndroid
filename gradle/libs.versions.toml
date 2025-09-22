@@ -4,10 +4,12 @@ agp = "8.7.3"
 firebaseCrashlyticsGradle = "3.0.3"
 googleServices = "4.4.2"
 fragmentKtx = "1.8.6"
+ktorClientAndroid = "2.3.5"
 switchbutton = "2.1.0"
 lifecycleLivedataKtx = "2.9.0"
 biometric = "1.1.0"
 firebaseBom = "33.13.0"
+supabaseBom = "2.0.0"
 hiltAndroid = "2.48"
 hiltAndroidGradlePlugin = "2.48"
 kotlin = "2.0.21"
@@ -16,7 +18,7 @@ junit = "4.13.2"
 junitVersion = "1.2.1"
 espressoCore = "3.6.1"
 appcompat = "1.7.0"
-kotlinGradlePlugin = "1.7.10"
+kotlinGradlePlugin = "2.0.21"
 material = "1.12.0"
 constraintlayout = "2.2.1"
 navigationFragmentKtx = "2.9.0"
@@ -52,6 +54,9 @@ androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "j
 androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
 androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
 kotlin-gradle-plugin = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlinGradlePlugin" }
+ktor-client-android = { module = "io.ktor:ktor-client-android", version.ref = "ktorClientAndroid" }
+supabase-bom = { module = "io.github.jan-tennert.supabase:bom", version.ref = "supabaseBom" }
+supabase-postgrest-kt = { module = "io.github.jan-tennert.supabase:postgrest-kt" }
 switchbutton = { module = "com.kyleduo.switchbutton:library", version.ref = "switchbutton" }
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }
 androidx-constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "constraintlayout" }
@@ -65,6 +70,7 @@ shimmer = { module = "com.facebook.shimmer:shimmer", version.ref = "shimmer" }
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 google-services = { id = "com.google.gms.google-services", version = "4.4.2" }
 kotlin-kapt = { id = "kotlin-kapt" }
 hilt = { id = "com.google.dagger.hilt.android" }
