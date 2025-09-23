@@ -12,6 +12,7 @@ class PriceRepositoryImpl(
 ) : PriceRepository {
 
     override fun observePrice(): Flow<Price> {
+
         return priceUsdFirestoreDataSource.observePriceBuy()
         //return priceUsdtRealtimeDataSource.observePriceBuy()
     }
