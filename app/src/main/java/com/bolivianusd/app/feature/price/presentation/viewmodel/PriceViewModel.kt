@@ -4,18 +4,18 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.bolivianusd.app.core.extensions.StateHolder
 import com.bolivianusd.app.feature.price.domain.model.Price
-import com.bolivianusd.app.feature.price.domain.model.enum.OperationType
-import com.bolivianusd.app.feature.price.domain.usecase.GetChartPriceUsdtUseCase
-import com.bolivianusd.app.feature.price.domain.usecase.GetPriceUsdtUseCase
-import com.bolivianusd.app.feature.price.domain.usecase.GetRangePriceUsdtUseCase
+import com.bolivianusd.app.feature.price.domain.model.old.enum.OperationType
+import com.bolivianusd.app.feature.price.domain.usecase.old.GetChartPriceUsdtUseCase
+import com.bolivianusd.app.feature.price.domain.usecase.old.GetPriceUsdtUseCase
+import com.bolivianusd.app.feature.price.domain.usecase.old.GetRangePriceUsdtUseCase
 import com.bolivianusd.app.feature.price.domain.usecase.ObservePriceUseCase
-import com.bolivianusd.app.shared.data.state.UiState
+import com.bolivianusd.app.shared.domain.model.DollarType
+import com.bolivianusd.app.shared.domain.model.TradeType
+import com.bolivianusd.app.shared.domain.state.UiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -43,7 +43,10 @@ class PriceViewModel @Inject constructor(
 
     private fun observePriceChanges() {
         viewModelScope.launch {
-            observePriceUseCase.invoke().collect { state ->
+            observePriceUseCase.invoke(
+                dollarType = DollarType.ASSET_USDT,
+                tradeType = TradeType.BUY
+            ).collect { state ->
                 priceStateHolder.setValue(state)
             }
         }

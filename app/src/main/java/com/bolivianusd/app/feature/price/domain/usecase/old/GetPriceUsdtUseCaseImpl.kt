@@ -1,10 +1,10 @@
-package com.bolivianusd.app.feature.price.domain.usecase
+package com.bolivianusd.app.feature.price.domain.usecase.old
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.liveData
 import com.bolivianusd.app.feature.price.data.old.repository.PriceRepository
 import com.bolivianusd.app.feature.price.domain.model.Price
-import com.bolivianusd.app.feature.price.domain.model.enum.OperationType
+import com.bolivianusd.app.feature.price.domain.model.old.enum.OperationType
 import kotlinx.coroutines.Dispatchers
 import javax.inject.Inject
 import com.bolivianusd.app.shared.data.state.State

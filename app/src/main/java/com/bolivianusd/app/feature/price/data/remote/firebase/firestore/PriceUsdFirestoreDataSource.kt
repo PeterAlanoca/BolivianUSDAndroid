@@ -1,10 +1,10 @@
 package com.bolivianusd.app.feature.price.data.remote.firebase.firestore
 
-import com.bolivianusd.app.feature.price.data.exception.FirestoreDataException
+import com.bolivianusd.app.shared.data.exception.FirestoreDataException
 import com.bolivianusd.app.feature.price.data.mappers.toPrice
 import com.bolivianusd.app.feature.price.data.remote.firebase.dto.PriceFirestoreDto
 import com.bolivianusd.app.feature.price.domain.model.Price
-import com.bolivianusd.app.shared.data.model.TradeType
+import com.bolivianusd.app.shared.domain.model.TradeType
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ListenerRegistration
 import kotlinx.coroutines.channels.awaitClose

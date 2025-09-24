@@ -1,9 +1,10 @@
 package com.bolivianusd.app.feature.price.data.remote.firebase.realtime
 
+import com.bolivianusd.app.shared.data.exception.RealtimeDatabaseException
 import com.bolivianusd.app.feature.price.data.remote.firebase.dto.PriceRealtimeDto
 import com.bolivianusd.app.feature.price.data.mappers.toPrice
 import com.bolivianusd.app.feature.price.domain.model.Price
-import com.bolivianusd.app.shared.data.model.TradeType
+import com.bolivianusd.app.shared.domain.model.TradeType
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
@@ -26,11 +27,15 @@ class PriceUsdtRealtimeDataSource @Inject constructor(
         val listener = object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 val dto = snapshot.getValue(PriceRealtimeDto::class.java)
-                dto?.let { trySend(it.toPrice()) }
+                if (dto == null) {
+                    close(RealtimeDatabaseException.NullOrInvalidData())
+                } else {
+                    trySend(dto.toPrice())
+                }
             }
 
             override fun onCancelled(error: DatabaseError) {
-                close(error.toException())
+                close(RealtimeDatabaseException.Cancelled(error.toException()))
             }
         }
         reference.addValueEventListener(listener)

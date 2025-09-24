@@ -2,9 +2,9 @@ package com.bolivianusd.app.feature.price.data.old.repository.datasource
 
 import android.content.Context
 import com.bolivianusd.app.feature.price.data.old.repository.PriceRepository
-import com.bolivianusd.app.feature.price.domain.model.ChartData
+import com.bolivianusd.app.feature.price.domain.model.old.model.ChartData
 import com.bolivianusd.app.feature.price.domain.model.Price
-import com.bolivianusd.app.feature.price.domain.model.RangePrice
+import com.bolivianusd.app.feature.price.domain.model.old.model.RangePrice
 import com.bolivianusd.app.feature.price.data.mappers.toChartData
 import com.bolivianusd.app.feature.price.data.mappers.toPrice
 import com.bolivianusd.app.feature.price.data.mappers.toRangePrice

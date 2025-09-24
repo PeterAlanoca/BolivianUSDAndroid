@@ -1,4 +1,4 @@
-package com.bolivianusd.app.feature.price.domain.model
+package com.bolivianusd.app.feature.price.domain.model.old.model
 
 import com.bolivianusd.app.core.util.ZERO
 import com.bolivianusd.app.core.util.ZERO_F

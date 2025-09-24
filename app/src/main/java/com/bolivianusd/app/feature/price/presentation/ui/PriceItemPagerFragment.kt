@@ -12,9 +12,6 @@ import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.repeatOnLifecycle
 import com.bolivianusd.app.R
 import com.bolivianusd.app.core.base.BaseFragment
 import com.bolivianusd.app.core.extensions.collectFlow
@@ -38,13 +35,13 @@ import com.bolivianusd.app.core.util.ZERO_F
 import com.bolivianusd.app.core.util.emptyBar
 import com.bolivianusd.app.core.util.emptyString
 import com.bolivianusd.app.databinding.FragmentPriceItemPagerBinding
-import com.bolivianusd.app.feature.price.domain.model.ChartData
+import com.bolivianusd.app.feature.price.domain.model.old.model.ChartData
 import com.bolivianusd.app.feature.price.domain.model.Price
-import com.bolivianusd.app.feature.price.domain.model.RangePrice
-import com.bolivianusd.app.feature.price.domain.model.enum.OperationType
+import com.bolivianusd.app.feature.price.domain.model.old.model.RangePrice
+import com.bolivianusd.app.feature.price.domain.model.old.enum.OperationType
 import com.bolivianusd.app.shared.data.state.State
 import com.bolivianusd.app.feature.price.presentation.viewmodel.PriceViewModel
-import com.bolivianusd.app.shared.data.state.UiState
+import com.bolivianusd.app.shared.domain.state.UiState
 import com.github.mikephil.charting.components.Legend
 import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.data.CandleData
@@ -57,7 +54,6 @@ import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
 import com.github.mikephil.charting.formatter.ValueFormatter
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet
 import com.yy.mobile.rollingtextview.CharOrder
-import kotlinx.coroutines.launch
 
 class PriceItemPagerFragment : BaseFragment<FragmentPriceItemPagerBinding>() {
 

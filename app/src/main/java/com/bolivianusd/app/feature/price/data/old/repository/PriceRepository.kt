@@ -1,8 +1,8 @@
 package com.bolivianusd.app.feature.price.data.old.repository
 
-import com.bolivianusd.app.feature.price.domain.model.ChartData
+import com.bolivianusd.app.feature.price.domain.model.old.model.ChartData
 import com.bolivianusd.app.feature.price.domain.model.Price
-import com.bolivianusd.app.feature.price.domain.model.RangePrice
+import com.bolivianusd.app.feature.price.domain.model.old.model.RangePrice
 import kotlinx.coroutines.flow.Flow
 
 interface PriceRepository {
