@@ -4,6 +4,7 @@ import com.bolivianusd.app.feature.price.data.remote.firebase.firestore.PriceUsd
 import com.bolivianusd.app.feature.price.data.remote.firebase.realtime.PriceUsdtRealtimeDataSource
 import com.bolivianusd.app.feature.price.domain.model.Price
 import com.bolivianusd.app.feature.price.domain.repository.PriceRepository
+import com.bolivianusd.app.shared.data.model.TradeType
 import kotlinx.coroutines.flow.Flow
 
 class PriceRepositoryImpl(
@@ -13,8 +14,8 @@ class PriceRepositoryImpl(
 
     override fun observePrice(): Flow<Price> {
 
-        return priceUsdFirestoreDataSource.observePriceBuy()
-        //return priceUsdtRealtimeDataSource.observePriceBuy()
+        return priceUsdFirestoreDataSource.observePrice(TradeType.BUY)
+        //return priceUsdtRealtimeDataSource.observePrice(TradeType.BUY)
     }
 
 }

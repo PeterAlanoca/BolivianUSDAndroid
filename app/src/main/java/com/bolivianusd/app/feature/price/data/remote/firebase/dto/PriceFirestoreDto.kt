@@ -5,11 +5,19 @@ import com.bolivianusd.app.core.util.emptyString
 import com.google.firebase.firestore.PropertyName
 
 data class PriceFirestoreDto(
-
-    @get:PropertyName("destination_amount")
-    @set:PropertyName("destination_amount")
-    var destinationAmount: Double = ZERO_D,
-    @get:PropertyName("destination_currency")
-    @set:PropertyName("destination_currency")
-    var destinationCurrency: String = emptyString
+    @get:PropertyName("asset")
+    @set:PropertyName("asset")
+    var asset: String = emptyString,
+    @get:PropertyName("fiat")
+    @set:PropertyName("fiat")
+    var fiat: String = emptyString,
+    @get:PropertyName("label")
+    @set:PropertyName("label")
+    var label: String = emptyString,
+    @get:PropertyName("price")
+    @set:PropertyName("price")
+    var price: Double = ZERO_D,
+    @get:PropertyName("updated_at")
+    @set:PropertyName("updated_at")
+    var updatedAt: String = emptyString,
 )

@@ -5,6 +5,7 @@ import com.bolivianusd.app.R
 import com.bolivianusd.app.core.extensions.getColorRes
 import com.bolivianusd.app.core.extensions.toFormatted
 import com.bolivianusd.app.core.util.ZERO_F
+import com.bolivianusd.app.core.util.emptyString
 import com.bolivianusd.app.core.util.minus
 import com.bolivianusd.app.core.util.plus
 import com.bolivianusd.app.feature.price.data.old.entity.ChartDataEntity
@@ -16,9 +17,16 @@ import com.bolivianusd.app.feature.price.domain.model.Price
 import com.bolivianusd.app.feature.price.domain.model.PriceValue
 import com.bolivianusd.app.feature.price.domain.model.RangePrice
 import com.github.mikephil.charting.data.Entry
+import kotlin.String
 
 fun PriceRealtimeDto.toPrice(): Price {
     return Price(
+        label = label,
+        updatedAt = updatedAt
+    )
+
+    /*return Price(
+
         origin = PriceValue(
             currency = originCurrency,
             amount = originAmount.toBigDecimal(),
@@ -29,15 +37,15 @@ fun PriceRealtimeDto.toPrice(): Price {
             amount = destinationAmount.toBigDecimal(),
             amountLabel = destinationAmount.toBigDecimal().toFormatted()
         ),
+
+    )*/
+}
+
+fun PriceFirestoreDto.toPrice(): Price {
+    return Price(
         label = label,
         updatedAt = updatedAt
     )
-}
-
-
-
-fun PriceFirestoreDto.toPrice(): Price {
-    return Price()
 }
 
 

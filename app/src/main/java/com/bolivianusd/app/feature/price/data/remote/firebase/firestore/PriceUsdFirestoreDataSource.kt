@@ -1,8 +1,10 @@
 package com.bolivianusd.app.feature.price.data.remote.firebase.firestore
 
+import com.bolivianusd.app.feature.price.data.exception.FirestoreDataException
 import com.bolivianusd.app.feature.price.data.mappers.toPrice
 import com.bolivianusd.app.feature.price.data.remote.firebase.dto.PriceFirestoreDto
 import com.bolivianusd.app.feature.price.domain.model.Price
+import com.bolivianusd.app.shared.data.model.TradeType
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ListenerRegistration
 import kotlinx.coroutines.channels.awaitClose
@@ -14,11 +16,15 @@ class PriceUsdFirestoreDataSource @Inject constructor(
     private val firebaseFirestore: FirebaseFirestore
 ) {
 
-    fun observePriceBuy(): Flow<Price> = callbackFlow {
+    fun observePrice(tradeType: TradeType): Flow<Price> = callbackFlow {
+        val documentPath = when (tradeType) {
+            TradeType.BUY -> DOCUMENT_PATH_BUY
+            TradeType.SELL -> DOCUMENT_PATH_SELL
+        }
         var listenerRegistration: ListenerRegistration? = null
         try {
-            listenerRegistration = firebaseFirestore.collection("price_usd")
-                .document("buy")
+            listenerRegistration = firebaseFirestore.collection(COLLECTION_PATH_PRICE_USD)
+                .document(documentPath)
                 .addSnapshotListener { snapshot, error ->
                     if (error != null) {
                         close(error)
@@ -30,10 +36,10 @@ class PriceUsdFirestoreDataSource @Inject constructor(
                          dto?.let {
                              trySend(it.toPrice())
                          } ?: run {
-                             close(IllegalStateException("Firestore data is null or invalid"))
+                             close(FirestoreDataException.NullOrInvalidData())
                          }
                     } else {
-                        close(IllegalStateException("Document does not exist: "))
+                        close(FirestoreDataException.DocumentNotFound(documentPath))
                     }
                 }
         } catch (e: Exception) {
@@ -42,6 +48,12 @@ class PriceUsdFirestoreDataSource @Inject constructor(
         awaitClose {
             listenerRegistration?.remove()
         }
+    }
+
+    companion object {
+        private const val COLLECTION_PATH_PRICE_USD = "price_usd"
+        private const val DOCUMENT_PATH_BUY = "buy"
+        private const val DOCUMENT_PATH_SELL = "sell"
     }
 
 }
