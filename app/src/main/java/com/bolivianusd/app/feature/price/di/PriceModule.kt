@@ -5,6 +5,8 @@ import com.bolivianusd.app.feature.price.data.remote.firebase.realtime.PriceUsdt
 import com.bolivianusd.app.feature.price.data.remote.supabase.postgrest.DailyCandleUsdtPostgrestDataSource
 import com.bolivianusd.app.feature.price.data.repository.PriceRepositoryImpl
 import com.bolivianusd.app.feature.price.domain.repository.PriceRepository
+import com.bolivianusd.app.feature.price.domain.usecase.ObservePriceRangeUseCase
+import com.bolivianusd.app.feature.price.domain.usecase.ObservePriceRangeUseCaseImpl
 import com.bolivianusd.app.feature.price.domain.usecase.ObservePriceUseCase
 import com.bolivianusd.app.feature.price.domain.usecase.ObservePriceUseCaseImpl
 import com.google.firebase.database.FirebaseDatabase
@@ -50,6 +52,14 @@ object PriceModule {
     fun provideObservePriceUseCase(
         priceRepository: PriceRepository
     ): ObservePriceUseCase = ObservePriceUseCaseImpl(
+        priceRepository = priceRepository
+    )
+
+    @Singleton
+    @Provides
+    fun provideObservePriceRangeUseCase(
+        priceRepository: PriceRepository
+    ): ObservePriceRangeUseCase = ObservePriceRangeUseCaseImpl(
         priceRepository = priceRepository
     )
 

@@ -11,8 +11,11 @@ import com.bolivianusd.app.feature.price.data.old.entity.ChartDataEntity
 import com.bolivianusd.app.feature.price.data.remote.firebase.dto.PriceRealtimeDto
 import com.bolivianusd.app.feature.price.data.old.entity.RangePriceEntity
 import com.bolivianusd.app.feature.price.data.remote.firebase.dto.PriceFirestoreDto
+import com.bolivianusd.app.feature.price.data.remote.firebase.dto.PriceRangeFirestoreDto
+import com.bolivianusd.app.feature.price.data.remote.firebase.dto.PriceRangeRealtimeDto
 import com.bolivianusd.app.feature.price.domain.model.old.model.ChartData
 import com.bolivianusd.app.feature.price.domain.model.Price
+import com.bolivianusd.app.feature.price.domain.model.PriceRange
 import com.bolivianusd.app.feature.price.domain.model.old.model.RangePrice
 import com.github.mikephil.charting.data.Entry
 
@@ -38,16 +41,53 @@ fun PriceFirestoreDto.toPrice(): Price {
     )
 }
 
+fun PriceRangeRealtimeDto.toPriceRange(): PriceRange {
+    return PriceRange(
+        currency = this.currency,
+        min = PriceRange.RangeValue(
+            value = this.min.value.toBigDecimal(),
+            valueLabel = this.min.valueLabel,
+            description = this.min.description
+        ),
+        max = PriceRange.RangeValue(
+            value = this.max.value.toBigDecimal(),
+            valueLabel = this.max.valueLabel,
+            description = this.max.description
+        ),
+        median = PriceRange.RangeValue(
+            value = this.median.value.toBigDecimal(),
+            valueLabel = this.median.valueLabel,
+            description = this.median.description
+        )
+    )
+}
+
+fun PriceRangeFirestoreDto.toPriceRange(): PriceRange {
+    return PriceRange(
+        currency = this.currency,
+        min = PriceRange.RangeValue(
+            value = this.min.value.toBigDecimal(),
+            valueLabel = this.min.valueLabel,
+            description = this.min.description
+        ),
+        max = PriceRange.RangeValue(
+            value = this.max.value.toBigDecimal(),
+            valueLabel = this.max.valueLabel,
+            description = this.max.description
+        ),
+        median = PriceRange.RangeValue(
+            value = this.median.value.toBigDecimal(),
+            valueLabel = this.median.valueLabel,
+            description = this.median.description
+        )
+    )
+}
 
 
 
 
 
-
-
-
-
-
+////////////////////////////////
 
 
 

@@ -4,6 +4,7 @@ import com.bolivianusd.app.core.extensions.toDataStateFlow
 import com.bolivianusd.app.feature.price.data.remote.firebase.firestore.PriceUsdFirestoreDataSource
 import com.bolivianusd.app.feature.price.data.remote.firebase.realtime.PriceUsdtRealtimeDataSource
 import com.bolivianusd.app.feature.price.domain.model.Price
+import com.bolivianusd.app.feature.price.domain.model.PriceRange
 import com.bolivianusd.app.feature.price.domain.repository.PriceRepository
 import com.bolivianusd.app.shared.data.state.DataState
 import com.bolivianusd.app.shared.domain.model.DollarType
@@ -19,6 +20,13 @@ class PriceRepositoryImpl(
         return when(dollarType) {
             DollarType.FIAT_USD -> priceUsdFirestoreDataSource.observePrice(tradeType)
             DollarType.ASSET_USDT -> priceUsdtRealtimeDataSource.observePrice(tradeType)
+        }.toDataStateFlow()
+    }
+
+    override fun observePriceRange(dollarType: DollarType, tradeType: TradeType):Flow<DataState<PriceRange>> {
+        return when(dollarType) {
+            DollarType.FIAT_USD -> priceUsdFirestoreDataSource.observePriceRange(tradeType)
+            DollarType.ASSET_USDT -> priceUsdtRealtimeDataSource.observePriceRange(tradeType)
         }.toDataStateFlow()
     }
 

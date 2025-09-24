@@ -4,36 +4,31 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.bolivianusd.app.core.extensions.StateHolder
 import com.bolivianusd.app.feature.price.domain.model.Price
-import com.bolivianusd.app.feature.price.domain.model.old.enum.OperationType
-import com.bolivianusd.app.feature.price.domain.usecase.old.GetChartPriceUsdtUseCase
-import com.bolivianusd.app.feature.price.domain.usecase.old.GetPriceUsdtUseCase
-import com.bolivianusd.app.feature.price.domain.usecase.old.GetRangePriceUsdtUseCase
+import com.bolivianusd.app.feature.price.domain.usecase.ObservePriceRangeUseCase
 import com.bolivianusd.app.feature.price.domain.usecase.ObservePriceUseCase
 import com.bolivianusd.app.shared.domain.model.DollarType
 import com.bolivianusd.app.shared.domain.model.TradeType
 import com.bolivianusd.app.shared.domain.state.UiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class PriceViewModel @Inject constructor(
-    private val observePriceUseCase: ObservePriceUseCase
+    private val observePriceUseCase: ObservePriceUseCase,
+    private val observePriceRangeUseCase: ObservePriceRangeUseCase
 ) : ViewModel() {
 
     private val priceStates = mutableMapOf<TradeType, StateHolder<UiState<Price>>>()
     private val currentDollarTypes = mutableMapOf<TradeType, MutableStateFlow<DollarType>>()
 
-    // Flow separado para cada TradeType
     fun getPriceState(tradeType: TradeType): StateFlow<UiState<Price>> {
         return priceStates.getOrPut(tradeType) {
-            StateHolder<UiState<Price>>(UiState.Loading)
+            StateHolder(UiState.Loading)
         }.state
     }
 
@@ -62,12 +57,10 @@ class PriceViewModel @Inject constructor(
     }
 
     fun refresh(tradeType: TradeType) {
-        // Force refresh by updating the value
         val current = getDollarTypeFlow(tradeType).value
         getDollarTypeFlow(tradeType).value = current
     }
 
-    // Limpiar estados cuando ya no se necesiten (opcional)
     fun clearTradeType(tradeType: TradeType) {
         priceStates.remove(tradeType)
         currentDollarTypes.remove(tradeType)
