@@ -6,7 +6,7 @@
     android:layout_height="wrap_content">
 
     <RelativeLayout
-        android:id="@+id/currencyView"
+        android:id="@+id/assetView"
         android:layout_width="@dimen/dimen_fifty"
         android:layout_height="@dimen/dimen_fifty"
         android:layout_gravity="center_horizontal"
@@ -17,7 +17,7 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/currencyTextView"
+            android:id="@+id/assetTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
@@ -36,15 +36,15 @@
         android:layout_marginTop="@dimen/margin_4"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/currencyView">
+        app:layout_constraintTop_toBottomOf="@+id/assetView">
 
         <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/exchangeRateCurrencyTextView"
+            android:id="@+id/fiatTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/margin_14"
             android:layout_marginEnd="@dimen/margin_8"
-            android:layout_toStartOf="@+id/exchangeRateAmountTextView"
+            android:layout_toStartOf="@+id/priceTextView"
             android:fontFamily="@font/sfuidisplay_medium"
             android:includeFontPadding="false"
             android:lineSpacingExtra="@dimen/line_spacing_extra_0"
@@ -54,7 +54,7 @@
             tools:ignore="RelativeOverlap" />
 
         <com.yy.mobile.rollingtextview.RollingTextView
-            android:id="@+id/exchangeRateAmountTextView"
+            android:id="@+id/priceTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
@@ -81,6 +81,7 @@
         app:layout_constraintTop_toBottomOf="@+id/exchangeRateView" />
 
     <com.kyleduo.switchbutton.SwitchButton
+        android:id="@+id/dollarTypeSwitch"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"

@@ -14,11 +14,13 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
 import com.bolivianusd.app.R
 import com.bolivianusd.app.core.base.BaseFragment
+import com.bolivianusd.app.core.extensions.clearText
 import com.bolivianusd.app.core.extensions.collectFlow
 import com.bolivianusd.app.core.extensions.collectFlows
 import com.bolivianusd.app.core.extensions.getColorRes
 import com.bolivianusd.app.core.extensions.getDrawableRes
 import com.bolivianusd.app.core.extensions.gone
+import com.bolivianusd.app.core.extensions.invisible
 import com.bolivianusd.app.core.extensions.serializable
 import com.bolivianusd.app.core.extensions.visible
 import com.bolivianusd.app.core.formats.AmountValueFormatter
@@ -41,6 +43,8 @@ import com.bolivianusd.app.feature.price.domain.model.old.model.RangePrice
 import com.bolivianusd.app.feature.price.domain.model.old.enum.OperationType
 import com.bolivianusd.app.shared.data.state.State
 import com.bolivianusd.app.feature.price.presentation.viewmodel.PriceViewModel
+import com.bolivianusd.app.shared.domain.model.DollarType
+import com.bolivianusd.app.shared.domain.model.TradeType
 import com.bolivianusd.app.shared.domain.state.UiState
 import com.github.mikephil.charting.components.Legend
 import com.github.mikephil.charting.components.XAxis
@@ -54,13 +58,182 @@ import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
 import com.github.mikephil.charting.formatter.ValueFormatter
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet
 import com.yy.mobile.rollingtextview.CharOrder
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.launch
 
 class PriceItemPagerFragment : BaseFragment<FragmentPriceItemPagerBinding>() {
 
     private val viewModel: PriceViewModel by activityViewModels()
 
-    private val operationType: OperationType by lazy {
-        requireNotNull(arguments?.serializable<OperationType>(OPERATION_TYPE))
+    private val tradeType: TradeType by lazy {
+        requireNotNull(arguments?.serializable<TradeType>(TRADER_TYPE))
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        isNotRecreate = false
+    }
+
+    override fun onStart() {
+        super.onStart()
+        // Iniciar la observación cuando el fragment se hace visible
+        viewModel.observeTradeType(tradeType)
+    }
+
+    override fun onStop() {
+        super.onStop()
+        // Opcional: limpiar cuando el fragment no es visible
+        // viewModel.clearTradeType(tradeType)
+    }
+
+    override fun getViewBinding(
+        inflater: LayoutInflater,
+        container: ViewGroup?
+    ) = FragmentPriceItemPagerBinding.inflate(inflater, container, false)
+
+    override fun initViews() {
+        setupRollingTextView()
+        resetDataUIComponents()
+    }
+
+    override fun setListeners() = with(binding) {
+        priceValue.dollarTypeSwitch.setOnCheckedChangeListener { _, isChecked ->
+            val dollarType = if (isChecked) DollarType.FIAT_USD else DollarType.ASSET_USDT
+            resetDataUIComponents()
+            viewModel.setDollarType(tradeType, dollarType)
+        }
+    }
+
+    override fun initData() {
+        viewModel.setDollarType(tradeType, DollarType.ASSET_USDT)
+    }
+
+    override fun setupObservers() {
+        collectFlow(viewModel.getPriceState(tradeType)) { state ->
+            when (state) {
+                is UiState.Loading -> {
+                    println("naty getPriceState UiState.Loading")
+                    showPriceLoadingState()
+                }
+                is UiState.Success -> {
+                    println("naty getPriceState UiState.Success ${state.data.toString()}")
+                    showPriceDataSuccess(state.data)
+                }
+                is UiState.Error -> Unit
+            }
+        }
+    }
+
+    private fun resetDataUIComponents()  {
+        with(binding.priceValue) {
+            assetView.invisible()
+            priceTextView.invisible()
+            dollarTypeSwitch.invisible()
+            assetTextView.clearText()
+            fiatTextView.clearText()
+            descriptionTextView.clearText()
+        }
+    }
+
+    private fun showPriceLoadingState() = with(binding) {
+        priceValue.root.gone()
+        priceShimmer.root.visible()
+        priceShimmer.shimmerLayout.startShimmer()
+    }
+
+    private fun showPriceDataSuccess(price: Price) = with(binding) {
+        if (priceValue.root.isVisible) {
+            setPriceData(price)
+            return@with
+        }
+        val fadeOut = AnimationUtils.loadAnimation(requireContext(), R.anim.anim_view_fade_out)
+        fadeOut.setAnimationListener(object : SimpleAnimationListener() {
+            override fun onAnimationEnd(animation: Animation?) {
+                hidePriceLoading()
+                setPriceData(price)
+                val fadeIn = AnimationUtils.loadAnimation(requireContext(), R.anim.anim_view_fade_in)
+                priceValue.root.visible()
+                priceValue.root.startAnimation(fadeIn)
+            }
+        })
+        priceShimmer.root.startAnimation(fadeOut)
+    }
+
+    private fun setPriceData(price: Price)  {
+        with(binding.priceValue) {
+            assetTextView.text = price.asset
+            fiatTextView.text = price.fiat
+            priceTextView.setText(price.priceLabel)
+            descriptionTextView.text = price.label
+            assetView.visible()
+            priceTextView.visible()
+            dollarTypeSwitch.visible()
+        }
+    }
+
+    private fun hidePriceLoading() = with(binding) {
+        priceShimmer.shimmerLayout.stopShimmer()
+        priceShimmer.root.gone()
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    private fun setupRollingTextView() = with(binding.priceValue) {
+        priceTextView.animationDuration = 600L
+        priceTextView.addCharOrder(CharOrder.Number)
+        priceTextView.animationInterpolator = AccelerateDecelerateInterpolator()
+    }
+
+
+    /*override fun onStart() {
+        super.onStart()
+        viewModel.observeTradeType(tradeType)
+        // Opcional: forzar refresh al volver a la pestaña
+        viewModel.refresh(tradeType)
+    }*/
+
+    companion object {
+        private const val TRADER_TYPE = "TRADER_TYPE"
+
+        fun newInstance(tradeType: TradeType) = PriceItemPagerFragment().apply {
+            arguments = Bundle().apply {
+                putSerializable(TRADER_TYPE, tradeType)
+            }
+        }
+    }
+}
+
+
+/*
+
+class PriceItemPagerFragment : BaseFragment<FragmentPriceItemPagerBinding>() {
+
+    private val viewModel: PriceViewModel by activityViewModels()
+
+    private val tradeType: TradeType by lazy {
+        requireNotNull(arguments?.serializable<TradeType>(TRADER_TYPE))
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -74,33 +247,31 @@ class PriceItemPagerFragment : BaseFragment<FragmentPriceItemPagerBinding>() {
     ) = FragmentPriceItemPagerBinding.inflate(inflater, container, false)
 
     override fun initViews() {
-        setupObservers()
-
-
         setupRollingTextView()
         setupLineChartShimmer()
         setupLineChart()
     }
 
+    override fun setListeners() = with(binding) {
+        priceValue.dollarTypeSwitch.setOnCheckedChangeListener { _, isChecked ->
+            println("naty dollarTypeSwitch $isChecked")
+        }
+    }
+
     override fun initData() {
         Handler(Looper.getMainLooper()).postDelayed({
-            getPrice()
-            getChartPrice()
-            getRangePrice()
+            //getPrice()
+            //getChartPrice()
+            //getRangePrice()
         }, 200)
     }
 
-    private fun setupObservers() {
-        collectFlow(viewModel.priceState) { state ->
-            when (state) {
-                is UiState.Loading -> println("naty Loading...")
-                is UiState.Success -> println("naty Success: ${state.data}")
-                is UiState.Error -> println("naty Error: ${state.throwable}")
-            }
-        }
+    override fun setupObservers() {
+        setupObserverPrice()
+
 
         // O para múltiples flows:
-        collectFlows {
+        /*collectFlows {
             /*launch {
                 viewModel.priceState.collect { state ->
                     // manejar estado de precio
@@ -111,26 +282,55 @@ class PriceItemPagerFragment : BaseFragment<FragmentPriceItemPagerBinding>() {
                     // manejar estado de usuario
                 }
             }*/
-        }
+        }*/
     }
 
 
-    private fun getPrice() {
-        viewModel.setPriceType("buy")
+    private fun setupObserverPrice() {
+        viewModel.setTradeType(tradeType)
+        //
+        //viewModel.setDollarType(DollarType.ASSET_USDT)
+        //
+        collectFlows {
+            launch {
+                viewModel.priceState.collect { state ->
+                    when (state) {
+                        is UiState.Loading -> println("naty Loading...")
+                        is UiState.Success -> println("naty Success: ${state.data}")
+                        is UiState.Error -> println("naty Error: ${state.throwable}")
+                    }
+                }
+            }
+            /*launch {
+                viewModel.userState.collect { user ->
+                    // manejar estado de usuario
+                }
+            }*/
+        }
+        /*collectFlow(viewModel.priceState) { state ->
+            when (state) {
+                is UiState.Loading -> println("naty Loading...")
+                is UiState.Success -> println("naty Success: ${state.data}")
+                is UiState.Error -> println("naty Error: ${state.throwable}")
+            }
+        }*/
+
+        //viewModel.setPriceType("buy")
+        /*
 
 
-        viewModel.getPriceBuy(operationType).observe(viewLifecycleOwner) { state ->
+        viewModel.getPriceBuy(tradeType).observe(viewLifecycleOwner) { state ->
             when (state) {
                 is State.Loading -> showPriceShimmer()
                 is State.Success -> setDataPriceValue(state.data)
                 is State.Error -> Unit
             }
-        }
+        }*/
     }
 
     private fun setDataPriceValue(price: Price) = with(binding.priceValue) {
-        with(price) {
-            when (operationType) {
+        /*with(price) {
+            when (tradeType) {
                 OperationType.BUY -> {
                     exchangeRateCurrencyTextView.text = origin.currency
                     exchangeRateAmountTextView.setText(origin.amountLabel)
@@ -144,7 +344,7 @@ class PriceItemPagerFragment : BaseFragment<FragmentPriceItemPagerBinding>() {
                 }
             }
             descriptionTextView.text = price.label
-        }
+        }*/
         animateShowPriceValue()
     }
 
@@ -173,7 +373,7 @@ class PriceItemPagerFragment : BaseFragment<FragmentPriceItemPagerBinding>() {
     }
 
     private fun getChartPrice() {
-        viewModel.getChartPrice(operationType).observe(viewLifecycleOwner) { state ->
+        /*viewModel.getChartPrice(tradeType).observe(viewLifecycleOwner) { state ->
             when (state) {
                 is State.Loading -> {
                     showUpdateTimeShimmer()
@@ -182,7 +382,7 @@ class PriceItemPagerFragment : BaseFragment<FragmentPriceItemPagerBinding>() {
                 is State.Success -> setDataChartPrice(state.data)
                 is State.Error -> Unit
             }
-        }
+        }*/
     }
 
     private fun setDataChartPrice(chartPrice: ChartData) = with(binding) {
@@ -391,13 +591,13 @@ class PriceItemPagerFragment : BaseFragment<FragmentPriceItemPagerBinding>() {
     }
 
     private fun getRangePrice() {
-        viewModel.getRangePrice(operationType).observe(viewLifecycleOwner) { state ->
+        /*viewModel.getRangePrice(tradeType).observe(viewLifecycleOwner) { state ->
             when (state) {
                 is State.Loading -> showRangeShimmer()
                 is State.Success -> setRangePrice(state.data)
                 is State.Error -> Unit
             }
-        }
+        }*/
     }
 
     private fun setRangePrice(rangePrice: RangePrice) = with(binding.range) {
@@ -526,13 +726,60 @@ class PriceItemPagerFragment : BaseFragment<FragmentPriceItemPagerBinding>() {
         }*/
     }
 
+
+
+    override fun onStart() {
+        super.onStart()
+        println("naty onStart")
+        //test
+        with(binding) {
+            priceShimmer.root.invisible()
+            updateTimeShimmer.root.invisible()
+            chartShimmer.root.invisible()
+            rangeShimmer.root.invisible()
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        println("naty onResume")
+        with(binding) {
+            priceShimmer.root.invisible()
+            updateTimeShimmer.root.invisible()
+            chartShimmer.root.invisible()
+            rangeShimmer.root.invisible()
+        }
+    }
+
+    override fun onPause() {
+        super.onPause()
+        println("naty onPause")
+        with(binding) {
+            priceShimmer.root.invisible()
+            updateTimeShimmer.root.invisible()
+            chartShimmer.root.invisible()
+            rangeShimmer.root.invisible()
+        }
+    }
+
+    override fun onStop() {
+        super.onStop()
+        println("naty onStop")
+        with(binding) {
+            priceShimmer.root.invisible()
+            updateTimeShimmer.root.invisible()
+            chartShimmer.root.invisible()
+            rangeShimmer.root.invisible()
+        }
+    }
+
     companion object {
-        private const val OPERATION_TYPE = "OPERATION_TYPE"
+        private const val TRADER_TYPE = "TRADER_TYPE"
         private const val CHART_DATA_ITEMS_SIZE = 9
 
-        fun newInstance(operationType: OperationType) = PriceItemPagerFragment().apply {
+        fun newInstance(tradeType: TradeType) = PriceItemPagerFragment().apply {
             val bundle = Bundle().apply {
-                putSerializable(OPERATION_TYPE, operationType)
+                putSerializable(TRADER_TYPE, tradeType)
             }
             arguments = bundle
         }
@@ -540,3 +787,5 @@ class PriceItemPagerFragment : BaseFragment<FragmentPriceItemPagerBinding>() {
 
 }
 
+
+ */

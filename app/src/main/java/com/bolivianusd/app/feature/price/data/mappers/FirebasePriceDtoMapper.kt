@@ -3,6 +3,7 @@ package com.bolivianusd.app.feature.price.data.mappers
 import android.content.Context
 import com.bolivianusd.app.R
 import com.bolivianusd.app.core.extensions.getColorRes
+import com.bolivianusd.app.core.extensions.toFormatted
 import com.bolivianusd.app.core.util.ZERO_F
 import com.bolivianusd.app.core.util.minus
 import com.bolivianusd.app.core.util.plus
@@ -17,28 +18,21 @@ import com.github.mikephil.charting.data.Entry
 
 fun PriceRealtimeDto.toPrice(): Price {
     return Price(
+        asset = asset,
+        fiat = fiat,
+        priceValue = price.toBigDecimal(),
+        priceLabel = price.toBigDecimal().toFormatted(),
         label = label,
         updatedAt = updatedAt
     )
-
-    /*return Price(
-
-        origin = PriceValue(
-            currency = originCurrency,
-            amount = originAmount.toBigDecimal(),
-            amountLabel = originAmount.toBigDecimal().toFormatted()
-        ),
-        destination = PriceValue(
-            currency = destinationCurrency,
-            amount = destinationAmount.toBigDecimal(),
-            amountLabel = destinationAmount.toBigDecimal().toFormatted()
-        ),
-
-    )*/
 }
 
 fun PriceFirestoreDto.toPrice(): Price {
     return Price(
+        asset = asset,
+        fiat = fiat,
+        priceValue = price.toBigDecimal(),
+        priceLabel = price.toBigDecimal().toFormatted(),
         label = label,
         updatedAt = updatedAt
     )

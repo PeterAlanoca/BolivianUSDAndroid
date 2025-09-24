@@ -47,20 +47,20 @@ class MainActivity : AppCompatActivity() {
 
     private fun goToPrice() {
         pushFragment(
-            fragment = PriceFragment.Companion.newInstance(),
+            fragment = PriceFragment.newInstance(),
             containerViewId = R.id.frameLayout,
-            tag = PriceFragment.Companion.TAG
+            tag = PriceFragment.TAG
         )
     }
 
     private fun goToCalculator() {
-        val fragment = CalculatorFragment.Companion.newInstance()
-        pushFragment(fragment, R.id.frameLayout, CalculatorFragment.Companion.TAG)
+        val fragment = CalculatorFragment.newInstance()
+        pushFragment(fragment, R.id.frameLayout, CalculatorFragment.TAG)
     }
 
     private fun goToNews() {
-        val fragment = NewsFragment.Companion.newInstance()
-        pushFragment(fragment, R.id.frameLayout, NewsFragment.Companion.TAG)
+        val fragment = NewsFragment.newInstance()
+        pushFragment(fragment, R.id.frameLayout, NewsFragment.TAG)
     }
 
 }

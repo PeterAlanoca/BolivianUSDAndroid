@@ -13,65 +13,63 @@ import com.bolivianusd.app.shared.domain.model.DollarType
 import com.bolivianusd.app.shared.domain.model.TradeType
 import com.bolivianusd.app.shared.domain.state.UiState
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class PriceViewModel @Inject constructor(
-    private val observePriceUseCase: ObservePriceUseCase,
-
-
-
-    private val getPriceUsdtUseCase: GetPriceUsdtUseCase,
-    private val getChartPriceUsdtUseCase: GetChartPriceUsdtUseCase,
-    private val getRangePriceUsdtUseCase: GetRangePriceUsdtUseCase
+    private val observePriceUseCase: ObservePriceUseCase
 ) : ViewModel() {
 
+    private val priceStates = mutableMapOf<TradeType, StateHolder<UiState<Price>>>()
+    private val currentDollarTypes = mutableMapOf<TradeType, MutableStateFlow<DollarType>>()
 
-    private val priceStateHolder = StateHolder<UiState<Price>>(UiState.Loading)
-
-    val priceState: StateFlow<UiState<Price>> = priceStateHolder.state
-
-    private val currentType = MutableStateFlow("buy") // "buy" o "sell"
-
-    init {
-        observePriceChanges()
+    // Flow separado para cada TradeType
+    fun getPriceState(tradeType: TradeType): StateFlow<UiState<Price>> {
+        return priceStates.getOrPut(tradeType) {
+            StateHolder<UiState<Price>>(UiState.Loading)
+        }.state
     }
 
-    private fun observePriceChanges() {
+    private fun getDollarTypeFlow(tradeType: TradeType): MutableStateFlow<DollarType> {
+        return currentDollarTypes.getOrPut(tradeType) {
+            MutableStateFlow(DollarType.ASSET_USDT)
+        }
+    }
+
+    @OptIn(ExperimentalCoroutinesApi::class)
+    fun observeTradeType(tradeType: TradeType) {
         viewModelScope.launch {
-            observePriceUseCase.invoke(
-                dollarType = DollarType.ASSET_USDT,
-                tradeType = TradeType.BUY
-            ).collect { state ->
-                priceStateHolder.setValue(state)
+            getDollarTypeFlow(tradeType).flatMapLatest { dollarType ->
+                observePriceUseCase.invoke(
+                    dollarType = dollarType,
+                    tradeType = tradeType
+                )
+            }.collect { state ->
+                priceStates[tradeType]?.setValue(state)
             }
         }
     }
 
-    fun setPriceType(type: String) {
-        if (type == "buy" || type == "sell") {
-            currentType.value = type
-        }
+    fun setDollarType(tradeType: TradeType, dollarType: DollarType) {
+        getDollarTypeFlow(tradeType).value = dollarType
     }
 
-    fun refresh() {
-        // Forzar recarga reiniciando la recolección
-        val current = currentType.value
-        currentType.value = ""
-        viewModelScope.launch {
-            delay(100) // Pequeño delay para reiniciar
-            currentType.value = current
-        }
+    fun refresh(tradeType: TradeType) {
+        // Force refresh by updating the value
+        val current = getDollarTypeFlow(tradeType).value
+        getDollarTypeFlow(tradeType).value = current
     }
 
-    fun getPriceBuy(operationType: OperationType) = getPriceUsdtUseCase.execute(operationType)
-
-    fun getChartPrice(operationType: OperationType) = getChartPriceUsdtUseCase.execute(operationType)
-
-    fun getRangePrice(operationType: OperationType) = getRangePriceUsdtUseCase.execute(operationType)
-
+    // Limpiar estados cuando ya no se necesiten (opcional)
+    fun clearTradeType(tradeType: TradeType) {
+        priceStates.remove(tradeType)
+        currentDollarTypes.remove(tradeType)
+    }
 }

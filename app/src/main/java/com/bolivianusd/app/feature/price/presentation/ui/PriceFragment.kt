@@ -6,16 +6,16 @@ import android.view.ViewGroup
 import com.bolivianusd.app.R
 import com.bolivianusd.app.core.base.BaseFragment
 import com.bolivianusd.app.databinding.FragmentPriceBinding
-import com.bolivianusd.app.feature.price.domain.model.old.enum.OperationType
 import com.bolivianusd.app.feature.price.presentation.adapter.PricePagerAdapter
+import com.bolivianusd.app.shared.domain.model.TradeType
 import com.google.android.material.tabs.TabLayoutMediator
 
 class PriceFragment : BaseFragment<FragmentPriceBinding>() {
 
     private val fragments by lazy {
         listOf(
-            PriceItemPagerFragment.Companion.newInstance(OperationType.BUY),
-            PriceItemPagerFragment.Companion.newInstance(OperationType.SELL)
+            PriceItemPagerFragment.newInstance(TradeType.BUY),
+            PriceItemPagerFragment.newInstance(TradeType.SELL)
         )
     }
 

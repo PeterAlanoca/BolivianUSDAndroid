@@ -1,6 +1,8 @@
 package com.bolivianusd.app.shared.domain.model
 
-enum class TradeType {
+import java.io.Serializable
+
+enum class TradeType: Serializable {
     BUY,
     SELL
 }

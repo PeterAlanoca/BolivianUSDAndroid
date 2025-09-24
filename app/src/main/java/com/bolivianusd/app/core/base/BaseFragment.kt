@@ -42,6 +42,7 @@ abstract class BaseFragment<T : ViewBinding> : Fragment() {
         initViews()
         initData()
         setListeners()
+        setupObservers()
     }
 
     override fun onStart() {
@@ -70,6 +71,8 @@ abstract class BaseFragment<T : ViewBinding> : Fragment() {
     open fun setListeners() {}
 
     open fun initData() {}
+
+    open fun setupObservers() {}
 
     open fun initDataStart() {}
 
