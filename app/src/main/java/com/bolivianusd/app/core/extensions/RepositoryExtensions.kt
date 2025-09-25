@@ -1,6 +1,7 @@
 package com.bolivianusd.app.core.extensions
 
 import com.bolivianusd.app.shared.data.exception.FirestoreDataException
+import com.bolivianusd.app.shared.data.exception.PostgrestDataException
 import com.bolivianusd.app.shared.data.exception.RealtimeDatabaseException
 import com.bolivianusd.app.shared.data.state.DataState
 import kotlinx.coroutines.flow.Flow
@@ -22,6 +23,7 @@ private fun createErrorState(throwable: Throwable): DataState.Error {
             is FirestoreDataException.DocumentNotFound -> "Documento no encontrado en Firestore"
             is RealtimeDatabaseException.NullOrInvalidData -> "Datos de Realtime Database inválidos"
             is RealtimeDatabaseException.Cancelled -> "Operación de base de datos cancelada"
+            is PostgrestDataException.UnknownException -> "Fallo inesperado en la comunicación con Supabase"
             is IOException -> "Error de conexión de red"
             else -> "Error desconocido: ${throwable.message ?: "sin detalles"}"
         }

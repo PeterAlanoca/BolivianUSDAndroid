@@ -3,8 +3,10 @@ package com.bolivianusd.app.feature.price.presentation.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.bolivianusd.app.core.extensions.StateHolder
+import com.bolivianusd.app.feature.price.domain.model.DailyCandle
 import com.bolivianusd.app.feature.price.domain.model.Price
 import com.bolivianusd.app.feature.price.domain.model.PriceRange
+import com.bolivianusd.app.feature.price.domain.usecase.GetLatestCandlesUseCase
 import com.bolivianusd.app.feature.price.domain.usecase.ObservePriceRangeUseCase
 import com.bolivianusd.app.feature.price.domain.usecase.ObservePriceUseCase
 import com.bolivianusd.app.shared.domain.model.DollarType
@@ -21,18 +23,14 @@ import javax.inject.Inject
 @HiltViewModel
 class PriceViewModel @Inject constructor(
     private val observePriceUseCase: ObservePriceUseCase,
-    private val observePriceRangeUseCase: ObservePriceRangeUseCase
+    private val observePriceRangeUseCase: ObservePriceRangeUseCase,
+    private val getLatestCandlesUseCase: GetLatestCandlesUseCase
 ) : ViewModel() {
 
     private val currentDollarTypes = mutableMapOf<TradeType, MutableStateFlow<DollarType>>()
     private val priceStates = mutableMapOf<TradeType, StateHolder<UiState<Price>>>()
     private val priceRangeStates = mutableMapOf<TradeType, StateHolder<UiState<PriceRange>>>()
-
-    private fun getDollarTypeFlow(tradeType: TradeType): MutableStateFlow<DollarType> {
-        return currentDollarTypes.getOrPut(tradeType) {
-            MutableStateFlow(DollarType.ASSET_USDT)
-        }
-    }
+    private val dailyCandlesStates = mutableMapOf<TradeType, StateHolder<UiState<List<DailyCandle>>>>()
 
     fun setDollarType(tradeType: TradeType, dollarType: DollarType) {
         if (getDollarTypeFlow(tradeType).value != dollarType) {
@@ -40,14 +38,14 @@ class PriceViewModel @Inject constructor(
         }
     }
 
-    fun getPriceState(tradeType: TradeType): StateFlow<UiState<Price>> {
-        return priceStates.getOrPut(tradeType) {
-            StateHolder(UiState.Loading)
-        }.state
+    private fun getDollarTypeFlow(tradeType: TradeType): MutableStateFlow<DollarType> {
+        return currentDollarTypes.getOrPut(tradeType) {
+            MutableStateFlow(DollarType.ASSET_USDT)
+        }
     }
 
-    fun getPriceRangeState(tradeType: TradeType): StateFlow<UiState<PriceRange>> {
-        return priceRangeStates.getOrPut(tradeType) {
+    fun getPriceState(tradeType: TradeType): StateFlow<UiState<Price>> {
+        return priceStates.getOrPut(tradeType) {
             StateHolder(UiState.Loading)
         }.state
     }
@@ -66,6 +64,12 @@ class PriceViewModel @Inject constructor(
         }
     }
 
+    fun getPriceRangeState(tradeType: TradeType): StateFlow<UiState<PriceRange>> {
+        return priceRangeStates.getOrPut(tradeType) {
+            StateHolder(UiState.Loading)
+        }.state
+    }
+
     @OptIn(ExperimentalCoroutinesApi::class)
     fun observePriceRange(tradeType: TradeType) {
         viewModelScope.launch {
@@ -80,9 +84,30 @@ class PriceViewModel @Inject constructor(
         }
     }
 
-    fun observePriceAndRange(tradeType: TradeType) {
+    fun getDailyCandleState(tradeType: TradeType): StateFlow<UiState<List<DailyCandle>>> {
+        return dailyCandlesStates.getOrPut(tradeType) {
+            StateHolder(UiState.Loading)
+        }.state
+    }
+
+    @OptIn(ExperimentalCoroutinesApi::class)
+    fun getLatestCandles(tradeType: TradeType) {
+        viewModelScope.launch {
+            getDollarTypeFlow(tradeType).flatMapLatest { dollarType ->
+                getLatestCandlesUseCase.invoke(
+                    dollarType = dollarType,
+                    tradeType = tradeType
+                )
+            }.collect { state ->
+                dailyCandlesStates[tradeType]?.setValue(state)
+            }
+        }
+    }
+
+    fun observePriceAndCandles(tradeType: TradeType) {
         observePrice(tradeType)
         observePriceRange(tradeType)
+        getLatestCandles(tradeType)
     }
 
     fun refresh(tradeType: TradeType) {
@@ -94,5 +119,6 @@ class PriceViewModel @Inject constructor(
         priceStates.remove(tradeType)
         priceRangeStates.remove(tradeType)
         currentDollarTypes.remove(tradeType)
+        dailyCandlesStates.remove(tradeType)
     }
 }

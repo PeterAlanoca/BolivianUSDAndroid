@@ -78,7 +78,7 @@ class PriceItemPagerFragment : BaseFragment<FragmentPriceItemPagerBinding>() {
     override fun onStart() {
         super.onStart()
         // Iniciar la observación cuando el fragment se hace visible
-        viewModel.observePriceAndRange(tradeType)
+        viewModel.observePriceAndCandles(tradeType)
     }
 
     override fun onStop() {
@@ -113,12 +113,12 @@ class PriceItemPagerFragment : BaseFragment<FragmentPriceItemPagerBinding>() {
         collectFlow(viewModel.getPriceState(tradeType)) { state ->
             when (state) {
                 is UiState.Loading -> {
-                    println("naty getPriceState UiState.Loading")
+                    //println("naty getPriceState UiState.Loading")
                     showPriceLoadingState()
                 }
 
                 is UiState.Success -> {
-                    println("naty getPriceState UiState.Success ${state.data.toString()}")
+                    //println("naty getPriceState UiState.Success ${state.data.toString()}")
                     showPriceDataSuccess(state.data)
                 }
 
@@ -128,15 +128,28 @@ class PriceItemPagerFragment : BaseFragment<FragmentPriceItemPagerBinding>() {
         collectFlow(viewModel.getPriceRangeState(tradeType)) { state ->
             when (state) {
                 is UiState.Loading -> {
-                    println("naty getPriceRangeState UiState.Loading")
+                    //println("naty getPriceRangeState UiState.Loading")
                     showPriceRangeLoadingState()
                 }
 
                 is UiState.Success -> {
                     showPriceRangeDataSuccess(state.data)
-                    println("naty getPriceRangeState UiState.Success ${state.data.toString()}")
+                    //println("naty getPriceRangeState UiState.Success ${state.data.toString()}")
                 }
 
+                is UiState.Error -> Unit
+            }
+        }
+
+        collectFlow(viewModel.getDailyCandleState(tradeType)) { state ->
+            when (state) {
+                is UiState.Loading -> {
+                    println("naty getDailyCandleState UiState.Loading")
+                }
+
+                is UiState.Success -> {
+                    println("naty getDailyCandleState UiState.Success ${state.data.toString()}")
+                }
                 is UiState.Error -> Unit
             }
         }
@@ -215,7 +228,6 @@ class PriceItemPagerFragment : BaseFragment<FragmentPriceItemPagerBinding>() {
         range.rangeValue.invisible()
         range.shimmerLayout.visible()
         range.shimmerLayout.startShimmer()
-
         range.rangeTitle.invisible()
         range.rangeTitleShimmer.visible()
         range.rangeTitleShimmer.startShimmer()
