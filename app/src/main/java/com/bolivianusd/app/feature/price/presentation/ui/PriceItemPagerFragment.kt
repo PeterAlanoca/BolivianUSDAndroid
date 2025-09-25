@@ -39,6 +39,7 @@ import com.bolivianusd.app.core.util.emptyString
 import com.bolivianusd.app.databinding.FragmentPriceItemPagerBinding
 import com.bolivianusd.app.feature.price.domain.model.old.model.ChartData
 import com.bolivianusd.app.feature.price.domain.model.Price
+import com.bolivianusd.app.feature.price.domain.model.PriceRange
 import com.bolivianusd.app.feature.price.domain.model.old.model.RangePrice
 import com.bolivianusd.app.feature.price.domain.model.old.enum.OperationType
 import com.bolivianusd.app.shared.data.state.State
@@ -77,7 +78,7 @@ class PriceItemPagerFragment : BaseFragment<FragmentPriceItemPagerBinding>() {
     override fun onStart() {
         super.onStart()
         // Iniciar la observación cuando el fragment se hace visible
-        viewModel.observeTradeType(tradeType)
+        viewModel.observePriceAndRange(tradeType)
     }
 
     override fun onStop() {
@@ -122,6 +123,21 @@ class PriceItemPagerFragment : BaseFragment<FragmentPriceItemPagerBinding>() {
                 is UiState.Error -> Unit
             }
         }
+        collectFlow(viewModel.getPriceRangeState(tradeType)) { state ->
+            when (state) {
+                is UiState.Loading -> {
+                    showRangeShimmer()
+                    println("naty getPriceRangeState UiState.Loading")
+
+                }
+                is UiState.Success -> {
+                    animateShowRangeView(state.data)
+                    println("naty getPriceRangeState UiState.Success ${state.data.toString()}")
+
+                }
+                is UiState.Error -> Unit
+            }
+        }
     }
 
     private fun resetDataUIComponents()  {
@@ -133,6 +149,18 @@ class PriceItemPagerFragment : BaseFragment<FragmentPriceItemPagerBinding>() {
             fiatTextView.clearText()
             descriptionTextView.clearText()
         }
+
+        with(binding.range) {
+            minTextView.clearText()
+            minLabelTextView.clearText()
+
+            avgTextView.clearText()
+            avgLabelTextView.clearText()
+
+            maxTextView.clearText()
+            maxLabelTextView.clearText()
+        }
+
     }
 
     private fun showPriceLoadingState() = with(binding) {
@@ -177,21 +205,84 @@ class PriceItemPagerFragment : BaseFragment<FragmentPriceItemPagerBinding>() {
     }
 
 
+    private fun showRangeShimmer() = with(binding) {
+        range.root.gone()
+        rangeShimmer.root.visible()
+        rangeShimmer.shimmerLayout.startShimmer()
+    }
+
+
+    /*private fun showPriceLoadingState() = with(binding) {
+        priceValue.root.gone()
+        priceShimmer.root.visible()
+        priceShimmer.shimmerLayout.startShimmer()
+    }*/
+
+    private fun animateShowRangeView(priceRange: PriceRange) = with(binding) {
+        if (range.root.isVisible) {
+            setRangePrice(priceRange)
+            return@with
+        }
+        val fadeOut = AnimationUtils.loadAnimation(requireContext(), R.anim.anim_view_fade_out)
+        fadeOut.setAnimationListener(object : SimpleAnimationListener() {
+            override fun onAnimationEnd(animation: Animation?) {
+                hideRangeShimmer()
+                setRangePrice(priceRange)
+                val fadeIn = AnimationUtils.loadAnimation(requireContext(), R.anim.anim_view_fade_in)
+                range.root.visible()
+                range.root.startAnimation(fadeIn)
+            }
+        })
+        rangeShimmer.root.startAnimation(fadeOut)
+    }
+
+    /*private fun showPriceDataSuccess(price: Price) = with(binding) {
+        if (priceValue.root.isVisible) {
+            setPriceData(price)
+            return@with
+        }
+        val fadeOut = AnimationUtils.loadAnimation(requireContext(), R.anim.anim_view_fade_out)
+        fadeOut.setAnimationListener(object : SimpleAnimationListener() {
+            override fun onAnimationEnd(animation: Animation?) {
+                hidePriceLoading()
+                setPriceData(price)
+                val fadeIn = AnimationUtils.loadAnimation(requireContext(), R.anim.anim_view_fade_in)
+                priceValue.root.visible()
+                priceValue.root.startAnimation(fadeIn)
+            }
+        })
+        priceShimmer.root.startAnimation(fadeOut)
+    }*/
+
+
+    private fun setRangePrice(priceRange: PriceRange) = with(binding.range) {
+        currencyTextView.text = priceRange.currency
+        with(priceRange.min) {
+            minTextView.text = this.valueLabel
+            minLabelTextView.text = this.description
+        }
+        with(priceRange.median) {
+            avgTextView.text = this.valueLabel
+            avgLabelTextView.text = this.description
+        }
+        with(priceRange.max) {
+            maxTextView.text = this.valueLabel
+            maxLabelTextView.text = this.description
+        }
+    }
 
 
 
 
+    private fun hideRangeShimmer() = with(binding) {
+        rangeShimmer.shimmerLayout.stopShimmer()
+        rangeShimmer.root.gone()
+    }
 
-
-
-
-
-
-
-
-
-
-
+    /*private fun hidePriceLoading() = with(binding) {
+        priceShimmer.shimmerLayout.stopShimmer()
+        priceShimmer.root.gone()
+    }*/
 
 
 

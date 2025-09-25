@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.bolivianusd.app.core.extensions.StateHolder
 import com.bolivianusd.app.feature.price.domain.model.Price
+import com.bolivianusd.app.feature.price.domain.model.PriceRange
 import com.bolivianusd.app.feature.price.domain.usecase.ObservePriceRangeUseCase
 import com.bolivianusd.app.feature.price.domain.usecase.ObservePriceUseCase
 import com.bolivianusd.app.shared.domain.model.DollarType
@@ -23,14 +24,9 @@ class PriceViewModel @Inject constructor(
     private val observePriceRangeUseCase: ObservePriceRangeUseCase
 ) : ViewModel() {
 
-    private val priceStates = mutableMapOf<TradeType, StateHolder<UiState<Price>>>()
     private val currentDollarTypes = mutableMapOf<TradeType, MutableStateFlow<DollarType>>()
-
-    fun getPriceState(tradeType: TradeType): StateFlow<UiState<Price>> {
-        return priceStates.getOrPut(tradeType) {
-            StateHolder(UiState.Loading)
-        }.state
-    }
+    private val priceStates = mutableMapOf<TradeType, StateHolder<UiState<Price>>>()
+    private val priceRangeStates = mutableMapOf<TradeType, StateHolder<UiState<PriceRange>>>()
 
     private fun getDollarTypeFlow(tradeType: TradeType): MutableStateFlow<DollarType> {
         return currentDollarTypes.getOrPut(tradeType) {
@@ -38,8 +34,26 @@ class PriceViewModel @Inject constructor(
         }
     }
 
+    fun setDollarType(tradeType: TradeType, dollarType: DollarType) {
+        if (getDollarTypeFlow(tradeType).value != dollarType) {
+            getDollarTypeFlow(tradeType).value = dollarType
+        }
+    }
+
+    fun getPriceState(tradeType: TradeType): StateFlow<UiState<Price>> {
+        return priceStates.getOrPut(tradeType) {
+            StateHolder(UiState.Loading)
+        }.state
+    }
+
+    fun getPriceRangeState(tradeType: TradeType): StateFlow<UiState<PriceRange>> {
+        return priceRangeStates.getOrPut(tradeType) {
+            StateHolder(UiState.Loading)
+        }.state
+    }
+
     @OptIn(ExperimentalCoroutinesApi::class)
-    fun observeTradeType(tradeType: TradeType) {
+    fun observePrice(tradeType: TradeType) {
         viewModelScope.launch {
             getDollarTypeFlow(tradeType).flatMapLatest { dollarType ->
                 observePriceUseCase.invoke(
@@ -52,8 +66,23 @@ class PriceViewModel @Inject constructor(
         }
     }
 
-    fun setDollarType(tradeType: TradeType, dollarType: DollarType) {
-        getDollarTypeFlow(tradeType).value = dollarType
+    @OptIn(ExperimentalCoroutinesApi::class)
+    fun observePriceRange(tradeType: TradeType) {
+        viewModelScope.launch {
+            getDollarTypeFlow(tradeType).flatMapLatest { dollarType ->
+                observePriceRangeUseCase.invoke(
+                    dollarType = dollarType,
+                    tradeType = tradeType
+                )
+            }.collect { state ->
+                priceRangeStates[tradeType]?.setValue(state)
+            }
+        }
+    }
+
+    fun observePriceAndRange(tradeType: TradeType) {
+        observePrice(tradeType)
+        observePriceRange(tradeType)
     }
 
     fun refresh(tradeType: TradeType) {
@@ -63,6 +92,7 @@ class PriceViewModel @Inject constructor(
 
     fun clearTradeType(tradeType: TradeType) {
         priceStates.remove(tradeType)
+        priceRangeStates.remove(tradeType)
         currentDollarTypes.remove(tradeType)
     }
 }

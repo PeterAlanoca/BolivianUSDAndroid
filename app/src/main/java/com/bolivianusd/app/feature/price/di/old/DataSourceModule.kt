@@ -1,4 +1,4 @@
-package com.bolivianusd.app.feature.price.di
+package com.bolivianusd.app.feature.price.di.old
 
 import android.content.Context
 import com.bolivianusd.app.feature.price.data.old.repository.PriceRepository

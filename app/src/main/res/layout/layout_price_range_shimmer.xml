@@ -5,8 +5,10 @@
     android:id="@+id/shimmerLayout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:visibility="gone"
     app:shimmer_duration="1000"
-    app:shimmer_intensity="0.5">
+    app:shimmer_intensity="0.5"
+    tools:visibility="visible">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
