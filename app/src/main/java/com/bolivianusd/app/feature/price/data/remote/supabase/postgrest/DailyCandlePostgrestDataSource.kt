@@ -1,6 +1,6 @@
 package com.bolivianusd.app.feature.price.data.remote.supabase.postgrest
 
-import com.bolivianusd.app.feature.price.data.mappers.toDailyCandle
+import com.bolivianusd.app.feature.price.data.mapper.toDailyCandles
 import com.bolivianusd.app.feature.price.data.remote.supabase.dto.DailyCandleDto
 import com.bolivianusd.app.feature.price.domain.model.DailyCandle
 import com.bolivianusd.app.shared.data.exception.PostgrestDataException
@@ -19,7 +19,7 @@ class DailyCandlePostgrestDataSource @Inject constructor(
     fun getCandles(
         dollarType: DollarType,
         tradeType: TradeType,
-        limit: Long = 5
+        limit: Long = 10
     ): Flow<List<DailyCandle>> = flow {
         try {
             val candlesDto = postgrest[TABLE_NAME]
@@ -33,7 +33,7 @@ class DailyCandlePostgrestDataSource @Inject constructor(
                     limit(limit)
                 }
                 .decodeList<DailyCandleDto>()
-            val candles = candlesDto.map { it.toDailyCandle() }
+            val candles = candlesDto.toDailyCandles()
             emit(candles)
         } catch (e: Exception) {
             throw PostgrestDataException.UnknownException(e)

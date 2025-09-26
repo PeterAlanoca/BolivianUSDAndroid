@@ -5,6 +5,8 @@ import com.bolivianusd.app.core.util.ZERO_D
 import com.bolivianusd.app.core.util.emptyString
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
+import java.time.LocalDate
+import java.time.LocalDateTime
 
 @Serializable
 data class DailyCandleDto(
@@ -22,7 +24,7 @@ data class DailyCandleDto(
     @SerialName("low_price")
     val lowPrice: Double = ZERO_D,
     @SerialName("candle_date")
-    val candleDate: String = emptyString, // o LocalDate si prefieres
+    val candleDate: String = LocalDate.now().toString(),
     @SerialName("created_at")
-    val createdAt: String = emptyString // o Instant si prefieres
+    val createdAt: String = LocalDateTime.now().toString()
 )

@@ -2,8 +2,8 @@ package com.bolivianusd.app.feature.price.data.remote.firebase.realtime
 
 import com.bolivianusd.app.shared.data.exception.RealtimeDatabaseException
 import com.bolivianusd.app.feature.price.data.remote.firebase.dto.PriceRealtimeDto
-import com.bolivianusd.app.feature.price.data.mappers.toPrice
-import com.bolivianusd.app.feature.price.data.mappers.toPriceRange
+import com.bolivianusd.app.feature.price.data.mapper.toPrice
+import com.bolivianusd.app.feature.price.data.mapper.toPriceRange
 import com.bolivianusd.app.feature.price.data.remote.firebase.dto.PriceRangeRealtimeDto
 import com.bolivianusd.app.feature.price.domain.model.Price
 import com.bolivianusd.app.feature.price.domain.model.PriceRange

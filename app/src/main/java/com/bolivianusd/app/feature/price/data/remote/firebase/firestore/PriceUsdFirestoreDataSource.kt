@@ -1,8 +1,8 @@
 package com.bolivianusd.app.feature.price.data.remote.firebase.firestore
 
 import com.bolivianusd.app.shared.data.exception.FirestoreDataException
-import com.bolivianusd.app.feature.price.data.mappers.toPrice
-import com.bolivianusd.app.feature.price.data.mappers.toPriceRange
+import com.bolivianusd.app.feature.price.data.mapper.toPrice
+import com.bolivianusd.app.feature.price.data.mapper.toPriceRange
 import com.bolivianusd.app.feature.price.data.remote.firebase.dto.PriceFirestoreDto
 import com.bolivianusd.app.feature.price.data.remote.firebase.dto.PriceRangeFirestoreDto
 import com.bolivianusd.app.feature.price.domain.model.Price

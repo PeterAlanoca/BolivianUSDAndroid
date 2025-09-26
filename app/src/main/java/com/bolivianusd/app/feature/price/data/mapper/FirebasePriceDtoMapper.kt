@@ -1,4 +1,4 @@
-package com.bolivianusd.app.feature.price.data.mappers
+package com.bolivianusd.app.feature.price.data.mapper
 
 import android.content.Context
 import com.bolivianusd.app.R

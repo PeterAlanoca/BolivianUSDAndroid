@@ -37,11 +37,14 @@ import com.bolivianusd.app.core.util.ZERO_F
 import com.bolivianusd.app.core.util.emptyBar
 import com.bolivianusd.app.core.util.emptyString
 import com.bolivianusd.app.databinding.FragmentPriceItemPagerBinding
+import com.bolivianusd.app.feature.price.domain.model.DailyCandle
 import com.bolivianusd.app.feature.price.domain.model.old.model.ChartData
 import com.bolivianusd.app.feature.price.domain.model.Price
 import com.bolivianusd.app.feature.price.domain.model.PriceRange
 import com.bolivianusd.app.feature.price.domain.model.old.model.RangePrice
 import com.bolivianusd.app.feature.price.domain.model.old.enum.OperationType
+import com.bolivianusd.app.feature.price.presentation.mapper.toCandleEntries
+import com.bolivianusd.app.feature.price.presentation.mapper.toXAxisValues
 import com.bolivianusd.app.shared.data.state.State
 import com.bolivianusd.app.feature.price.presentation.viewmodel.PriceViewModel
 import com.bolivianusd.app.shared.domain.model.DollarType
@@ -58,6 +61,7 @@ import com.github.mikephil.charting.data.LineDataSet
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
 import com.github.mikephil.charting.formatter.ValueFormatter
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet
+import com.google.gson.Gson
 import com.yy.mobile.rollingtextview.CharOrder
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.launch
@@ -144,10 +148,13 @@ class PriceItemPagerFragment : BaseFragment<FragmentPriceItemPagerBinding>() {
         collectFlow(viewModel.getDailyCandleState(tradeType)) { state ->
             when (state) {
                 is UiState.Loading -> {
+                    showUpdateTimeShimmer()
+                    showChartShimmer()
                     println("naty getDailyCandleState UiState.Loading")
                 }
 
                 is UiState.Success -> {
+                    setDataChartPrice(state.data)
                     println("naty getDailyCandleState UiState.Success ${state.data.toString()}")
                 }
                 is UiState.Error -> Unit
@@ -280,6 +287,221 @@ class PriceItemPagerFragment : BaseFragment<FragmentPriceItemPagerBinding>() {
         range.rangeTitleShimmer.stopShimmer()
         range.rangeTitleShimmer.gone()
     }
+
+    ////////////////////////////////
+
+
+
+
+    private fun setChartData(dailyCandles: List<DailyCandle>) = with(binding.chart) {
+
+        val json =  Gson().toJson(dailyCandles)
+        println("naty CHART $json")
+
+        val entries = dailyCandles.toCandleEntries()
+        val set = CandleDataSet(entries, "USDT - BOB")
+
+        set.barSpace = 0.3f   // 🔥 velas delgadas
+        set.shadowWidth = 1f
+        set.shadowColorSameAsCandle = true // <-- hace que la sombra tenga el mismo color que la vela
+        set.decreasingColor = requireContext().getColorRes(R.color.red)
+        set.decreasingPaintStyle = Paint.Style.FILL
+        set.increasingColor = requireContext().getColorRes(R.color.green)
+        set.increasingPaintStyle = Paint.Style.FILL
+        set.neutralColor = Color.BLUE
+        set.setDrawValues(false)
+
+
+        val data = CandleData(set)
+
+        chart.description.isEnabled = false
+        chart.description = null
+
+
+        chart.setDrawBorders(false)       // quitar borde del gráfico
+
+        // Eje Y izquierdo
+        chart.axisLeft.setDrawGridLines(false)
+        chart.axisLeft.isEnabled = false  // opcional, si quieres quitar eje izquierdo
+
+        // Eje Y derecho
+        chart.axisRight.setDrawAxisLine(false) // oculta la línea del eje Y derecho
+        chart.axisRight.setDrawLabels(true)    // mantiene los valores visibles
+        chart.axisRight.setDrawGridLines(true)
+        chart.axisRight.textColor = requireContext().getColorRes(R.color.white_alpha_65)
+        chart.axisRight.textSize = 8f
+        chart.axisRight.setDrawGridLines(true)
+        chart.axisRight.gridColor = requireContext().getColorRes(R.color.white_alpha_05)
+        chart.axisRight.gridLineWidth = 1f         // 🔹 grosor de línea (opcional)
+        chart.axisRight.valueFormatter = object : ValueFormatter() {
+            override fun getFormattedValue(value: Float): String {
+                return "BOB " + String.format("%.2f", value)
+            }
+        }
+
+        // Eje X derecho
+        /*val fechas = listOf(
+            "20/09",
+            "21/09",
+            "22/09",
+            "23/09",
+            "24/09",
+            "25/09",
+            "26/09",
+            "27/09",
+            "28/09",
+            "29/09"
+        )*/
+        val fechas = dailyCandles.toXAxisValues()
+        chart.xAxis.position = XAxis.XAxisPosition.BOTTOM
+        chart.xAxis.setDrawLabels(true)  // mostrar etiquetas
+        chart.xAxis.setDrawGridLines(false) // quitar líneas de cuadrícula
+        chart.xAxis.setDrawAxisLine(false) // oculta la línea del eje X derecho
+        chart.xAxis.labelCount = fechas.size
+        chart.xAxis.textSize = 8f
+        chart.xAxis.textColor = requireContext().getColorRes(R.color.white_alpha_65)
+        chart.xAxis.valueFormatter = object : ValueFormatter() {
+            override fun getFormattedValue(value: Float): String {
+                val index = value.toInt()
+                return if (index >= 0 && index < fechas.size) fechas[index] else ""
+            }
+        }
+
+
+        // Establecer mínimo y máximo
+        //chart.axisRight.axisMinimum = 2f   // mínimo del eje Y
+        //chart.axisRight.axisMaximum = 24f   // máximo del eje Y
+
+        chart.data = data
+
+        chart.legend.isEnabled = true
+        chart.legend.textSize = 9f
+        chart.legend.textColor = requireContext().getColorRes(R.color.white_alpha_65)
+        chart.legend.verticalAlignment = Legend.LegendVerticalAlignment.TOP
+        chart.legend.horizontalAlignment = Legend.LegendHorizontalAlignment.LEFT
+        chart.legend.orientation = Legend.LegendOrientation.HORIZONTAL
+
+        chart.setExtraOffsets(0f, 0f, 0f, 0f)
+
+        chart.setTouchEnabled(false)       // ❌ desactiva todos los eventos táctiles
+        chart.setDragEnabled(false)        // ❌ desactiva el drag (mover con dedo)
+        chart.setScaleEnabled(false)       // ❌ desactiva pinch zoom
+        chart.setPinchZoom(false)          // ❌ desactiva pinch-to-zoom combinado
+        chart.isDoubleTapToZoomEnabled = false // ❌ desactiva zoom con doble tap
+        chart.isHighlightPerTapEnabled = false   // ❌ evita que seleccione una vela al tocar
+
+
+        chart.invalidate()
+
+        /*val labels = chartData.labels
+        val values = chartData.values
+        val colors = chartData.colors
+        val label = chartData.label
+
+        descriptionTextView.text = chartData.description
+        variationTextView.text = chartData.variation
+        variationTextView.setTextColor(chartData.variationColor)
+        priceTextView.text = chartData.price
+        labelTextView.text = label
+
+        val dataSet = LineDataSet(values, label)
+        dataSet.setDrawIcons(true)
+        dataSet.setDrawValues(true)
+        dataSet.valueFormatter = AmountValueFormatter()
+        dataSet.valueTextSize = ELEVEN_F
+        dataSet.setValueTextColors(colors)
+        dataSet.enableDashedLine(TEN_F, ZERO_F, ZERO_F)
+        dataSet.color = requireContext().getColorRes(R.color.maroon_flush)
+        dataSet.setCircleColor(requireContext().getColorRes(R.color.maroon_flush))
+        dataSet.lineWidth = THREE_F
+        dataSet.circleRadius = FOUR_F
+        dataSet.setDrawCircleHole(false)
+        dataSet.setDrawFilled(true)
+        dataSet.mode = LineDataSet.Mode.HORIZONTAL_BEZIER
+        dataSet.fillDrawable = requireContext().getDrawableRes(R.drawable.gradient_chart)
+        val dataSets = ArrayList<ILineDataSet>()
+        dataSets.add(dataSet)
+
+        lineChart.apply {
+            xAxis.setLabelCount(labels.size, true)
+            xAxis.valueFormatter = IndexAxisValueFormatter(labels)
+            axisLeft.setAxisMaximum(chartData.axisMaximum)
+            axisLeft.setAxisMinimum(chartData.axisMinimum)
+            clear()
+            setData(LineData(dataSets))
+            invalidate()
+        }*/
+    }
+
+    private fun setDataChartPrice(dailyCandles: List<DailyCandle>) = with(binding) {
+        with(updateTime) {
+            //updatedTextView.text = chartPrice.updated
+            animateShowUpdateTimeView()
+        }
+        with(chart) {
+            setChartData(dailyCandles)
+            animateShowChartView()
+        }
+    }
+
+    private fun showChartShimmer() = with(binding) {
+        chartShimmer.shimmerLayout.startShimmer()
+        chartShimmer.root.visible()
+    }
+
+    private fun animateShowChartView() = with(binding) {
+        if (chart.root.isVisible) return@with
+        val fadeIn = AnimationUtils.loadAnimation(requireContext(), R.anim.anim_view_fade_in)
+        chart.root.visible()
+        chart.root.startAnimation(fadeIn)
+        val fadeOut = AnimationUtils.loadAnimation(requireContext(), R.anim.anim_view_fade_out)
+        fadeOut.setAnimationListener(object : SimpleAnimationListener() {
+            override fun onAnimationEnd(animation: Animation?) {
+                hideChartShimmer()
+            }
+        })
+        chartShimmer.root.startAnimation(fadeOut)
+    }
+
+    private fun hideChartShimmer() = with(binding) {
+        chartShimmer.shimmerLayout.stopShimmer()
+        chartShimmer.root.gone()
+    }
+
+
+    private fun showUpdateTimeShimmer() = with(binding) {
+        updateTimeShimmer.shimmerLayout.startShimmer()
+        updateTimeShimmer.root.visible()
+    }
+
+    private fun animateShowUpdateTimeView() = with(binding) {
+        if (updateTime.root.isVisible) return@with
+        val fadeIn = AnimationUtils.loadAnimation(requireContext(), R.anim.anim_view_fade_in)
+        updateTime.root.visible()
+        updateTime.root.startAnimation(fadeIn)
+        val fadeOut = AnimationUtils.loadAnimation(requireContext(), R.anim.anim_view_fade_out)
+        fadeOut.setAnimationListener(object : SimpleAnimationListener() {
+            override fun onAnimationEnd(animation: Animation?) {
+                hideUpdateTimeShimmer()
+            }
+        })
+        updateTimeShimmer.root.startAnimation(fadeOut)
+    }
+
+    private fun hideUpdateTimeShimmer() = with(binding) {
+        updateTimeShimmer.shimmerLayout.stopShimmer()
+        updateTimeShimmer.root.gone()
+    }
+
+
+
+
+
+
+
+
+
+
 
 
     private fun setupRollingTextView() = with(binding.priceValue) {

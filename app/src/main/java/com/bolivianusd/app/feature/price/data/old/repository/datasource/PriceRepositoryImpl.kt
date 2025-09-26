@@ -5,9 +5,9 @@ import com.bolivianusd.app.feature.price.data.old.repository.PriceRepository
 import com.bolivianusd.app.feature.price.domain.model.old.model.ChartData
 import com.bolivianusd.app.feature.price.domain.model.Price
 import com.bolivianusd.app.feature.price.domain.model.old.model.RangePrice
-import com.bolivianusd.app.feature.price.data.mappers.toChartData
-import com.bolivianusd.app.feature.price.data.mappers.toPrice
-import com.bolivianusd.app.feature.price.data.mappers.toRangePrice
+import com.bolivianusd.app.feature.price.data.mapper.toChartData
+import com.bolivianusd.app.feature.price.data.mapper.toPrice
+import com.bolivianusd.app.feature.price.data.mapper.toRangePrice
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
