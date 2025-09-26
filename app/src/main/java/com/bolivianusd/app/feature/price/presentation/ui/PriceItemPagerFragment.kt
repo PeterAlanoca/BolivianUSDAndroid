@@ -3,8 +3,6 @@ package com.bolivianusd.app.feature.price.presentation.ui
 import android.graphics.Color
 import android.graphics.Paint
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.view.animation.AccelerateDecelerateInterpolator
@@ -16,36 +14,22 @@ import com.bolivianusd.app.R
 import com.bolivianusd.app.core.base.BaseFragment
 import com.bolivianusd.app.core.extensions.clearText
 import com.bolivianusd.app.core.extensions.collectFlow
-import com.bolivianusd.app.core.extensions.collectFlows
 import com.bolivianusd.app.core.extensions.getColorRes
-import com.bolivianusd.app.core.extensions.getDrawableRes
 import com.bolivianusd.app.core.extensions.gone
 import com.bolivianusd.app.core.extensions.invisible
 import com.bolivianusd.app.core.extensions.serializable
 import com.bolivianusd.app.core.extensions.visible
-import com.bolivianusd.app.core.formats.AmountValueFormatter
 import com.bolivianusd.app.core.listeners.SimpleAnimationListener
-import com.bolivianusd.app.core.util.ELEVEN_F
-import com.bolivianusd.app.core.util.FOUR_F
-import com.bolivianusd.app.core.util.NEGATIVE_SIX_F
-import com.bolivianusd.app.core.util.ONE
-import com.bolivianusd.app.core.util.SIX_F
-import com.bolivianusd.app.core.util.TEN_F
-import com.bolivianusd.app.core.util.THREE_F
-import com.bolivianusd.app.core.util.ZERO
-import com.bolivianusd.app.core.util.ZERO_F
-import com.bolivianusd.app.core.util.emptyBar
 import com.bolivianusd.app.core.util.emptyString
 import com.bolivianusd.app.databinding.FragmentPriceItemPagerBinding
 import com.bolivianusd.app.feature.price.domain.model.DailyCandle
-import com.bolivianusd.app.feature.price.domain.model.old.model.ChartData
 import com.bolivianusd.app.feature.price.domain.model.Price
 import com.bolivianusd.app.feature.price.domain.model.PriceRange
-import com.bolivianusd.app.feature.price.domain.model.old.model.RangePrice
-import com.bolivianusd.app.feature.price.domain.model.old.enum.OperationType
+import com.bolivianusd.app.feature.price.presentation.mapper.getDateRangeLabel
 import com.bolivianusd.app.feature.price.presentation.mapper.toCandleEntries
+import com.bolivianusd.app.feature.price.presentation.mapper.toDataSetLabel
+import com.bolivianusd.app.feature.price.presentation.mapper.toFiat
 import com.bolivianusd.app.feature.price.presentation.mapper.toXAxisValues
-import com.bolivianusd.app.shared.data.state.State
 import com.bolivianusd.app.feature.price.presentation.viewmodel.PriceViewModel
 import com.bolivianusd.app.shared.domain.model.DollarType
 import com.bolivianusd.app.shared.domain.model.TradeType
@@ -54,18 +38,9 @@ import com.github.mikephil.charting.components.Legend
 import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.data.CandleData
 import com.github.mikephil.charting.data.CandleDataSet
-import com.github.mikephil.charting.data.CandleEntry
-import com.github.mikephil.charting.data.Entry
-import com.github.mikephil.charting.data.LineData
-import com.github.mikephil.charting.data.LineDataSet
-import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
 import com.github.mikephil.charting.formatter.ValueFormatter
-import com.github.mikephil.charting.interfaces.datasets.ILineDataSet
 import com.google.gson.Gson
 import com.yy.mobile.rollingtextview.CharOrder
-import kotlinx.coroutines.flow.distinctUntilChanged
-import kotlinx.coroutines.launch
-import kotlin.collections.get
 
 class PriceItemPagerFragment : BaseFragment<FragmentPriceItemPagerBinding>() {
 
@@ -105,14 +80,14 @@ class PriceItemPagerFragment : BaseFragment<FragmentPriceItemPagerBinding>() {
 
     override fun setListeners() = with(binding) {
         priceValue.dollarTypeSwitch.setOnCheckedChangeListener { _, isChecked ->
-            val dollarType = if (isChecked) DollarType.FIAT_USD else DollarType.ASSET_USDT
+            val dollarType = if (isChecked) DollarType.USD else DollarType.USDT
             resetDataUIComponents()
             viewModel.setDollarType(tradeType, dollarType)
         }
     }
 
     override fun initData() {
-        viewModel.setDollarType(tradeType, DollarType.ASSET_USDT)
+        viewModel.setDollarType(tradeType, DollarType.USDT)
     }
 
     override fun setupObservers() {
@@ -150,8 +125,8 @@ class PriceItemPagerFragment : BaseFragment<FragmentPriceItemPagerBinding>() {
         collectFlow(viewModel.getDailyCandleState(tradeType)) { state ->
             when (state) {
                 is UiState.Loading -> {
-                    showUpdateTimeShimmer()
-                    showChartShimmer()
+                    //showUpdateTimeShimmer()
+                    //showChartShimmer()
                     println("naty getDailyCandleState UiState.Loading")
                 }
 
@@ -327,11 +302,6 @@ class PriceItemPagerFragment : BaseFragment<FragmentPriceItemPagerBinding>() {
             setDrawGridLines(true)
             gridColor = requireContext().getColorRes(R.color.white_alpha_05)
             gridLineWidth = 1f         // 🔹 grosor de línea (opcional)
-            valueFormatter = object : ValueFormatter() {
-                override fun getFormattedValue(value: Float): String {
-                    return "BOB " + String.format("%.2f", value)
-                }
-            }
         }
 
         chart.xAxis.apply {
@@ -341,7 +311,6 @@ class PriceItemPagerFragment : BaseFragment<FragmentPriceItemPagerBinding>() {
             setDrawAxisLine(false) // oculta la línea del eje X derecho
             textSize = 8f
             textColor = requireContext().getColorRes(R.color.white_alpha_65)
-
         }
     }
 
@@ -351,11 +320,12 @@ class PriceItemPagerFragment : BaseFragment<FragmentPriceItemPagerBinding>() {
         println("naty CHART $json")
 
         val entries = dailyCandles.toCandleEntries()
-        val fechas = dailyCandles.toXAxisValues()
+        val xAxisValues = dailyCandles.toXAxisValues()
+        val dataSetLabel = dailyCandles.toDataSetLabel()
+        val fiat = dailyCandles.toFiat()
 
-        val set = CandleDataSet(entries, "USDT - BOB")
-
-        set.apply {
+        val candleDataSet = CandleDataSet(entries, dataSetLabel)
+        candleDataSet.apply {
             barSpace = 0.3f   // 🔥 velas delgadas
             shadowWidth = 1f
             shadowColorSameAsCandle = true // <-- hace que la sombra tenga el mismo color que la vela
@@ -363,36 +333,34 @@ class PriceItemPagerFragment : BaseFragment<FragmentPriceItemPagerBinding>() {
             decreasingPaintStyle = Paint.Style.FILL
             increasingColor = requireContext().getColorRes(R.color.green)
             increasingPaintStyle = Paint.Style.FILL
-            neutralColor = Color.BLUE
+            neutralColor = requireContext().getColorRes(R.color.white_alpha_50)
             setDrawValues(false)
         }
 
-        chart.xAxis.apply {
-            labelCount = fechas.size
+        chart.axisRight.apply {
             valueFormatter = object : ValueFormatter() {
                 override fun getFormattedValue(value: Float): String {
-                    val index = value.toInt()
-                    return if (index >= 0 && index < fechas.size) fechas[index] else ""
+                    return "$fiat ${String.format("%.2f", value)}"
                 }
             }
         }
-        val data = CandleData(set)
 
-
-
-        chart.data = data
-
-
-
-
-
-        //chart.invalidate()
-
+        chart.xAxis.apply {
+            labelCount = xAxisValues.size
+            valueFormatter = object : ValueFormatter() {
+                override fun getFormattedValue(value: Float): String {
+                    val index = value.toInt()
+                    return if (index >= 0 && index < xAxisValues.size) xAxisValues[index] else emptyString
+                }
+            }
+        }
+        chart.data = CandleData(candleDataSet)
+        chart.invalidate()
     }
 
     private fun setDataChartPrice(dailyCandles: List<DailyCandle>) = with(binding) {
         with(updateTime) {
-            //updatedTextView.text = chartPrice.updated
+            updatedTextView.text = dailyCandles.getDateRangeLabel()
             animateShowUpdateTimeView()
         }
         with(chart) {

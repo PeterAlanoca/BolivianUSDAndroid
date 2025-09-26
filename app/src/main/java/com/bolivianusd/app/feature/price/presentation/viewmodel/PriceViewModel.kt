@@ -40,7 +40,7 @@ class PriceViewModel @Inject constructor(
 
     private fun getDollarTypeFlow(tradeType: TradeType): MutableStateFlow<DollarType> {
         return currentDollarTypes.getOrPut(tradeType) {
-            MutableStateFlow(DollarType.ASSET_USDT)
+            MutableStateFlow(DollarType.USDT)
         }
     }
 

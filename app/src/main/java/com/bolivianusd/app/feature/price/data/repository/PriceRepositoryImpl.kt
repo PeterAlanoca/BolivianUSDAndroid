@@ -18,15 +18,15 @@ class PriceRepositoryImpl(
 
     override fun observePrice(dollarType: DollarType, tradeType: TradeType): Flow<DataState<Price>> {
         return when(dollarType) {
-            DollarType.FIAT_USD -> priceUsdFirestoreDataSource.observePrice(tradeType)
-            DollarType.ASSET_USDT -> priceUsdtRealtimeDataSource.observePrice(tradeType)
+            DollarType.USD -> priceUsdFirestoreDataSource.observePrice(tradeType)
+            DollarType.USDT -> priceUsdtRealtimeDataSource.observePrice(tradeType)
         }.toDataStateFlow()
     }
 
     override fun observePriceRange(dollarType: DollarType, tradeType: TradeType):Flow<DataState<PriceRange>> {
         return when(dollarType) {
-            DollarType.FIAT_USD -> priceUsdFirestoreDataSource.observePriceRange(tradeType)
-            DollarType.ASSET_USDT -> priceUsdtRealtimeDataSource.observePriceRange(tradeType)
+            DollarType.USD -> priceUsdFirestoreDataSource.observePriceRange(tradeType)
+            DollarType.USDT -> priceUsdtRealtimeDataSource.observePriceRange(tradeType)
         }.toDataStateFlow()
     }
 

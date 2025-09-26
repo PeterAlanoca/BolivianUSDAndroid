@@ -1,6 +1,8 @@
 package com.bolivianusd.app.shared.domain.model
 
-enum class DollarType {
-    FIAT_USD,
-    ASSET_USDT
+import java.io.Serializable
+
+enum class DollarType(val value: String) : Serializable {
+    USD("USD"),
+    USDT("USDT")
 }

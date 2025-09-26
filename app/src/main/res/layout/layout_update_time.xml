@@ -42,11 +42,11 @@
         android:fontFamily="@font/sfuidisplay_medium"
         android:includeFontPadding="false"
         android:lineSpacingExtra="@dimen/line_spacing_extra_0"
-        android:text="@string/price_view_pager_item_time"
         android:textColor="@color/white_alpha_65"
         android:textSize="@dimen/text_size_14"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toEndOf="@+id/dotTextView"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="@string/price_view_pager_item_time" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

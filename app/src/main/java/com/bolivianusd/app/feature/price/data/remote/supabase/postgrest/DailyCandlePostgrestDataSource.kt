@@ -25,7 +25,7 @@ class DailyCandlePostgrestDataSource @Inject constructor(
             val candlesDto = postgrest[TABLE_NAME]
                 .select {
                     filter {
-                        eq("asset", "USDT")
+                        eq("asset", dollarType.value)
                         eq("fiat", "BOB")
                         eq("trade_type", tradeType.value)
                     }
