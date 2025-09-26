@@ -127,11 +127,15 @@ class PriceItemPagerFragment : BaseFragment<FragmentPriceItemPagerBinding>() {
             when (state) {
                 is UiState.Loading -> {
                     //showUpdateTimeShimmer()
-                    showChartLoadingState()
+                    if (shouldShowLoading) {
+                        showPriceLoadingState()
+                    }
                     println("naty getDailyCandleState UiState.Loading")
                 }
 
                 is UiState.Success -> {
+                    shouldShowLoading = false // ✅ Una vez cargado, no mostrar más loading
+
                     showChartDataSuccess(state.data)
                     println("naty getDailyCandleState UiState.Success ${state.data.toString()}")
                 }
@@ -139,6 +143,7 @@ class PriceItemPagerFragment : BaseFragment<FragmentPriceItemPagerBinding>() {
             }
         }
     }
+    private var shouldShowLoading = true
 
     private fun resetDataUIComponents() {
         with(binding.priceValue) {
@@ -205,7 +210,9 @@ class PriceItemPagerFragment : BaseFragment<FragmentPriceItemPagerBinding>() {
                 priceValue.root.startAnimation(fadeIn)
             }
         })
-        priceShimmer.root.startAnimation(fadeOut)
+        if (priceShimmer.root.isVisible) {
+            priceShimmer.root.startAnimation(fadeOut)
+        }
     }
 
     private fun setPriceData(price: Price) {
@@ -254,8 +261,13 @@ class PriceItemPagerFragment : BaseFragment<FragmentPriceItemPagerBinding>() {
                 range.rangeTitle.startAnimation(fadeIn)
             }
         })
-        range.shimmerLayout.startAnimation(fadeOut)
-        range.rangeTitleShimmer.startAnimation(fadeOut)
+
+        if (range.shimmerLayout.isVisible) {
+            range.shimmerLayout.startAnimation(fadeOut)
+        }
+        if (range.rangeTitleShimmer.isVisible) {
+            range.rangeTitleShimmer.startAnimation(fadeOut)
+        }
     }
 
     private fun setPriceRangeData(priceRange: PriceRange) = with(binding.range) {
@@ -350,26 +362,29 @@ class PriceItemPagerFragment : BaseFragment<FragmentPriceItemPagerBinding>() {
     }
 
     private fun showChartDataSuccess(dailyCandles: List<DailyCandle>) = with(binding) {
-        if (chart.valueData.isVisible) {
-            setChartData(dailyCandles)
-            return@with
-        }
+        // ✅ SIEMPRE ocultar el loading primero (con animación)
         val fadeOut = AnimationUtils.loadAnimation(requireContext(), R.anim.anim_view_fade_out)
         fadeOut.setAnimationListener(object : SimpleAnimationListener() {
             override fun onAnimationEnd(animation: Animation?) {
                 hideChartLoadingState()
+
+                // ✅ LUEGO mostrar el contenido con animación
                 setChartData(dailyCandles)
                 val fadeIn = AnimationUtils.loadAnimation(requireContext(), R.anim.anim_view_fade_in)
-
                 chart.valueData.visible()
                 chart.valueData.startAnimation(fadeIn)
-
                 updateTime.root.visible()
                 updateTime.root.startAnimation(fadeIn)
             }
         })
-        chart.shimmerLayout.startAnimation(fadeOut)
-        updateTimeShimmer.shimmerLayout.startAnimation(fadeOut)
+
+        // Iniciar la animación de ocultamiento
+        if (chart.shimmerLayout.isVisible) {
+            chart.shimmerLayout.startAnimation(fadeOut)
+        }
+        if (updateTimeShimmer.shimmerLayout.isVisible) {
+            updateTimeShimmer.shimmerLayout.startAnimation(fadeOut)
+        }
     }
 
     private fun hideChartLoadingState() = with(binding) {
