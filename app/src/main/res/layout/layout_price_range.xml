@@ -10,7 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:visibility="gone"
-        app:shimmer_duration="1000"
+        app:shimmer_duration="500"
         app:shimmer_intensity="0.5"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -163,7 +163,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:visibility="gone"
-            app:shimmer_duration="1000"
+            app:shimmer_duration="500"
             app:shimmer_intensity="0.5"
             tools:visibility="visible">
 
