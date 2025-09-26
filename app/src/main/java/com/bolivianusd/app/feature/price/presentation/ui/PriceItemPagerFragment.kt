@@ -65,6 +65,7 @@ import com.google.gson.Gson
 import com.yy.mobile.rollingtextview.CharOrder
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.launch
+import kotlin.collections.get
 
 class PriceItemPagerFragment : BaseFragment<FragmentPriceItemPagerBinding>() {
 
@@ -98,6 +99,7 @@ class PriceItemPagerFragment : BaseFragment<FragmentPriceItemPagerBinding>() {
 
     override fun initViews() {
         setupRollingTextView()
+        setupCandleStickChart()
         resetDataUIComponents()
     }
 
@@ -290,147 +292,102 @@ class PriceItemPagerFragment : BaseFragment<FragmentPriceItemPagerBinding>() {
 
     ////////////////////////////////
 
+    private fun setupCandleStickChart() = with(binding.chart) {
+        chart.apply {
+            setDrawBorders(false)       // quitar borde del gráfico
+            setExtraOffsets(0f, 0f, 0f, 0f)
+            setTouchEnabled(false)       // ❌ desactiva todos los eventos táctiles
+            setDragEnabled(false)        // ❌ desactiva el drag (mover con dedo)
+            setScaleEnabled(false)       // ❌ desactiva pinch zoom
+            setPinchZoom(false)          // ❌ desactiva pinch-to-zoom combinado
+            isDoubleTapToZoomEnabled = false // ❌ desactiva zoom con doble tap
+            isHighlightPerTapEnabled = false   // ❌ evita que seleccione una vela al tocar
+        }
+        chart.legend.apply {
+            isEnabled = true
+            textSize = 9f
+            textColor = requireContext().getColorRes(R.color.white_alpha_65)
+            verticalAlignment = Legend.LegendVerticalAlignment.TOP
+            horizontalAlignment = Legend.LegendHorizontalAlignment.LEFT
+            orientation = Legend.LegendOrientation.HORIZONTAL
+        }
+        chart.description.apply {
+            isEnabled = false
+        }
+        chart.axisLeft.apply {
+            setDrawGridLines(false)
+            isEnabled = false  // opcional, si quieres quitar eje izquierdo
+        }
+        chart.axisRight.apply {
+            setDrawAxisLine(false) // oculta la línea del eje Y derecho
+            setDrawLabels(true)    // mantiene los valores visibles
+            setDrawGridLines(true)
+            textColor = requireContext().getColorRes(R.color.white_alpha_65)
+            textSize = 8f
+            setDrawGridLines(true)
+            gridColor = requireContext().getColorRes(R.color.white_alpha_05)
+            gridLineWidth = 1f         // 🔹 grosor de línea (opcional)
+            valueFormatter = object : ValueFormatter() {
+                override fun getFormattedValue(value: Float): String {
+                    return "BOB " + String.format("%.2f", value)
+                }
+            }
+        }
 
+        chart.xAxis.apply {
+            position = XAxis.XAxisPosition.BOTTOM
+            setDrawLabels(true)  // mostrar etiquetas
+            setDrawGridLines(false) // quitar líneas de cuadrícula
+            setDrawAxisLine(false) // oculta la línea del eje X derecho
+            textSize = 8f
+            textColor = requireContext().getColorRes(R.color.white_alpha_65)
+
+        }
+    }
 
 
     private fun setChartData(dailyCandles: List<DailyCandle>) = with(binding.chart) {
-
         val json =  Gson().toJson(dailyCandles)
         println("naty CHART $json")
 
         val entries = dailyCandles.toCandleEntries()
+        val fechas = dailyCandles.toXAxisValues()
+
         val set = CandleDataSet(entries, "USDT - BOB")
 
-        set.barSpace = 0.3f   // 🔥 velas delgadas
-        set.shadowWidth = 1f
-        set.shadowColorSameAsCandle = true // <-- hace que la sombra tenga el mismo color que la vela
-        set.decreasingColor = requireContext().getColorRes(R.color.red)
-        set.decreasingPaintStyle = Paint.Style.FILL
-        set.increasingColor = requireContext().getColorRes(R.color.green)
-        set.increasingPaintStyle = Paint.Style.FILL
-        set.neutralColor = Color.BLUE
-        set.setDrawValues(false)
+        set.apply {
+            barSpace = 0.3f   // 🔥 velas delgadas
+            shadowWidth = 1f
+            shadowColorSameAsCandle = true // <-- hace que la sombra tenga el mismo color que la vela
+            decreasingColor = requireContext().getColorRes(R.color.red)
+            decreasingPaintStyle = Paint.Style.FILL
+            increasingColor = requireContext().getColorRes(R.color.green)
+            increasingPaintStyle = Paint.Style.FILL
+            neutralColor = Color.BLUE
+            setDrawValues(false)
+        }
 
-
+        chart.xAxis.apply {
+            labelCount = fechas.size
+            valueFormatter = object : ValueFormatter() {
+                override fun getFormattedValue(value: Float): String {
+                    val index = value.toInt()
+                    return if (index >= 0 && index < fechas.size) fechas[index] else ""
+                }
+            }
+        }
         val data = CandleData(set)
 
-        chart.description.isEnabled = false
-        chart.description = null
 
-
-        chart.setDrawBorders(false)       // quitar borde del gráfico
-
-        // Eje Y izquierdo
-        chart.axisLeft.setDrawGridLines(false)
-        chart.axisLeft.isEnabled = false  // opcional, si quieres quitar eje izquierdo
-
-        // Eje Y derecho
-        chart.axisRight.setDrawAxisLine(false) // oculta la línea del eje Y derecho
-        chart.axisRight.setDrawLabels(true)    // mantiene los valores visibles
-        chart.axisRight.setDrawGridLines(true)
-        chart.axisRight.textColor = requireContext().getColorRes(R.color.white_alpha_65)
-        chart.axisRight.textSize = 8f
-        chart.axisRight.setDrawGridLines(true)
-        chart.axisRight.gridColor = requireContext().getColorRes(R.color.white_alpha_05)
-        chart.axisRight.gridLineWidth = 1f         // 🔹 grosor de línea (opcional)
-        chart.axisRight.valueFormatter = object : ValueFormatter() {
-            override fun getFormattedValue(value: Float): String {
-                return "BOB " + String.format("%.2f", value)
-            }
-        }
-
-        // Eje X derecho
-        /*val fechas = listOf(
-            "20/09",
-            "21/09",
-            "22/09",
-            "23/09",
-            "24/09",
-            "25/09",
-            "26/09",
-            "27/09",
-            "28/09",
-            "29/09"
-        )*/
-        val fechas = dailyCandles.toXAxisValues()
-        chart.xAxis.position = XAxis.XAxisPosition.BOTTOM
-        chart.xAxis.setDrawLabels(true)  // mostrar etiquetas
-        chart.xAxis.setDrawGridLines(false) // quitar líneas de cuadrícula
-        chart.xAxis.setDrawAxisLine(false) // oculta la línea del eje X derecho
-        chart.xAxis.labelCount = fechas.size
-        chart.xAxis.textSize = 8f
-        chart.xAxis.textColor = requireContext().getColorRes(R.color.white_alpha_65)
-        chart.xAxis.valueFormatter = object : ValueFormatter() {
-            override fun getFormattedValue(value: Float): String {
-                val index = value.toInt()
-                return if (index >= 0 && index < fechas.size) fechas[index] else ""
-            }
-        }
-
-
-        // Establecer mínimo y máximo
-        //chart.axisRight.axisMinimum = 2f   // mínimo del eje Y
-        //chart.axisRight.axisMaximum = 24f   // máximo del eje Y
 
         chart.data = data
 
-        chart.legend.isEnabled = true
-        chart.legend.textSize = 9f
-        chart.legend.textColor = requireContext().getColorRes(R.color.white_alpha_65)
-        chart.legend.verticalAlignment = Legend.LegendVerticalAlignment.TOP
-        chart.legend.horizontalAlignment = Legend.LegendHorizontalAlignment.LEFT
-        chart.legend.orientation = Legend.LegendOrientation.HORIZONTAL
-
-        chart.setExtraOffsets(0f, 0f, 0f, 0f)
-
-        chart.setTouchEnabled(false)       // ❌ desactiva todos los eventos táctiles
-        chart.setDragEnabled(false)        // ❌ desactiva el drag (mover con dedo)
-        chart.setScaleEnabled(false)       // ❌ desactiva pinch zoom
-        chart.setPinchZoom(false)          // ❌ desactiva pinch-to-zoom combinado
-        chart.isDoubleTapToZoomEnabled = false // ❌ desactiva zoom con doble tap
-        chart.isHighlightPerTapEnabled = false   // ❌ evita que seleccione una vela al tocar
 
 
-        chart.invalidate()
 
-        /*val labels = chartData.labels
-        val values = chartData.values
-        val colors = chartData.colors
-        val label = chartData.label
 
-        descriptionTextView.text = chartData.description
-        variationTextView.text = chartData.variation
-        variationTextView.setTextColor(chartData.variationColor)
-        priceTextView.text = chartData.price
-        labelTextView.text = label
+        //chart.invalidate()
 
-        val dataSet = LineDataSet(values, label)
-        dataSet.setDrawIcons(true)
-        dataSet.setDrawValues(true)
-        dataSet.valueFormatter = AmountValueFormatter()
-        dataSet.valueTextSize = ELEVEN_F
-        dataSet.setValueTextColors(colors)
-        dataSet.enableDashedLine(TEN_F, ZERO_F, ZERO_F)
-        dataSet.color = requireContext().getColorRes(R.color.maroon_flush)
-        dataSet.setCircleColor(requireContext().getColorRes(R.color.maroon_flush))
-        dataSet.lineWidth = THREE_F
-        dataSet.circleRadius = FOUR_F
-        dataSet.setDrawCircleHole(false)
-        dataSet.setDrawFilled(true)
-        dataSet.mode = LineDataSet.Mode.HORIZONTAL_BEZIER
-        dataSet.fillDrawable = requireContext().getDrawableRes(R.drawable.gradient_chart)
-        val dataSets = ArrayList<ILineDataSet>()
-        dataSets.add(dataSet)
-
-        lineChart.apply {
-            xAxis.setLabelCount(labels.size, true)
-            xAxis.valueFormatter = IndexAxisValueFormatter(labels)
-            axisLeft.setAxisMaximum(chartData.axisMaximum)
-            axisLeft.setAxisMinimum(chartData.axisMinimum)
-            clear()
-            setData(LineData(dataSets))
-            invalidate()
-        }*/
     }
 
     private fun setDataChartPrice(dailyCandles: List<DailyCandle>) = with(binding) {
