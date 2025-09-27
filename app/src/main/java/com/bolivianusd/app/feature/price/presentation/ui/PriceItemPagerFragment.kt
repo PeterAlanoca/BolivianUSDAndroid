@@ -73,18 +73,22 @@ class PriceItemPagerFragment : BaseFragment<FragmentPriceItemPagerBinding>() {
     ) = FragmentPriceItemPagerBinding.inflate(inflater, container, false)
 
     override fun initViews() {
-        setupRollingTextView()
+       // setupRollingTextView()
         setupCandleStickChart()
         setupCandleStickCharShimmer()
         resetDataUIComponents()
     }
 
     override fun setListeners() = with(binding) {
-        priceValue.dollarTypeSwitch.setOnCheckedChangeListener { _, isChecked ->
-            val dollarType = if (isChecked) DollarType.USD else DollarType.USDT
+        priceView.setOnDollarTypeChanged { dollarType ->
             resetDataUIComponents()
             viewModel.setDollarType(tradeType, dollarType)
         }
+        /*priceContent.dollarTypeSwitch.setOnCheckedChangeListener { _, isChecked ->
+            val dollarType = if (isChecked) DollarType.USD else DollarType.USDT
+            resetDataUIComponents()
+            viewModel.setDollarType(tradeType, dollarType)
+        }*/
     }
 
     override fun initData() {
@@ -96,12 +100,15 @@ class PriceItemPagerFragment : BaseFragment<FragmentPriceItemPagerBinding>() {
             when (state) {
                 is UiState.Loading -> {
                     //println("naty getPriceState UiState.Loading")
-                    showPriceLoadingState()
+                    //showPriceLoadingState()
+                    binding.priceView.showPriceLoadingState()
                 }
 
                 is UiState.Success -> {
+                    binding.priceView.showPriceDataSuccess(state.data)
+
                     //println("naty getPriceState UiState.Success ${state.data.toString()}")
-                    showPriceDataSuccess(state.data)
+                    //showPriceDataSuccess(state.data)
                 }
 
                 is UiState.Error -> Unit
@@ -126,15 +133,12 @@ class PriceItemPagerFragment : BaseFragment<FragmentPriceItemPagerBinding>() {
         collectFlow(viewModel.getDailyCandleState(tradeType)) { state ->
             when (state) {
                 is UiState.Loading -> {
-                    //showUpdateTimeShimmer()
-                    if (shouldShowLoading) {
-                        showPriceLoadingState()
-                    }
+                    showChartLoadingState()
+
                     println("naty getDailyCandleState UiState.Loading")
                 }
 
                 is UiState.Success -> {
-                    shouldShowLoading = false // ✅ Una vez cargado, no mostrar más loading
 
                     showChartDataSuccess(state.data)
                     println("naty getDailyCandleState UiState.Success ${state.data.toString()}")
@@ -143,17 +147,17 @@ class PriceItemPagerFragment : BaseFragment<FragmentPriceItemPagerBinding>() {
             }
         }
     }
-    private var shouldShowLoading = true
 
     private fun resetDataUIComponents() {
-        with(binding.priceValue) {
+        binding.priceView.resetDataUIComponents()
+        /*with(binding.priceValue) {
             assetView.invisible()
             priceTextView.invisible()
             dollarTypeSwitch.invisible()
             assetTextView.clearText()
             fiatTextView.clearText()
             descriptionTextView.clearText()
-        }
+        }*/
 
         with(binding.range) {
             minTextView.clearText()
@@ -188,13 +192,13 @@ class PriceItemPagerFragment : BaseFragment<FragmentPriceItemPagerBinding>() {
         }
     }
 
-    private fun showPriceLoadingState() = with(binding) {
+    /*private fun showPriceLoadingState() = with(binding) {
         priceValue.root.gone()
         priceShimmer.root.visible()
         priceShimmer.shimmerLayout.startShimmer()
-    }
+    }*/
 
-    private fun showPriceDataSuccess(price: Price) = with(binding) {
+    /*private fun showPriceDataSuccess(price: Price) = with(binding) {
         if (priceValue.root.isVisible) {
             setPriceData(price)
             return@with
@@ -230,7 +234,7 @@ class PriceItemPagerFragment : BaseFragment<FragmentPriceItemPagerBinding>() {
     private fun hidePriceLoading() = with(binding) {
         priceShimmer.shimmerLayout.stopShimmer()
         priceShimmer.root.gone()
-    }
+    }*/
 
     ////////////////////////////////
     private fun showPriceRangeLoadingState() = with(binding) {
@@ -318,9 +322,9 @@ class PriceItemPagerFragment : BaseFragment<FragmentPriceItemPagerBinding>() {
 
         val candleDataSet = CandleDataSet(entries, dataSetLabel)
         candleDataSet.apply {
-            barSpace = 0.3f   // 🔥 velas delgadas
+            barSpace = 0.3f
             shadowWidth = 1f
-            shadowColorSameAsCandle = true // <-- hace que la sombra tenga el mismo color que la vela
+            shadowColorSameAsCandle = true
             decreasingColor = requireContext().getColorRes(R.color.red)
             decreasingPaintStyle = Paint.Style.FILL
             increasingColor = requireContext().getColorRes(R.color.green)
@@ -404,11 +408,11 @@ class PriceItemPagerFragment : BaseFragment<FragmentPriceItemPagerBinding>() {
 
     }
 
-    private fun setupRollingTextView() = with(binding.priceValue) {
+    /*private fun setupRollingTextView() = with(binding.priceValue) {
         priceTextView.animationDuration = 600L
         priceTextView.addCharOrder(CharOrder.Number)
         priceTextView.animationInterpolator = AccelerateDecelerateInterpolator()
-    }
+    }*/
 
     private fun setupCandleStickCharShimmer() = with(binding.chart) {
         val entries = listOf(
@@ -541,12 +545,6 @@ class PriceItemPagerFragment : BaseFragment<FragmentPriceItemPagerBinding>() {
         }
     }
 
-    /*override fun onStart() {
-        super.onStart()
-        viewModel.observeTradeType(tradeType)
-        // Opcional: forzar refresh al volver a la pestaña
-        viewModel.refresh(tradeType)
-    }*/
 
     companion object {
         private const val TRADER_TYPE = "TRADER_TYPE"
