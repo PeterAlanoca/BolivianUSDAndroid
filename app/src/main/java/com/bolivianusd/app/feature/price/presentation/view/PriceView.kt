@@ -1,4 +1,4 @@
-package com.bolivianusd.app.feature.price.presentation.views
+package com.bolivianusd.app.feature.price.presentation.view
 
 import android.content.Context
 import android.util.AttributeSet
