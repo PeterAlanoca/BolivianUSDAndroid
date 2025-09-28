@@ -33,7 +33,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setupBottomNavigationView() = with(binding) {
-        bottomNavigationView.isVisible = false
+        //bottomNavigationView.isVisible = false
         bottomNavigationView.setOnItemSelectedListener {
             when (it.itemId) {
                 R.id.actionPrice -> goToPrice()
@@ -54,8 +54,11 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun goToCalculator() {
-        val fragment = CalculatorFragment.newInstance()
-        pushFragment(fragment, R.id.frameLayout, CalculatorFragment.TAG)
+        pushFragment(
+            fragment = CalculatorFragment.newInstance(),
+            containerViewId = R.id.frameLayout,
+            tag = CalculatorFragment.TAG
+        )
     }
 
     private fun goToNews() {

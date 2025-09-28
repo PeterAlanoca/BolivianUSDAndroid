@@ -28,7 +28,6 @@ import com.github.mikephil.charting.data.CandleData
 import com.github.mikephil.charting.data.CandleDataSet
 import com.github.mikephil.charting.data.CandleEntry
 import com.github.mikephil.charting.formatter.ValueFormatter
-import com.google.gson.Gson
 
 class DailyCandleChartView @JvmOverloads constructor(
     context: Context,
@@ -36,8 +35,9 @@ class DailyCandleChartView @JvmOverloads constructor(
     defStyleAttr: Int = 0
 ) : ConstraintLayout(context, attrs, defStyleAttr) {
 
-    private val binding =
+    private val binding: LayoutDailyCandleChartBinding by lazy {
         LayoutDailyCandleChartBinding.inflate(LayoutInflater.from(context), this, true)
+    }
 
     init {
         setupCandleStickCharShimmer()

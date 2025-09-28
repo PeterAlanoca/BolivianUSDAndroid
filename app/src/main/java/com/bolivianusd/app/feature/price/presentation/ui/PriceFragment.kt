@@ -39,7 +39,7 @@ class PriceFragment : BaseFragment<FragmentPriceBinding>() {
             getString(R.string.price_view_pager_item_sell)
         )
         viewPager.adapter = PricePagerAdapter(this@PriceFragment, fragments)
-        TabLayoutMediator(binding.tabLayout, binding.viewPager) { tab, position ->
+        TabLayoutMediator(tabLayout, viewPager) { tab, position ->
             tab.text = titles[position]
         }.attach()
     }

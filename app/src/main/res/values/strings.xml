@@ -23,4 +23,8 @@
     <string name="price_view_pager_item_middle">Medio</string>
     <string name="price_view_pager_item_high">Alto</string>
 
+    <!-- Calculator -->
+    <string name="calculator_view_pager_item_buy">Compra</string>
+    <string name="calculator_view_pager_item_sell">Venta</string>
+
 </resources>

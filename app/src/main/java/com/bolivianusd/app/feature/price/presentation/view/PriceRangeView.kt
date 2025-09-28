@@ -22,8 +22,9 @@ class PriceRangeView @JvmOverloads constructor(
     defStyleAttr: Int = 0
 ) : ConstraintLayout(context, attrs, defStyleAttr) {
 
-    private val binding =
+    private val binding: LayoutPriceRangeBinding by lazy {
         LayoutPriceRangeBinding.inflate(LayoutInflater.from(context), this, true)
+    }
 
     fun resetDataUIComponents() {
         with(binding) {
