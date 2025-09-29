@@ -42,7 +42,7 @@ class MainActivity : AppCompatActivity() {
             }
             true
         }
-        bottomNavigationView.selectedItemId = R.id.actionPrice
+        bottomNavigationView.selectedItemId = R.id.actionCalculator
     }
 
     private fun goToPrice() {

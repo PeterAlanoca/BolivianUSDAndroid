@@ -4,8 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    app:layout_constraintEnd_toEndOf="parent"
-    app:layout_constraintStart_toStartOf="parent">
+    tools:context=".feature.price.presentation.view.DailyCandleChartView">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/updateTimeContent"

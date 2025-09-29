@@ -15,7 +15,7 @@ import com.bolivianusd.app.core.extensions.invisible
 import com.bolivianusd.app.core.extensions.visible
 import com.bolivianusd.app.core.listeners.SimpleAnimationListener
 import com.bolivianusd.app.core.util.emptyString
-import com.bolivianusd.app.databinding.LayoutDailyCandleChartBinding
+import com.bolivianusd.app.databinding.ViewDailyCandleChartBinding
 import com.bolivianusd.app.feature.price.domain.model.DailyCandle
 import com.bolivianusd.app.feature.price.presentation.mapper.getDateRangeLabel
 import com.bolivianusd.app.feature.price.presentation.mapper.toCandleEntries
@@ -35,8 +35,8 @@ class DailyCandleChartView @JvmOverloads constructor(
     defStyleAttr: Int = 0
 ) : ConstraintLayout(context, attrs, defStyleAttr) {
 
-    private val binding: LayoutDailyCandleChartBinding by lazy {
-        LayoutDailyCandleChartBinding.inflate(LayoutInflater.from(context), this, true)
+    private val binding: ViewDailyCandleChartBinding by lazy {
+        ViewDailyCandleChartBinding.inflate(LayoutInflater.from(context), this, true)
     }
 
     init {

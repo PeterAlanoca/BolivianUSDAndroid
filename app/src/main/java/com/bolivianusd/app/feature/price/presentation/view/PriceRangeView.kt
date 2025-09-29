@@ -13,7 +13,7 @@ import com.bolivianusd.app.core.extensions.gone
 import com.bolivianusd.app.core.extensions.invisible
 import com.bolivianusd.app.core.extensions.visible
 import com.bolivianusd.app.core.listeners.SimpleAnimationListener
-import com.bolivianusd.app.databinding.LayoutPriceRangeBinding
+import com.bolivianusd.app.databinding.ViewPriceRangeBinding
 import com.bolivianusd.app.feature.price.domain.model.PriceRange
 
 class PriceRangeView @JvmOverloads constructor(
@@ -22,8 +22,8 @@ class PriceRangeView @JvmOverloads constructor(
     defStyleAttr: Int = 0
 ) : ConstraintLayout(context, attrs, defStyleAttr) {
 
-    private val binding: LayoutPriceRangeBinding by lazy {
-        LayoutPriceRangeBinding.inflate(LayoutInflater.from(context), this, true)
+    private val binding: ViewPriceRangeBinding by lazy {
+        ViewPriceRangeBinding.inflate(LayoutInflater.from(context), this, true)
     }
 
     fun resetDataUIComponents() {

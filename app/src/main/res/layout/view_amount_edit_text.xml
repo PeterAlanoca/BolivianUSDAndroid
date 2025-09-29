@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    tools:context=".feature.calculator.presentation.view.AmountEditText">
+
+    <EditText
+        android:id="@+id/editText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/transparent"
+        android:cursorVisible="true"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:fontFamily="@font/sfuidisplay_medium"
+        android:includeFontPadding="false"
+        android:inputType="numberDecimal"
+        android:maxLength="16"
+        android:maxLines="1"
+        android:padding="0dp"
+        android:textAlignment="textEnd"
+        android:textColor="@color/white"
+        android:textCursorDrawable="@drawable/cursor_input"
+        android:textSize="28sp"
+        tools:text="1.00" />
+
+</RelativeLayout>

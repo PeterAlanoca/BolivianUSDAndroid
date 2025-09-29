@@ -14,8 +14,7 @@ import com.bolivianusd.app.core.extensions.gone
 import com.bolivianusd.app.core.extensions.invisible
 import com.bolivianusd.app.core.extensions.visible
 import com.bolivianusd.app.core.listeners.SimpleAnimationListener
-import com.bolivianusd.app.databinding.LayoutDailyCandleChartBinding
-import com.bolivianusd.app.databinding.LayoutPriceBinding
+import com.bolivianusd.app.databinding.ViewPriceBinding
 import com.bolivianusd.app.feature.price.domain.model.Price
 import com.bolivianusd.app.shared.domain.model.DollarType
 import com.yy.mobile.rollingtextview.CharOrder
@@ -26,8 +25,8 @@ class PriceView @JvmOverloads constructor(
     defStyleAttr: Int = 0
 ) : ConstraintLayout(context, attrs, defStyleAttr) {
 
-    private val binding: LayoutPriceBinding by lazy {
-        LayoutPriceBinding.inflate(LayoutInflater.from(context), this, true)
+    private val binding: ViewPriceBinding by lazy {
+        ViewPriceBinding.inflate(LayoutInflater.from(context), this, true)
     }
 
     private var onDollarTypeChanged: ((DollarType) -> Unit)? = null
