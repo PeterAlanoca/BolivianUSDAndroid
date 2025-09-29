@@ -3,6 +3,8 @@ package com.bolivianusd.app.feature.calculator.presentation.ui
 import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.LayoutInflater
@@ -11,6 +13,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
+import androidx.core.widget.doAfterTextChanged
 import com.bolivianusd.app.R
 import com.bolivianusd.app.core.base.BaseFragment
 import com.bolivianusd.app.core.extensions.getMaxLength
@@ -29,7 +32,8 @@ class CalculatorItemPagerFragment : BaseFragment<FragmentCalculatorItemPagerBind
 
     private var exchangeRateValue = 6.86
     private var usdValue = 1.00
-    private var bobValue = 6.86
+    private var bobValue = exchangeRateValue * usdValue
+
     private var currentFocusField: EditText? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -58,7 +62,71 @@ class CalculatorItemPagerFragment : BaseFragment<FragmentCalculatorItemPagerBind
             deleteNumberField()
         }
         binding.keyboardView.setOnNumberClickListener {
-            appendNumberField( it)
+            appendNumberField(it)
+        }
+        // Usar el listener personalizado de AmountEditText
+        binding.etExchangeRate.setOnAmountChangeListener { amount ->
+            if (binding.etExchangeRate.editText.hasFocus()) {
+                exchangeRateValue = amount
+                calculateFromExchangeRate()
+            }
+        }
+
+        binding.etUsd.setOnAmountChangeListener { amount ->
+            if (binding.etUsd.editText.hasFocus()) {
+                usdValue = amount
+                calculateFromUSD()
+            }
+        }
+
+        binding.etBob.setOnAmountChangeListener { amount ->
+            if (binding.etBob.editText.hasFocus()) {
+                bobValue = amount
+                calculateFromBOB()
+            }
+        }
+    }
+
+    private fun calculateFromExchangeRate() {
+        // Cuando cambia la tasa de cambio, recalcular BOB basado en USD
+        bobValue = exchangeRateValue * usdValue
+        updateBobField()
+    }
+
+    private fun calculateFromUSD() {
+        // Cuando cambia USD, calcular BOB
+        bobValue = exchangeRateValue * usdValue
+        updateBobField()
+    }
+
+    private fun calculateFromBOB() {
+        // Cuando cambia BOB, calcular USD
+        usdValue = if (exchangeRateValue != 0.0) {
+            bobValue / exchangeRateValue
+        } else {
+            0.0
+        }
+        updateUsdField()
+    }
+
+    private fun updateBobField() {
+        // Actualizar campo BOB sin triggerear su listener
+        if (!binding.etBob.editText.hasFocus()) {
+            binding.etBob.setAmountValue(bobValue)
+        }
+    }
+
+    private fun updateUsdField() {
+        // Actualizar campo USD sin triggerear su listener
+        if (!binding.etUsd.editText.hasFocus()) {
+            binding.etUsd.setAmountValue(usdValue)
+        }
+    }
+
+    private fun updateExchangeRateField() {
+        // Actualizar campo tasa sin triggerear su listener
+        if (!binding.etExchangeRate.editText.hasFocus()) {
+            binding.etExchangeRate.setAmountValue(exchangeRateValue)
         }
     }
 
@@ -67,9 +135,11 @@ class CalculatorItemPagerFragment : BaseFragment<FragmentCalculatorItemPagerBind
             binding.etExchangeRate.editText -> {
                 deleteNumber(binding.etExchangeRate)
             }
+
             binding.etUsd.editText -> {
                 deleteNumber(binding.etUsd)
             }
+
             binding.etBob.editText -> {
                 deleteNumber(binding.etBob)
             }
@@ -81,9 +151,11 @@ class CalculatorItemPagerFragment : BaseFragment<FragmentCalculatorItemPagerBind
             binding.etExchangeRate.editText -> {
                 appendNumber(binding.etExchangeRate, value)
             }
+
             binding.etUsd.editText -> {
                 appendNumber(binding.etUsd, value)
             }
+
             binding.etBob.editText -> {
                 appendNumber(binding.etBob, value)
             }
@@ -95,9 +167,11 @@ class CalculatorItemPagerFragment : BaseFragment<FragmentCalculatorItemPagerBind
             binding.etExchangeRate.editText -> {
                 clearNumber(binding.etExchangeRate)
             }
+
             binding.etUsd.editText -> {
                 clearNumber(binding.etUsd)
             }
+
             binding.etBob.editText -> {
                 clearNumber(binding.etBob)
             }
@@ -140,26 +214,25 @@ class CalculatorItemPagerFragment : BaseFragment<FragmentCalculatorItemPagerBind
         amountEditText.clearAmount()
     }
 
-    private fun setupUI() {
-        /*binding.etExchangeRate.isFocusable = true
-        binding.etExchangeRate.isFocusableInTouchMode = true
-        binding.etUsd.isFocusable = true
-        binding.etUsd.isFocusableInTouchMode = true
-        binding.etBob.isFocusable = true
-        binding.etBob.isFocusableInTouchMode = true*/
+    private fun setupUI() = with(binding) {
+        etExchangeRate.setAmountValue(exchangeRateValue)
+        etUsd.setAmountValue(usdValue)
+        etBob.setAmountValue(bobValue)
 
-        // Establecer valores iniciales
+        currentFocusField = etUsd.editText
+        Handler(Looper.getMainLooper()).postDelayed({
+            binding.etUsd.editText.requestFocus()
+
+        }, 500)
     }
 
     private fun setupClickListeners() {
-        binding.etExchangeRate.editText.setOnClickListener {
+        binding.etExchangeRate.setOnClickListener {
             setCurrentFocus(binding.etExchangeRate.editText)
         }
-
         binding.etUsd.setOnClickListener {
             setCurrentFocus(binding.etUsd.editText)
         }
-
         binding.etBob.setOnClickListener {
             setCurrentFocus(binding.etBob.editText)
         }
@@ -186,6 +259,7 @@ class CalculatorItemPagerFragment : BaseFragment<FragmentCalculatorItemPagerBind
         field.requestFocus()
         hideSystemKeyboard()
         highlightActiveField()
+        clearField() //test
     }
 
     private fun highlightActiveField() {
@@ -198,10 +272,12 @@ class CalculatorItemPagerFragment : BaseFragment<FragmentCalculatorItemPagerBind
                 binding.exchangeRate.strokeWidth = 2
                 binding.exchangeRate.strokeColor = requireContext().getColor(R.color.white)
             }
+
             binding.etUsd.editText -> {
                 binding.usd.strokeWidth = 2
                 binding.usd.strokeColor = requireContext().getColor(R.color.white)
             }
+
             binding.etBob.editText -> {
                 binding.bob.strokeWidth = 2
                 binding.bob.strokeColor = requireContext().getColor(R.color.white)
@@ -210,12 +286,14 @@ class CalculatorItemPagerFragment : BaseFragment<FragmentCalculatorItemPagerBind
     }
 
     private fun disableSystemKeyboard() {
-        val imm = requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        val imm =
+            requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         imm.hideSoftInputFromWindow(view?.windowToken, 0)
     }
 
     private fun hideSystemKeyboard() {
-        val imm = requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        val imm =
+            requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         imm.hideSoftInputFromWindow(view?.windowToken, 0)
         activity?.let {
             imm.hideSoftInputFromWindow(it.currentFocus?.windowToken, 0)

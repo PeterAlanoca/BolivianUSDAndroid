@@ -43,7 +43,6 @@ class AmountEditText @JvmOverloads constructor(
 
     private fun initView() {
         setupTextWatcher()
-        setAmountValue(1.00)//
     }
 
     private fun setupTextWatcher() {
