@@ -3,7 +3,14 @@ package com.bolivianusd.app.feature.calculator.presentation.view
 import android.content.Context
 import android.util.AttributeSet
 import android.view.LayoutInflater
+import android.view.animation.Animation
+import android.view.animation.AnimationUtils
 import android.widget.RelativeLayout
+import androidx.core.view.isVisible
+import com.bolivianusd.app.R
+import com.bolivianusd.app.core.extensions.gone
+import com.bolivianusd.app.core.extensions.visible
+import com.bolivianusd.app.core.listeners.SimpleAnimationListener
 import com.google.android.material.textview.MaterialTextView
 import com.bolivianusd.app.databinding.ViewKeyboardBinding
 
@@ -32,17 +39,52 @@ class KeyboardView @JvmOverloads constructor(
         setupClickListeners()
     }
 
+    fun showShimmerLoading() = with(binding) {
+        keyboardShimmer.visible()
+        shimmerLayout.root.startShimmer()
+        keyboardView.gone()
+    }
+
+    fun showContentView() = with(binding) {
+        if (keyboardView.isVisible) {
+            return@with
+        }
+
+        val fadeOut = AnimationUtils.loadAnimation(context, R.anim.anim_view_fade_out)
+        fadeOut.setAnimationListener(object : SimpleAnimationListener() {
+            override fun onAnimationEnd(animation: Animation?) {
+                hideShimmerLoading()
+                //setPriceRangeData(priceRange)
+                val fadeIn =
+                    AnimationUtils.loadAnimation(context, R.anim.anim_view_fade_in)
+                keyboardView.visible()
+                keyboardView.startAnimation(fadeIn)
+            }
+        })
+        if (keyboardShimmer.isVisible) {
+            shimmerLayout.root.startAnimation(fadeOut)
+        }
+    }
+
+    private fun hideShimmerLoading() = with(binding) {
+        keyboardShimmer.gone()
+        shimmerLayout.root.stopShimmer()
+        keyboardView.visible()
+    }
 
     private fun setupClickListeners() {
         numberButtons.forEachIndexed { number, button ->
             button.setOnClickListener {
+                println("naty button")
                 onNumberClickListener?.invoke(number)
             }
         }
         binding.btnDelete.setOnClickListener {
+            println("naty btnDelete")
             onDeleteClickListener?.invoke()
         }
         binding.btnClear.setOnClickListener {
+            println("naty btnClear")
             onClearClickListener?.invoke()
         }
     }
