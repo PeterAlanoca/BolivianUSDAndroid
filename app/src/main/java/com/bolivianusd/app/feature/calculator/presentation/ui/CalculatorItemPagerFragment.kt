@@ -13,18 +13,24 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
-import androidx.core.widget.doAfterTextChanged
+import androidx.fragment.app.activityViewModels
 import com.bolivianusd.app.R
 import com.bolivianusd.app.core.base.BaseFragment
+import com.bolivianusd.app.core.extensions.collectFlow
 import com.bolivianusd.app.core.extensions.getMaxLength
 import com.bolivianusd.app.core.extensions.serializable
-import com.bolivianusd.app.core.util.emptyString
 import com.bolivianusd.app.databinding.FragmentCalculatorItemPagerBinding
 import com.bolivianusd.app.feature.calculator.presentation.view.AmountEditText
+import com.bolivianusd.app.feature.calculator.presentation.viewmodel.CalculatorItemPagerViewModel
+import com.bolivianusd.app.shared.domain.model.DollarType
 import com.bolivianusd.app.shared.domain.model.TradeType
-import com.google.android.material.textfield.TextInputEditText
+import com.bolivianusd.app.shared.domain.state.UiState
+import kotlin.getValue
 
 class CalculatorItemPagerFragment : BaseFragment<FragmentCalculatorItemPagerBinding>() {
+
+
+    private val viewModel: CalculatorItemPagerViewModel by activityViewModels()
 
     private val tradeType: TradeType by lazy {
         requireNotNull(arguments?.serializable<TradeType>(TRADER_TYPE))
@@ -39,6 +45,11 @@ class CalculatorItemPagerFragment : BaseFragment<FragmentCalculatorItemPagerBind
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         isNotRecreate = false
+    }
+
+    override fun onStart() {
+        super.onStart()
+        viewModel.getPriceAndCandles(tradeType)
     }
 
     override fun getViewBinding(
@@ -87,6 +98,32 @@ class CalculatorItemPagerFragment : BaseFragment<FragmentCalculatorItemPagerBind
         }
     }
 
+    override fun initData() {
+        viewModel.setDollarType(tradeType, DollarType.USDT)
+    }
+
+    ////////////////
+    override fun setupObservers() {
+        setupPriceRangeObserver()
+    }
+
+    private fun setupPriceRangeObserver() = with(binding) {
+        collectFlow(viewModel.getPriceRangeState(tradeType)) { state ->
+            when (state) {
+                is UiState.Loading -> {
+                    println("naty Loading")
+                }
+                is UiState.Success -> {
+                    println("naty Success ${state.data}")
+                }
+                is UiState.Error -> Unit
+            }
+        }
+    }
+
+
+
+    /////////////////////////////////////
     private fun calculateFromExchangeRate() {
         // Cuando cambia la tasa de cambio, recalcular BOB basado en USD
         bobValue = exchangeRateValue * usdValue
@@ -259,14 +296,13 @@ class CalculatorItemPagerFragment : BaseFragment<FragmentCalculatorItemPagerBind
         field.requestFocus()
         hideSystemKeyboard()
         highlightActiveField()
-        clearField() //test
+        //clearField() //test
     }
 
     private fun highlightActiveField() {
-        binding.exchangeRate.strokeWidth = 0
+        /*binding.exchangeRate.strokeWidth = 0
         binding.usd.strokeWidth = 0
         binding.bob.strokeWidth = 0
-
         when (currentFocusField) {
             binding.etExchangeRate.editText -> {
                 binding.exchangeRate.strokeWidth = 2
@@ -277,12 +313,11 @@ class CalculatorItemPagerFragment : BaseFragment<FragmentCalculatorItemPagerBind
                 binding.usd.strokeWidth = 2
                 binding.usd.strokeColor = requireContext().getColor(R.color.white)
             }
-
             binding.etBob.editText -> {
                 binding.bob.strokeWidth = 2
                 binding.bob.strokeColor = requireContext().getColor(R.color.white)
             }
-        }
+        }*/
     }
 
     private fun disableSystemKeyboard() {

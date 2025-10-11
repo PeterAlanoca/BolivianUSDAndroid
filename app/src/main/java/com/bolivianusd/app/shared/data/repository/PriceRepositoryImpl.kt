@@ -1,14 +1,14 @@
-package com.bolivianusd.app.feature.price.data.repository
+package com.bolivianusd.app.shared.data.repository
 
 import com.bolivianusd.app.core.extensions.toDataStateFlow
-import com.bolivianusd.app.feature.price.data.remote.firebase.firestore.PriceUsdFirestoreDataSource
-import com.bolivianusd.app.feature.price.data.remote.firebase.realtime.PriceUsdtRealtimeDataSource
-import com.bolivianusd.app.feature.price.domain.model.Price
-import com.bolivianusd.app.feature.price.domain.model.PriceRange
-import com.bolivianusd.app.feature.price.domain.repository.PriceRepository
+import com.bolivianusd.app.shared.data.remote.firebase.firestore.PriceUsdFirestoreDataSource
+import com.bolivianusd.app.shared.data.remote.firebase.realtime.PriceUsdtRealtimeDataSource
 import com.bolivianusd.app.shared.data.state.DataState
 import com.bolivianusd.app.shared.domain.model.DollarType
+import com.bolivianusd.app.shared.domain.model.Price
+import com.bolivianusd.app.shared.domain.model.PriceRange
 import com.bolivianusd.app.shared.domain.model.TradeType
+import com.bolivianusd.app.shared.domain.repository.PriceRepository
 import kotlinx.coroutines.flow.Flow
 
 class PriceRepositoryImpl(
@@ -23,11 +23,17 @@ class PriceRepositoryImpl(
         }.toDataStateFlow()
     }
 
-    override fun observePriceRange(dollarType: DollarType, tradeType: TradeType):Flow<DataState<PriceRange>> {
+    override fun observePriceRange(dollarType: DollarType, tradeType: TradeType): Flow<DataState<PriceRange>> {
         return when(dollarType) {
             DollarType.USD -> priceUsdFirestoreDataSource.observePriceRange(tradeType)
             DollarType.USDT -> priceUsdtRealtimeDataSource.observePriceRange(tradeType)
         }.toDataStateFlow()
     }
 
+    override fun getPriceRange(dollarType: DollarType, tradeType: TradeType): Flow<DataState<PriceRange>> {
+        return when(dollarType) {
+            DollarType.USD -> priceUsdFirestoreDataSource.getPriceRange(tradeType)
+            DollarType.USDT -> priceUsdtRealtimeDataSource.getPriceRange(tradeType)
+        }.toDataStateFlow()
+    }
 }

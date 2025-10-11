@@ -1,14 +1,15 @@
-package com.bolivianusd.app.feature.price.domain.usecase
+package com.bolivianusd.app.feature.calculator.domain.usecase
 
-import com.bolivianusd.app.shared.domain.model.Price
 import com.bolivianusd.app.shared.domain.model.DollarType
+import com.bolivianusd.app.shared.domain.model.PriceRange
 import com.bolivianusd.app.shared.domain.model.TradeType
 import com.bolivianusd.app.shared.domain.state.UiState
 import kotlinx.coroutines.flow.Flow
 
-interface ObservePriceUseCase {
+interface GetPriceRangePollingUseCase {
     operator fun invoke(
         dollarType: DollarType,
-        tradeType: TradeType
-    ): Flow<UiState<Price>>
+        tradeType: TradeType,
+        interval: Long = 5000L
+    ): Flow<UiState<PriceRange>>
 }

@@ -14,7 +14,7 @@ import com.bolivianusd.app.core.extensions.invisible
 import com.bolivianusd.app.core.extensions.visible
 import com.bolivianusd.app.core.listeners.SimpleAnimationListener
 import com.bolivianusd.app.databinding.ViewPriceRangeBinding
-import com.bolivianusd.app.feature.price.domain.model.PriceRange
+import com.bolivianusd.app.shared.domain.model.PriceRange
 
 class PriceRangeView @JvmOverloads constructor(
     context: Context,

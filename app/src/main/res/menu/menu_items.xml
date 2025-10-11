@@ -13,10 +13,10 @@
         android:title="Calculadora"
         app:showAsAction="always|withText" />
 
-    <item
+    <!--item
         android:id="@+id/actionNews"
         android:icon="@drawable/ic_menu_news_24dp"
         android:title="Noticias"
-        app:showAsAction="always|withText" />
+        app:showAsAction="always|withText" /-->
 
 </menu>

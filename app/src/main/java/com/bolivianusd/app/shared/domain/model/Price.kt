@@ -1,4 +1,4 @@
-package com.bolivianusd.app.feature.price.domain.model
+package com.bolivianusd.app.shared.domain.model
 
 import com.bolivianusd.app.core.util.emptyString
 import java.math.BigDecimal

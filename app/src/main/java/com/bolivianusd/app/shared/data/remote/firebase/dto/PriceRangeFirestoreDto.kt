@@ -1,10 +1,10 @@
-package com.bolivianusd.app.feature.price.data.remote.firebase.dto
+package com.bolivianusd.app.shared.data.remote.firebase.dto
 
 import com.bolivianusd.app.core.util.ZERO_D
 import com.bolivianusd.app.core.util.emptyString
-import com.google.firebase.database.PropertyName
+import com.google.firebase.firestore.PropertyName
 
-data class PriceRangeRealtimeDto(
+data class PriceRangeFirestoreDto(
     @get:PropertyName("median")
     @set:PropertyName("median")
     var median: RangeValueDto = RangeValueDto(),

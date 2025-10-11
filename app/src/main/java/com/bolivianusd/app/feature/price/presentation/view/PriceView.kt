@@ -15,7 +15,7 @@ import com.bolivianusd.app.core.extensions.invisible
 import com.bolivianusd.app.core.extensions.visible
 import com.bolivianusd.app.core.listeners.SimpleAnimationListener
 import com.bolivianusd.app.databinding.ViewPriceBinding
-import com.bolivianusd.app.feature.price.domain.model.Price
+import com.bolivianusd.app.shared.domain.model.Price
 import com.bolivianusd.app.shared.domain.model.DollarType
 import com.yy.mobile.rollingtextview.CharOrder
 

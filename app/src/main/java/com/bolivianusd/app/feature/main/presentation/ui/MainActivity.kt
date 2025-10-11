@@ -3,6 +3,7 @@ package com.bolivianusd.app.feature.main.presentation.ui
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
+import androidx.fragment.app.Fragment
 import com.bolivianusd.app.R
 import com.bolivianusd.app.core.extensions.exit
 import com.bolivianusd.app.core.extensions.onBackPressed
@@ -25,6 +26,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
         onBackPressed { exit() }
         setupToolbar()
+        setupFragments()
         setupBottomNavigationView()
     }
 
@@ -36,26 +38,57 @@ class MainActivity : AppCompatActivity() {
         //bottomNavigationView.isVisible = false
         bottomNavigationView.setOnItemSelectedListener {
             when (it.itemId) {
-                R.id.actionPrice -> goToPrice()
-                R.id.actionCalculator -> goToCalculator()
-                R.id.actionNews -> goToNews()
+                R.id.actionPrice -> showFragment(priceFragment)
+                R.id.actionCalculator -> showFragment(calculatorFragment)
+                //R.id.actionNews -> goToNews()
             }
             true
         }
         bottomNavigationView.selectedItemId = R.id.actionCalculator
     }
 
+
+    private fun showFragment(fragment: Fragment) {
+        // Si ya está visible, no hacemos nada
+        if (fragment == activeFragment) return
+
+        supportFragmentManager.beginTransaction()
+            .hide(activeFragment!!) // ocultamos el anterior
+            .show(fragment)          // mostramos el nuevo
+            .commitAllowingStateLoss()
+
+        activeFragment = fragment // actualizamos el fragment activo
+    }
+
+    val priceFragment = PriceFragment.newInstance()
+
     private fun goToPrice() {
         pushFragment(
-            fragment = PriceFragment.newInstance(),
+            fragment = priceFragment,
             containerViewId = R.id.frameLayout,
             tag = PriceFragment.TAG
         )
     }
 
+    val calculatorFragment = CalculatorFragment.newInstance()
+
+    private var activeFragment: Fragment? = null
+
+
+    private fun setupFragments() {
+        supportFragmentManager.beginTransaction()
+            .add(R.id.frameLayout, calculatorFragment, PriceFragment.TAG)
+            .hide(calculatorFragment)
+            .add(R.id.frameLayout, priceFragment, PriceFragment.TAG)
+            .commit()
+
+        activeFragment = priceFragment
+    }
+
+
     private fun goToCalculator() {
         pushFragment(
-            fragment = CalculatorFragment.newInstance(),
+            fragment = calculatorFragment,
             containerViewId = R.id.frameLayout,
             tag = CalculatorFragment.TAG
         )

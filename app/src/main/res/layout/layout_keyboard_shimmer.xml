@@ -1,28 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.facebook.shimmer.ShimmerFrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/shimmerFrameLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/rhino"
+    app:shimmer_duration="500"
+    app:shimmer_intensity="0.5"
     tools:context=".feature.calculator.presentation.view.KeyboardView">
 
     <LinearLayout
-        android:id="@+id/keyboardShimmer"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="visible"
-        tools:visibility="gone">
-
-        <include layout="@layout/layout_keyboard_shimmer" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/keyboardView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:visibility="gone"
-        tools:visibility="visible">
+        android:orientation="vertical">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -39,7 +29,7 @@
                 android:fontFamily="@font/sfuidisplay_medium"
                 android:gravity="center"
                 android:text="7"
-                android:textColor="@color/white"
+                android:textColor="@color/cool_grey"
                 android:textSize="34sp" />
 
             <com.google.android.material.textview.MaterialTextView
@@ -50,7 +40,7 @@
                 android:fontFamily="@font/sfuidisplay_medium"
                 android:gravity="center"
                 android:text="8"
-                android:textColor="@color/white"
+                android:textColor="@color/cool_grey"
                 android:textSize="34sp" />
 
             <com.google.android.material.textview.MaterialTextView
@@ -61,7 +51,7 @@
                 android:fontFamily="@font/sfuidisplay_medium"
                 android:gravity="center"
                 android:text="9"
-                android:textColor="@color/white"
+                android:textColor="@color/cool_grey"
                 android:textSize="34sp" />
 
         </LinearLayout>
@@ -81,7 +71,7 @@
                 android:fontFamily="@font/sfuidisplay_medium"
                 android:gravity="center"
                 android:text="4"
-                android:textColor="@color/white"
+                android:textColor="@color/cool_grey"
                 android:textSize="34sp" />
 
             <com.google.android.material.textview.MaterialTextView
@@ -92,7 +82,7 @@
                 android:fontFamily="@font/sfuidisplay_medium"
                 android:gravity="center"
                 android:text="5"
-                android:textColor="@color/white"
+                android:textColor="@color/cool_grey"
                 android:textSize="34sp" />
 
             <com.google.android.material.textview.MaterialTextView
@@ -103,7 +93,7 @@
                 android:fontFamily="@font/sfuidisplay_medium"
                 android:gravity="center"
                 android:text="6"
-                android:textColor="@color/white"
+                android:textColor="@color/cool_grey"
                 android:textSize="34sp" />
 
         </LinearLayout>
@@ -123,7 +113,7 @@
                 android:fontFamily="@font/sfuidisplay_medium"
                 android:gravity="center"
                 android:text="1"
-                android:textColor="@color/white"
+                android:textColor="@color/cool_grey"
                 android:textSize="34sp" />
 
             <com.google.android.material.textview.MaterialTextView
@@ -134,7 +124,7 @@
                 android:fontFamily="@font/sfuidisplay_medium"
                 android:gravity="center"
                 android:text="2"
-                android:textColor="@color/white"
+                android:textColor="@color/cool_grey"
                 android:textSize="34sp" />
 
             <com.google.android.material.textview.MaterialTextView
@@ -145,7 +135,7 @@
                 android:fontFamily="@font/sfuidisplay_medium"
                 android:gravity="center"
                 android:text="3"
-                android:textColor="@color/white"
+                android:textColor="@color/cool_grey"
                 android:textSize="34sp" />
 
         </LinearLayout>
@@ -164,7 +154,8 @@
                 android:layout_weight="1"
                 android:background="@android:color/transparent"
                 android:scaleType="center"
-                android:src="@drawable/ic_del_white_40" />
+                android:src="@drawable/ic_del_white_40"
+                app:tint="@color/cool_grey" />
 
             <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/btn0"
@@ -174,7 +165,7 @@
                 android:fontFamily="@font/sfuidisplay_medium"
                 android:gravity="center"
                 android:text="0"
-                android:textColor="@color/white"
+                android:textColor="@color/cool_grey"
                 android:textSize="34sp" />
 
             <com.google.android.material.textview.MaterialTextView
@@ -185,10 +176,12 @@
                 android:fontFamily="@font/sfuidisplay_medium"
                 android:gravity="center"
                 android:text="C"
-                android:textColor="@color/red"
+                android:textColor="@color/cool_grey"
                 android:textSize="34sp" />
 
         </LinearLayout>
+
     </LinearLayout>
 
-</RelativeLayout>
+</com.facebook.shimmer.ShimmerFrameLayout>
+

@@ -1,12 +1,12 @@
-package com.bolivianusd.app.feature.price.data.mapper
+package com.bolivianusd.app.shared.data.mapper
 
 import com.bolivianusd.app.core.extensions.toFormatted
-import com.bolivianusd.app.feature.price.data.remote.firebase.dto.PriceRealtimeDto
-import com.bolivianusd.app.feature.price.data.remote.firebase.dto.PriceFirestoreDto
-import com.bolivianusd.app.feature.price.data.remote.firebase.dto.PriceRangeFirestoreDto
-import com.bolivianusd.app.feature.price.data.remote.firebase.dto.PriceRangeRealtimeDto
-import com.bolivianusd.app.feature.price.domain.model.Price
-import com.bolivianusd.app.feature.price.domain.model.PriceRange
+import com.bolivianusd.app.shared.data.remote.firebase.dto.PriceRealtimeDto
+import com.bolivianusd.app.shared.data.remote.firebase.dto.PriceFirestoreDto
+import com.bolivianusd.app.shared.data.remote.firebase.dto.PriceRangeFirestoreDto
+import com.bolivianusd.app.shared.data.remote.firebase.dto.PriceRangeRealtimeDto
+import com.bolivianusd.app.shared.domain.model.Price
+import com.bolivianusd.app.shared.domain.model.PriceRange
 
 fun PriceRealtimeDto.toPrice(): Price {
     return Price(

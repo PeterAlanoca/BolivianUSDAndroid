@@ -2,7 +2,7 @@ package com.bolivianusd.app.feature.price.domain.usecase
 
 import com.bolivianusd.app.core.extensions.toUiStateError
 import com.bolivianusd.app.feature.price.domain.model.DailyCandle
-import com.bolivianusd.app.feature.price.domain.model.Price
+import com.bolivianusd.app.shared.domain.model.Price
 import com.bolivianusd.app.feature.price.domain.repository.DailyCandleRepository
 import com.bolivianusd.app.shared.data.state.DataState
 import com.bolivianusd.app.shared.domain.model.DollarType

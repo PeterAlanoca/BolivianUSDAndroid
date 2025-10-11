@@ -1,12 +1,12 @@
-package com.bolivianusd.app.feature.price.data.remote.firebase.realtime
+package com.bolivianusd.app.shared.data.remote.firebase.realtime
 
 import com.bolivianusd.app.shared.data.exception.RealtimeDatabaseException
-import com.bolivianusd.app.feature.price.data.remote.firebase.dto.PriceRealtimeDto
-import com.bolivianusd.app.feature.price.data.mapper.toPrice
-import com.bolivianusd.app.feature.price.data.mapper.toPriceRange
-import com.bolivianusd.app.feature.price.data.remote.firebase.dto.PriceRangeRealtimeDto
-import com.bolivianusd.app.feature.price.domain.model.Price
-import com.bolivianusd.app.feature.price.domain.model.PriceRange
+import com.bolivianusd.app.shared.data.remote.firebase.dto.PriceRealtimeDto
+import com.bolivianusd.app.shared.data.mapper.toPrice
+import com.bolivianusd.app.shared.data.mapper.toPriceRange
+import com.bolivianusd.app.shared.data.remote.firebase.dto.PriceRangeRealtimeDto
+import com.bolivianusd.app.shared.domain.model.Price
+import com.bolivianusd.app.shared.domain.model.PriceRange
 import com.bolivianusd.app.shared.domain.model.TradeType
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -15,6 +15,8 @@ import com.google.firebase.database.ValueEventListener
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
 class PriceUsdtRealtimeDataSource @Inject constructor(
@@ -62,11 +64,28 @@ class PriceUsdtRealtimeDataSource @Inject constructor(
             }
 
             override fun onCancelled(error: DatabaseError) {
+                //encaso de error
                 close(RealtimeDatabaseException.Cancelled(error.toException()))
             }
         }
         reference.addValueEventListener(listener)
         awaitClose { reference.removeEventListener(listener) }
+    }
+
+    fun getPriceRange(tradeType: TradeType): Flow<PriceRange> = flow {
+        val path = when (tradeType) {
+            TradeType.BUY -> PRICE_RANGE_BUY_PATH
+            TradeType.SELL -> PRICE_RANGE_SELL_PATH
+        }
+        val reference = firebaseDatabase.getReference(path)
+        try {
+            val snapshot = reference.get().await()
+            val dto = snapshot.getValue(PriceRangeRealtimeDto::class.java)
+                ?: throw RealtimeDatabaseException.NullOrInvalidData()
+            emit(dto.toPriceRange())
+        } catch (e: Exception) {
+            throw RealtimeDatabaseException.Cancelled(e)
+        }
     }
 
     companion object {

@@ -1,5 +1,9 @@
 package com.bolivianusd.app.shared.di
 
+import com.bolivianusd.app.shared.data.remote.firebase.firestore.PriceUsdFirestoreDataSource
+import com.bolivianusd.app.shared.data.remote.firebase.realtime.PriceUsdtRealtimeDataSource
+import com.bolivianusd.app.shared.data.repository.PriceRepositoryImpl
+import com.bolivianusd.app.shared.domain.repository.PriceRepository
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.FirebaseFirestoreSettings
@@ -48,5 +52,25 @@ object SharedModule {
     @Provides
     @Singleton
     fun providePostgrest(client: SupabaseClient) = client.postgrest
+
+    @Provides
+    @Singleton
+    fun providePriceUsdtRealtimeDataSource(firebaseDatabase: FirebaseDatabase) =
+        PriceUsdtRealtimeDataSource(firebaseDatabase = firebaseDatabase)
+
+    @Provides
+    @Singleton
+    fun providePriceUsdFirestoreDataSource(firebaseFirestore: FirebaseFirestore) =
+        PriceUsdFirestoreDataSource(firebaseFirestore = firebaseFirestore)
+
+    @Singleton
+    @Provides
+    fun providePriceRepository(
+        priceUsdtRealtimeDataSource: PriceUsdtRealtimeDataSource,
+        priceUsdFirestoreDataSource: PriceUsdFirestoreDataSource
+    ): PriceRepository = PriceRepositoryImpl(
+        priceUsdtRealtimeDataSource = priceUsdtRealtimeDataSource,
+        priceUsdFirestoreDataSource = priceUsdFirestoreDataSource
+    )
 
 }

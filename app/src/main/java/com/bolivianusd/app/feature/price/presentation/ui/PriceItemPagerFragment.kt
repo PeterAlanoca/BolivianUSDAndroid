@@ -8,14 +8,14 @@ import com.bolivianusd.app.core.base.BaseFragment
 import com.bolivianusd.app.core.extensions.collectFlow
 import com.bolivianusd.app.core.extensions.serializable
 import com.bolivianusd.app.databinding.FragmentPriceItemPagerBinding
-import com.bolivianusd.app.feature.price.presentation.viewmodel.PriceViewModel
+import com.bolivianusd.app.feature.price.presentation.viewmodel.PriceItemPagerViewModel
 import com.bolivianusd.app.shared.domain.model.DollarType
 import com.bolivianusd.app.shared.domain.model.TradeType
 import com.bolivianusd.app.shared.domain.state.UiState
 
 class PriceItemPagerFragment : BaseFragment<FragmentPriceItemPagerBinding>() {
 
-    private val viewModel: PriceViewModel by activityViewModels()
+    private val viewModel: PriceItemPagerViewModel by activityViewModels()
 
     private val tradeType: TradeType by lazy {
         requireNotNull(arguments?.serializable<TradeType>(TRADER_TYPE))

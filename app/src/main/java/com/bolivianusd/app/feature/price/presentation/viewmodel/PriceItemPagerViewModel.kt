@@ -4,8 +4,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.bolivianusd.app.core.extensions.StateHolder
 import com.bolivianusd.app.feature.price.domain.model.DailyCandle
-import com.bolivianusd.app.feature.price.domain.model.Price
-import com.bolivianusd.app.feature.price.domain.model.PriceRange
+import com.bolivianusd.app.shared.domain.model.Price
+import com.bolivianusd.app.shared.domain.model.PriceRange
 import com.bolivianusd.app.feature.price.domain.usecase.GetLatestCandlesUseCase
 import com.bolivianusd.app.feature.price.domain.usecase.ObservePriceRangeUseCase
 import com.bolivianusd.app.feature.price.domain.usecase.ObservePriceUseCase
@@ -21,7 +21,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class PriceViewModel @Inject constructor(
+class PriceItemPagerViewModel @Inject constructor(
     private val observePriceUseCase: ObservePriceUseCase,
     private val observePriceRangeUseCase: ObservePriceRangeUseCase,
     private val getLatestCandlesUseCase: GetLatestCandlesUseCase
