@@ -4,6 +4,7 @@ import android.content.Context
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.widget.RelativeLayout
+import com.bolivianusd.app.core.extensions.visible
 import com.bolivianusd.app.databinding.ViewDisplayBinding
 
 class DisplayView @JvmOverloads constructor(
@@ -21,7 +22,12 @@ class DisplayView @JvmOverloads constructor(
     private var bobValue = exchangeRateValue * usdValue
 
     init {
+        initView()
         setListeners()
+    }
+
+    private fun initView() = with(binding) {
+        displayView.visible()
     }
 
     private fun setListeners() {
