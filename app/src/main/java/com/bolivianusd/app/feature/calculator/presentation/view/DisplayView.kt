@@ -2,12 +2,9 @@ package com.bolivianusd.app.feature.calculator.presentation.view
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.os.Handler
-import android.os.Looper
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.MotionEvent
-import android.view.View
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import android.view.inputmethod.InputMethodManager
@@ -20,7 +17,10 @@ import com.bolivianusd.app.core.extensions.getMaxLength
 import com.bolivianusd.app.core.extensions.gone
 import com.bolivianusd.app.core.extensions.visible
 import com.bolivianusd.app.core.listeners.SimpleAnimationListener
+import com.bolivianusd.app.core.util.ONE_D
+import com.bolivianusd.app.core.util.ZERO_D
 import com.bolivianusd.app.databinding.ViewDisplayBinding
+import com.bolivianusd.app.shared.domain.model.PriceRange
 
 class DisplayView @JvmOverloads constructor(
     context: Context,
@@ -32,9 +32,9 @@ class DisplayView @JvmOverloads constructor(
         ViewDisplayBinding.inflate(LayoutInflater.from(context), this, true)
     }
 
-    private var exchangeRateValue = 6.86
-    private var usdValue = 1.00
-    private var bobValue = exchangeRateValue * usdValue
+    private var exchangeRateValue = ZERO_D
+    private var usdValue = ZERO_D
+    private var bobValue = ZERO_D
 
     private var currentFocusField: EditText? = null
 
@@ -45,62 +45,63 @@ class DisplayView @JvmOverloads constructor(
         disableSystemKeyboard()
     }
 
-    fun setData() = with(binding) {
+    fun setData(priceRange: PriceRange) = with(binding) {
+        ///
+        exchangeRateValue = priceRange.median.value.toDouble()
+        usdValue = ONE_D
+        bobValue = exchangeRateValue * usdValue
+        //
+
+        priceRangeTextView.text = priceRange.descriptionLabel
+        updateAtTextView.text = priceRange.updatedAtFormat
         etExchangeRate.setAmountValue(exchangeRateValue)
         etUsd.setAmountValue(usdValue)
         etBob.setAmountValue(bobValue)
 
         currentFocusField = etUsd.editText
-        Handler(Looper.getMainLooper()).postDelayed({
-            binding.etUsd.editText.requestFocus()
-
-        }, 500)
+        etUsd.editText.postDelayed({
+           etUsd.editText.requestFocus()
+        }, DELAY_REQUEST_FOCUS)
     }
 
-    fun deleteNumberField() {
+    fun deleteNumberField() = with(binding) {
         when (currentFocusField) {
-            binding.etExchangeRate.editText -> {
-                deleteNumber(binding.etExchangeRate)
+            etExchangeRate.editText -> {
+                deleteNumber(etExchangeRate)
             }
-
-            binding.etUsd.editText -> {
-                deleteNumber(binding.etUsd)
+            etUsd.editText -> {
+                deleteNumber(etUsd)
             }
-
-            binding.etBob.editText -> {
-                deleteNumber(binding.etBob)
+            etBob.editText -> {
+                deleteNumber(etBob)
             }
         }
     }
 
-    fun appendNumberField(value: Int) {
+    fun appendNumberField(value: Int) = with(binding) {
         when (currentFocusField) {
-            binding.etExchangeRate.editText -> {
-                appendNumber(binding.etExchangeRate, value)
+            etExchangeRate.editText -> {
+                appendNumber(etExchangeRate, value)
             }
-
-            binding.etUsd.editText -> {
-                appendNumber(binding.etUsd, value)
+            etUsd.editText -> {
+                appendNumber(etUsd, value)
             }
-
-            binding.etBob.editText -> {
-                appendNumber(binding.etBob, value)
+            etBob.editText -> {
+                appendNumber(etBob, value)
             }
         }
     }
 
-    fun clearField() {
+    fun clearField() = with(binding) {
         when (currentFocusField) {
-            binding.etExchangeRate.editText -> {
-                clearNumber(binding.etExchangeRate)
+            etExchangeRate.editText -> {
+                clearNumber(etExchangeRate)
             }
-
-            binding.etUsd.editText -> {
-                clearNumber(binding.etUsd)
+            etUsd.editText -> {
+                clearNumber(etUsd)
             }
-
-            binding.etBob.editText -> {
-                clearNumber(binding.etBob)
+            etBob.editText -> {
+                clearNumber(etBob)
             }
         }
     }
@@ -155,23 +156,21 @@ class DisplayView @JvmOverloads constructor(
         displayView.gone()
     }
 
-    private fun setListeners() {
-        binding.etExchangeRate.setOnAmountChangeListener { amount ->
-            if (binding.etExchangeRate.editText.hasFocus()) {
+    private fun setListeners() = with(binding) {
+        etExchangeRate.setOnAmountChangeListener { amount ->
+            if (etExchangeRate.editText.hasFocus()) {
                 exchangeRateValue = amount
                 calculateFromExchangeRate()
             }
         }
-
-        binding.etUsd.setOnAmountChangeListener { amount ->
-            if (binding.etUsd.editText.hasFocus()) {
+        etUsd.setOnAmountChangeListener { amount ->
+            if (etUsd.editText.hasFocus()) {
                 usdValue = amount
                 calculateFromUSD()
             }
         }
-
-        binding.etBob.setOnAmountChangeListener { amount ->
-            if (binding.etBob.editText.hasFocus()) {
+        etBob.setOnAmountChangeListener { amount ->
+            if (etBob.editText.hasFocus()) {
                 bobValue = amount
                 calculateFromBOB()
             }
@@ -179,8 +178,8 @@ class DisplayView @JvmOverloads constructor(
     }
 
     @SuppressLint("ClickableViewAccessibility")
-    private fun setupTouchListeners() {
-        val blockingTouchListener = View.OnTouchListener { v, event ->
+    private fun setupTouchListeners() = with(binding) {
+        val blockingTouchListener = OnTouchListener { v, event ->
             if (event.action == MotionEvent.ACTION_UP) {
                 v.requestFocus()
                 hideSystemKeyboard()
@@ -189,9 +188,9 @@ class DisplayView @JvmOverloads constructor(
             true
         }
 
-        binding.etExchangeRate.editText.setOnTouchListener(blockingTouchListener)
-        binding.etUsd.editText.setOnTouchListener(blockingTouchListener)
-        binding.etBob.editText.setOnTouchListener(blockingTouchListener)
+        etExchangeRate.editText.setOnTouchListener(blockingTouchListener)
+        etUsd.editText.setOnTouchListener(blockingTouchListener)
+        etBob.editText.setOnTouchListener(blockingTouchListener)
     }
 
     private fun setCurrentFocus(field: EditText) {
@@ -225,24 +224,24 @@ class DisplayView @JvmOverloads constructor(
         updateUsdField()
     }
 
-    private fun updateBobField() {
+    private fun updateBobField() = with(binding) {
         // Actualizar campo BOB sin triggerear su listener
-        if (!binding.etBob.editText.hasFocus()) {
-            binding.etBob.setAmountValue(bobValue)
+        if (!etBob.editText.hasFocus()) {
+            etBob.setAmountValue(bobValue)
         }
     }
 
-    private fun updateUsdField() {
+    private fun updateUsdField() = with(binding) {
         // Actualizar campo USD sin triggerear su listener
-        if (!binding.etUsd.editText.hasFocus()) {
-            binding.etUsd.setAmountValue(usdValue)
+        if (!etUsd.editText.hasFocus()) {
+            etUsd.setAmountValue(usdValue)
         }
     }
 
-    private fun updateExchangeRateField() {
+    private fun updateExchangeRateField() = with(binding) {
         // Actualizar campo tasa sin triggerear su listener
-        if (!binding.etExchangeRate.editText.hasFocus()) {
-            binding.etExchangeRate.setAmountValue(exchangeRateValue)
+        if (!etExchangeRate.editText.hasFocus()) {
+            etExchangeRate.setAmountValue(exchangeRateValue)
         }
     }
 
@@ -303,6 +302,29 @@ class DisplayView @JvmOverloads constructor(
         }*/
     }
 
+    override fun onAttachedToWindow() {
+        super.onAttachedToWindow()
+        with(binding) {
+            when (currentFocusField) {
+                etExchangeRate.editText -> {
+                    etExchangeRate.editText.postDelayed({
+                        etExchangeRate.editText.requestFocus()
+                    }, DELAY_REQUEST_FOCUS)
+                }
+                etUsd.editText -> {
+                    etUsd.editText.postDelayed({
+                        etUsd.editText.requestFocus()
+                    }, DELAY_REQUEST_FOCUS)
+                }
+                etBob.editText -> {
+                    etBob.editText.postDelayed({
+                        etBob.editText.requestFocus()
+                    }, DELAY_REQUEST_FOCUS)
+                }
+            }
+        }
+    }
+
     private fun disableSystemKeyboard() {
         val imm = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         imm.hideSoftInputFromWindow(windowToken, 0)
@@ -315,6 +337,10 @@ class DisplayView @JvmOverloads constructor(
         context.getActivity()?.let {
             imm.hideSoftInputFromWindow(it.currentFocus?.windowToken, 0)
         }
+    }
+
+    companion object {
+        private const val DELAY_REQUEST_FOCUS = 500L
     }
 
 }

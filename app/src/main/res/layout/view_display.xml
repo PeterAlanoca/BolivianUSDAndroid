@@ -29,24 +29,24 @@
                 android:layout_marginStart="@dimen/margin_20"
                 android:fontFamily="@font/sfuidisplay_medium"
                 android:includeFontPadding="false"
-                android:text="Bajo 12:59 | Medio 12:60 | Alto 12:71"
                 android:textColor="@color/white_alpha_65"
                 android:textSize="@dimen/text_size_11"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="Bajo 10.59 | Medio 12.60 | Alto 12.71" />
 
             <com.google.android.material.textview.MaterialTextView
-                android:id="@+id/dateTextView"
+                android:id="@+id/updateAtTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="@dimen/margin_20"
                 android:fontFamily="@font/sfuidisplay_medium"
                 android:includeFontPadding="false"
-                android:text="12/09/25 10:35:01"
                 android:textColor="@color/white_alpha_65"
                 android:textSize="@dimen/text_size_11"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="12/09/25 10:35:01" />
 
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/exchangeRate"

@@ -11,6 +11,7 @@ import com.bolivianusd.app.core.extensions.serializable
 import com.bolivianusd.app.databinding.FragmentCalculatorItemPagerBinding
 import com.bolivianusd.app.feature.calculator.presentation.viewmodel.CalculatorItemPagerViewModel
 import com.bolivianusd.app.shared.domain.model.DollarType
+import com.bolivianusd.app.shared.domain.model.PriceRange
 import com.bolivianusd.app.shared.domain.model.TradeType
 import com.bolivianusd.app.shared.domain.state.UiState
 import kotlin.getValue
@@ -37,7 +38,6 @@ class CalculatorItemPagerFragment : BaseFragment<FragmentCalculatorItemPagerBind
         inflater: LayoutInflater,
         container: ViewGroup?
     ) = FragmentCalculatorItemPagerBinding.inflate(inflater, container, false)
-
 
     override fun setListeners() {
         binding.keyboardView.setOnClearClickListener {
@@ -73,7 +73,7 @@ class CalculatorItemPagerFragment : BaseFragment<FragmentCalculatorItemPagerBind
                     println("naty Loading")
                 }
                 is UiState.Success -> {
-                    hideShimmerLoading()
+                    showContentView(state.data)
                     println("naty Success siuuuuuuuuuuuu")
                     println("naty Success ${state.data}")
                 }
@@ -87,8 +87,8 @@ class CalculatorItemPagerFragment : BaseFragment<FragmentCalculatorItemPagerBind
         keyboardView.showShimmerLoading()
     }
 
-    private fun hideShimmerLoading() = with(binding) {
-        displayView.setData()
+    private fun showContentView(priceRange: PriceRange) = with(binding) {
+        displayView.setData(priceRange)
         displayView.showContentView()
         keyboardView.showContentView()
     }

@@ -14,6 +14,7 @@ const val ELEVEN_F = 11f
 const val NEGATIVE_SIX_F = -6f
 
 const val ZERO_D = 0.0
+const val ONE_D = 1.0
 
 const val emptyString = ""
 const val emptyBar = "███"

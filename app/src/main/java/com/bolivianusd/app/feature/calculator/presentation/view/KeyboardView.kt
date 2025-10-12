@@ -75,16 +75,13 @@ class KeyboardView @JvmOverloads constructor(
     private fun setupClickListeners() {
         numberButtons.forEachIndexed { number, button ->
             button.setOnClickListener {
-                println("naty button")
                 onNumberClickListener?.invoke(number)
             }
         }
         binding.btnDelete.setOnClickListener {
-            println("naty btnDelete")
             onDeleteClickListener?.invoke()
         }
         binding.btnClear.setOnClickListener {
-            println("naty btnClear")
             onClearClickListener?.invoke()
         }
     }
