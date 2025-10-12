@@ -65,7 +65,7 @@ class DisplayView @JvmOverloads constructor(
 
         currentFocusField = etUsd.editText
         etUsd.editText.postDelayed({
-           etUsd.editText.requestFocus()
+            etUsd.editText.requestFocus()
         }, DELAY_REQUEST_FOCUS)
         updateExchangeRateLabel()
     }
@@ -79,9 +79,11 @@ class DisplayView @JvmOverloads constructor(
             etExchangeRate.editText -> {
                 deleteNumber(etExchangeRate)
             }
+
             etUsd.editText -> {
                 deleteNumber(etUsd)
             }
+
             etBob.editText -> {
                 deleteNumber(etBob)
             }
@@ -93,9 +95,11 @@ class DisplayView @JvmOverloads constructor(
             etExchangeRate.editText -> {
                 appendNumber(etExchangeRate, value)
             }
+
             etUsd.editText -> {
                 appendNumber(etUsd, value)
             }
+
             etBob.editText -> {
                 appendNumber(etBob, value)
             }
@@ -107,9 +111,11 @@ class DisplayView @JvmOverloads constructor(
             etExchangeRate.editText -> {
                 clearNumber(etExchangeRate)
             }
+
             etUsd.editText -> {
                 clearNumber(etUsd)
             }
+
             etBob.editText -> {
                 clearNumber(etBob)
             }
@@ -178,21 +184,30 @@ class DisplayView @JvmOverloads constructor(
             onDollarTypeChanged?.invoke(dollarType)
         }
         etExchangeRate.setOnAmountChangeListener { amount ->
-            if (etExchangeRate.editText.hasFocus()) {
-                exchangeRateValue = amount
-                calculateFromExchangeRate()
+            validateRequestFocus()
+            etExchangeRate.post {
+                if (etExchangeRate.editText.hasFocus()) {
+                    exchangeRateValue = amount
+                    calculateFromExchangeRate()
+                }
             }
         }
         etUsd.setOnAmountChangeListener { amount ->
-            if (etUsd.editText.hasFocus()) {
-                usdValue = amount
-                calculateFromUSD()
+            validateRequestFocus()
+            etUsd.post {
+                if (etUsd.editText.hasFocus()) {
+                    usdValue = amount
+                    calculateFromUSD()
+                }
             }
         }
         etBob.setOnAmountChangeListener { amount ->
-            if (etBob.editText.hasFocus()) {
-                bobValue = amount
-                calculateFromBOB()
+            validateRequestFocus()
+            etBob.post {
+                if (etBob.editText.hasFocus()) {
+                    bobValue = amount
+                    calculateFromBOB()
+                }
             }
         }
     }
@@ -330,24 +345,29 @@ class DisplayView @JvmOverloads constructor(
         }*/
     }
 
-    override fun onAttachedToWindow() {
-        super.onAttachedToWindow()
-        with(binding) {
-            when (currentFocusField) {
-                etExchangeRate.editText -> {
-                    etExchangeRate.editText.postDelayed({
+    private fun validateRequestFocus() = with(binding) {
+        when (currentFocusField) {
+            etExchangeRate.editText -> {
+                if (!etExchangeRate.editText.hasFocus()) {
+                    etExchangeRate.editText.post {
                         etExchangeRate.editText.requestFocus()
-                    }, DELAY_REQUEST_FOCUS)
+                    }
                 }
-                etUsd.editText -> {
-                    etUsd.editText.postDelayed({
+            }
+
+            etUsd.editText -> {
+                if (!etUsd.editText.hasFocus()) {
+                    etUsd.editText.post {
                         etUsd.editText.requestFocus()
-                    }, DELAY_REQUEST_FOCUS)
+                    }
                 }
-                etBob.editText -> {
-                    etBob.editText.postDelayed({
+            }
+
+            etBob.editText -> {
+                if (!etBob.editText.hasFocus()) {
+                    etBob.editText.post {
                         etBob.editText.requestFocus()
-                    }, DELAY_REQUEST_FOCUS)
+                    }
                 }
             }
         }
@@ -367,8 +387,13 @@ class DisplayView @JvmOverloads constructor(
         }
     }
 
+    override fun onAttachedToWindow() {
+        super.onAttachedToWindow()
+        validateRequestFocus()
+    }
+
     companion object {
-        private const val DELAY_REQUEST_FOCUS = 500L
+        private const val DELAY_REQUEST_FOCUS = 250L
     }
 
 }

@@ -10,9 +10,12 @@ import com.bolivianusd.app.shared.domain.model.TradeType
 import com.bolivianusd.app.shared.domain.state.UiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -54,10 +57,6 @@ class CalculatorItemPagerViewModel @Inject constructor(
                 priceRangeStates[tradeType]?.setValue(state)
             }
         }
-    }
-
-    fun getPriceAndCandles(tradeType: TradeType) {
-        getPriceRange(tradeType)
     }
 
     fun refresh(tradeType: TradeType) {

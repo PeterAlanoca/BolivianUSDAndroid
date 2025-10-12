@@ -77,7 +77,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun setupFragments() {
         supportFragmentManager.beginTransaction()
-            .add(R.id.frameLayout, calculatorFragment, PriceFragment.TAG)
+            .add(R.id.frameLayout, calculatorFragment, CalculatorFragment.TAG)
             .hide(calculatorFragment)
             .add(R.id.frameLayout, priceFragment, PriceFragment.TAG)
             .commit()
