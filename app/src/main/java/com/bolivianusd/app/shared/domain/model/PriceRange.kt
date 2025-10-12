@@ -11,7 +11,7 @@ data class PriceRange(
     var min: RangeValue = RangeValue(),
     var max: RangeValue = RangeValue(),
     var currency: String = emptyString,
-    var updatedAt: String = "2021-12-11T21:29:43.2171761-04:00"
+    var updatedAt: String = emptyString
 ) {
     data class RangeValue(
         var value: BigDecimal = BigDecimal.ZERO,

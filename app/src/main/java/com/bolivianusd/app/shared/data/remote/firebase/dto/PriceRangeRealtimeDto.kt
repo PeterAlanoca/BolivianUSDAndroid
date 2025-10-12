@@ -16,7 +16,10 @@ data class PriceRangeRealtimeDto(
     var max: RangeValueDto = RangeValueDto(),
     @get:PropertyName("currency")
     @set:PropertyName("currency")
-    var currency: String = emptyString
+    var currency: String = emptyString,
+    @get:PropertyName("updated_at")
+    @set:PropertyName("updated_at")
+    var updatedAt: String = emptyString
 ) {
     data class RangeValueDto(
         @get:PropertyName("value")

@@ -33,6 +33,7 @@ fun PriceFirestoreDto.toPrice(): Price {
 fun PriceRangeRealtimeDto.toPriceRange(): PriceRange {
     return PriceRange(
         currency = this.currency,
+        updatedAt = this.updatedAt,
         min = PriceRange.RangeValue(
             value = this.min.value.toBigDecimal(),
             valueLabel = this.min.valueLabel,
