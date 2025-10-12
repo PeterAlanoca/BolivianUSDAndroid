@@ -44,7 +44,7 @@ class MainActivity : AppCompatActivity() {
             }
             true
         }
-        bottomNavigationView.selectedItemId = R.id.actionCalculator
+        bottomNavigationView.selectedItemId = R.id.actionPrice
     }
 
 

@@ -31,8 +31,7 @@ class CalculatorItemPagerFragment : BaseFragment<FragmentCalculatorItemPagerBind
 
     override fun onStart() {
         super.onStart()
-        println("naty onStart ")
-        viewModel.getPriceAndCandles(tradeType)
+        viewModel.observePriceRange(tradeType)
     }
 
     override fun getViewBinding(

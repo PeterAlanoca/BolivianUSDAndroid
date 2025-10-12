@@ -46,7 +46,7 @@ class CalculatorItemPagerViewModel @Inject constructor(
     }
 
     @OptIn(ExperimentalCoroutinesApi::class)
-    fun getPriceRange(tradeType: TradeType) {
+    fun observePriceRange(tradeType: TradeType) {
         viewModelScope.launch {
             getDollarTypeFlow(tradeType).flatMapLatest { dollarType ->
                 getPriceRangePollingUseCase.invoke(
