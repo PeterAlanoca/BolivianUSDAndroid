@@ -32,7 +32,8 @@ fun PriceFirestoreDto.toPrice(): Price {
 
 fun PriceRangeRealtimeDto.toPriceRange(): PriceRange {
     return PriceRange(
-        currency = this.currency,
+        asset = this.asset,
+        fiat = this.fiat,
         updatedAt = this.updatedAt,
         min = PriceRange.RangeValue(
             value = this.min.value.toBigDecimal(),
@@ -54,7 +55,8 @@ fun PriceRangeRealtimeDto.toPriceRange(): PriceRange {
 
 fun PriceRangeFirestoreDto.toPriceRange(): PriceRange {
     return PriceRange(
-        currency = this.currency,
+        asset = this.asset,
+        fiat = this.fiat,
         min = PriceRange.RangeValue(
             value = this.min.value.toBigDecimal(),
             valueLabel = this.min.valueLabel,

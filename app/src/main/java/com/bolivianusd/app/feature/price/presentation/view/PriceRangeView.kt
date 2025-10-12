@@ -81,7 +81,7 @@ class PriceRangeView @JvmOverloads constructor(
     }
 
     private fun setPriceRangeData(priceRange: PriceRange) = with(binding) {
-        currencyTextView.text = priceRange.currency
+        currencyTextView.text = priceRange.fiat
         with(priceRange.min) {
             minTextView.text = this.valueLabel
             minLabelTextView.text = this.description

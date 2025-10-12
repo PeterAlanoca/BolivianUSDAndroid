@@ -49,7 +49,6 @@ class KeyboardView @JvmOverloads constructor(
         if (keyboardView.isVisible) {
             return@with
         }
-
         val fadeOut = AnimationUtils.loadAnimation(context, R.anim.anim_view_fade_out)
         fadeOut.setAnimationListener(object : SimpleAnimationListener() {
             override fun onAnimationEnd(animation: Animation?) {
@@ -64,6 +63,13 @@ class KeyboardView @JvmOverloads constructor(
         if (keyboardShimmer.isVisible) {
             shimmerLayout.root.startAnimation(fadeOut)
         }
+    }
+
+    fun resetUIComponents() = with(binding) {
+        keyboardView.clearAnimation()
+        shimmerLayout.root.clearAnimation()
+        keyboardView.gone()
+        keyboardShimmer.visible()
     }
 
     private fun hideShimmerLoading() = with(binding) {

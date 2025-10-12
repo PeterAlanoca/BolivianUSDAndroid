@@ -31,6 +31,7 @@ class CalculatorItemPagerFragment : BaseFragment<FragmentCalculatorItemPagerBind
 
     override fun onStart() {
         super.onStart()
+        println("naty onStart ")
         viewModel.getPriceAndCandles(tradeType)
     }
 
@@ -39,26 +40,25 @@ class CalculatorItemPagerFragment : BaseFragment<FragmentCalculatorItemPagerBind
         container: ViewGroup?
     ) = FragmentCalculatorItemPagerBinding.inflate(inflater, container, false)
 
-    override fun setListeners() {
-        binding.keyboardView.setOnClearClickListener {
-            binding.displayView.clearField()
+    override fun setListeners() = with(binding) {
+        displayView.setOnDollarTypeChanged { dollarType ->
+            viewModel.setDollarType(tradeType, dollarType)
+            displayView.resetUIComponents()
+            keyboardView.resetUIComponents()
         }
-        binding.keyboardView.setOnDeleteClickListener {
-            binding.displayView.deleteNumberField()
+        keyboardView.setOnClearClickListener {
+            displayView.clearField()
         }
-        binding.keyboardView.setOnNumberClickListener {
-            binding.displayView.appendNumberField(it)
+        keyboardView.setOnDeleteClickListener {
+            displayView.deleteNumberField()
         }
-        binding.etExchangeRate.setOnAmountChangeListener { amount ->
-            if (binding.etExchangeRate.editText.hasFocus()) {
-                //calculateFromExchangeRate()
-            }
+        keyboardView.setOnNumberClickListener {
+            displayView.appendNumberField(it)
         }
-
     }
 
-    override fun initData() {
-        viewModel.setDollarType(tradeType, DollarType.USDT)
+    override fun initData() = with(binding) {
+        viewModel.setDollarType(tradeType,displayView.dollarType)
     }
 
     override fun setupObservers() {
@@ -93,14 +93,9 @@ class CalculatorItemPagerFragment : BaseFragment<FragmentCalculatorItemPagerBind
         keyboardView.showContentView()
     }
 
-    private fun calculateFromExchangeRate() {
-        // Cuando cambia la tasa de cambio, recalcular BOB basado en USD
-        //bobValue = exchangeRateValue * usdValue
-        //updateBobField()
-    }
-
     override fun onResume() {
         super.onResume()
+        println("naty onResume ")
         hideSystemKeyboard()
     }
 

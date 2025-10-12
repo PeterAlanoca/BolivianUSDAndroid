@@ -20,6 +20,7 @@ import com.bolivianusd.app.core.listeners.SimpleAnimationListener
 import com.bolivianusd.app.core.util.ONE_D
 import com.bolivianusd.app.core.util.ZERO_D
 import com.bolivianusd.app.databinding.ViewDisplayBinding
+import com.bolivianusd.app.shared.domain.model.DollarType
 import com.bolivianusd.app.shared.domain.model.PriceRange
 
 class DisplayView @JvmOverloads constructor(
@@ -38,6 +39,10 @@ class DisplayView @JvmOverloads constructor(
 
     private var currentFocusField: EditText? = null
 
+    private var onDollarTypeChanged: ((DollarType) -> Unit)? = null
+
+    var dollarType = DollarType.USDT
+
     init {
         initView()
         setListeners()
@@ -46,22 +51,27 @@ class DisplayView @JvmOverloads constructor(
     }
 
     fun setData(priceRange: PriceRange) = with(binding) {
-        ///
         exchangeRateValue = priceRange.median.value.toDouble()
         usdValue = ONE_D
         bobValue = exchangeRateValue * usdValue
-        //
 
         priceRangeTextView.text = priceRange.descriptionLabel
         updateAtTextView.text = priceRange.updatedAtFormat
         etExchangeRate.setAmountValue(exchangeRateValue)
         etUsd.setAmountValue(usdValue)
+        usdLabel.text = priceRange.asset
         etBob.setAmountValue(bobValue)
+        bobLabel.text = priceRange.fiat
 
         currentFocusField = etUsd.editText
         etUsd.editText.postDelayed({
            etUsd.editText.requestFocus()
         }, DELAY_REQUEST_FOCUS)
+        updateExchangeRateLabel()
+    }
+
+    fun setOnDollarTypeChanged(onDollarTypeChanged: ((DollarType) -> Unit)) {
+        this.onDollarTypeChanged = onDollarTypeChanged
     }
 
     fun deleteNumberField() = with(binding) {
@@ -122,7 +132,6 @@ class DisplayView @JvmOverloads constructor(
         if (displayView.isVisible) {
             return@with
         }
-
         val fadeOut = AnimationUtils.loadAnimation(context, R.anim.anim_view_fade_out)
         fadeOut.setAnimationListener(object : SimpleAnimationListener() {
             override fun onAnimationEnd(animation: Animation?) {
@@ -137,6 +146,13 @@ class DisplayView @JvmOverloads constructor(
         if (displayShimmer.isVisible) {
             shimmerLayout.root.startAnimation(fadeOut)
         }
+    }
+
+    fun resetUIComponents() = with(binding) {
+        displayView.clearAnimation()
+        displayShimmer.clearAnimation()
+        displayView.gone()
+        displayShimmer.visible()
     }
 
     private fun hideShimmerLoading() = with(binding) {
@@ -157,6 +173,10 @@ class DisplayView @JvmOverloads constructor(
     }
 
     private fun setListeners() = with(binding) {
+        dollarTypeSwitch.setOnCheckedChangeListener { _, isChecked ->
+            dollarType = if (isChecked) DollarType.USD else DollarType.USDT
+            onDollarTypeChanged?.invoke(dollarType)
+        }
         etExchangeRate.setOnAmountChangeListener { amount ->
             if (etExchangeRate.editText.hasFocus()) {
                 exchangeRateValue = amount
@@ -279,6 +299,14 @@ class DisplayView @JvmOverloads constructor(
 
     private fun clearNumber(amountEditText: AmountEditText) {
         amountEditText.clearAmount()
+    }
+
+    private fun updateExchangeRateLabel() = with(binding) {
+        val exchangeRateDescriptionResId = when (dollarType) {
+            DollarType.USDT -> R.string.calculator_view_pager_item_parallel_dollar
+            DollarType.USD -> R.string.calculator_view_pager_item_official_dollar
+        }
+        exchangeRateLabel.text = context.getString(exchangeRateDescriptionResId)
     }
 
     private fun highlightActiveField() {

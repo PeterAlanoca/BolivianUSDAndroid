@@ -73,12 +73,12 @@
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:fontFamily="@font/sfuidisplay_medium"
-                        android:text="TIPO DE CAMBIO PARALELO"
                         android:textColor="@color/white_alpha_65"
                         android:textSize="15sp"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
+                        app:layout_constraintTop_toTopOf="parent"
+                        tools:text="TIPO DE CAMBIO PARALELO" />
 
                     <com.bolivianusd.app.feature.calculator.presentation.view.AmountEditText
                         android:id="@+id/etExchangeRate"
@@ -141,12 +141,12 @@
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:fontFamily="@font/sfuidisplay_medium"
-                        android:text="USD"
                         android:textColor="@color/white_alpha_65"
                         android:textSize="15sp"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
+                        app:layout_constraintTop_toTopOf="parent"
+                        tools:text="USD" />
 
                     <com.bolivianusd.app.feature.calculator.presentation.view.AmountEditText
                         android:id="@+id/etUsd"
@@ -207,12 +207,12 @@
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:fontFamily="@font/sfuidisplay_medium"
-                        android:text="BOB"
                         android:textColor="@color/white_alpha_65"
                         android:textSize="15sp"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
+                        app:layout_constraintTop_toTopOf="parent"
+                        tools:text="BOB" />
 
                     <com.bolivianusd.app.feature.calculator.presentation.view.AmountEditText
                         android:id="@+id/etBob"

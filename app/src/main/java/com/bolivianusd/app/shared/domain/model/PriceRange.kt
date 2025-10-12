@@ -10,7 +10,8 @@ data class PriceRange(
     var median: RangeValue = RangeValue(),
     var min: RangeValue = RangeValue(),
     var max: RangeValue = RangeValue(),
-    var currency: String = emptyString,
+    var asset: String = emptyString,
+    var fiat: String = emptyString,
     var updatedAt: String = emptyString
 ) {
     data class RangeValue(

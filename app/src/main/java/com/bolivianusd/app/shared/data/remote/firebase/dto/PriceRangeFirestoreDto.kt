@@ -14,9 +14,12 @@ data class PriceRangeFirestoreDto(
     @get:PropertyName("max")
     @set:PropertyName("max")
     var max: RangeValueDto = RangeValueDto(),
-    @get:PropertyName("currency")
-    @set:PropertyName("currency")
-    var currency: String = emptyString
+    @get:PropertyName("asset")
+    @set:PropertyName("asset")
+    var asset: String = emptyString,
+    @get:PropertyName("fiat")
+    @set:PropertyName("fiat")
+    var fiat: String = emptyString
 ) {
     data class RangeValueDto(
         @get:PropertyName("value")
