@@ -50,9 +50,6 @@ class PriceRangeView @JvmOverloads constructor(
         rangeTitle.invisible()
         rangeTitleShimmer.visible()
         rangeTitleShimmer.startShimmer()
-
-        println("naty showPriceRangeLoadingState3333333")
-
     }
 
     fun showPriceRangeDataSuccess(priceRange: PriceRange) = with(binding) {

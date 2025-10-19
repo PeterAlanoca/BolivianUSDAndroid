@@ -5,6 +5,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bolivianusd.app.databinding.ItemPriceBinding
 import com.bolivianusd.app.feature.price.domain.model.DailyCandle
+import com.bolivianusd.app.shared.domain.model.DollarType
 import com.bolivianusd.app.shared.domain.model.Price
 import com.bolivianusd.app.shared.domain.model.PriceRange
 import com.bolivianusd.app.shared.domain.model.TradeType
@@ -13,6 +14,7 @@ class PriceAdapter : RecyclerView.Adapter<PriceAdapter.PriceHolder>() {
 
     private val items = listOf(TradeType.BUY, TradeType.SELL)
     private val viewHolders = mutableMapOf<TradeType, PriceHolder>()
+    private var actionDollarType: ((DollarType) -> Unit)? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PriceHolder {
         val binding = ItemPriceBinding.inflate(
@@ -31,6 +33,10 @@ class PriceAdapter : RecyclerView.Adapter<PriceAdapter.PriceHolder>() {
 
     override fun getItemCount(): Int = items.size
 
+    fun setOnDollarTypeChanged(actionDollarType: (DollarType) -> Unit) {
+        this.actionDollarType = actionDollarType
+    }
+
     fun showPriceLoadingState(targetTradeType: TradeType) {
         viewHolders[targetTradeType]?.showPriceLoadingState()
     }
@@ -40,8 +46,6 @@ class PriceAdapter : RecyclerView.Adapter<PriceAdapter.PriceHolder>() {
     }
 
     fun showPriceRangeLoadingState(targetTradeType: TradeType) {
-        println("naty showPriceRangeLoadingState11 $targetTradeType")
-
         viewHolders[targetTradeType]?.showPriceRangeLoadingState()
     }
 
@@ -66,55 +70,46 @@ class PriceAdapter : RecyclerView.Adapter<PriceAdapter.PriceHolder>() {
     ) : RecyclerView.ViewHolder(binding.root) {
 
         fun bind(tradeType: TradeType) {
-            setupViewForTradeType(tradeType)
-            showPriceLoadingState()
+            setListeners()
+            resetDataUIComponents()
             showPriceRangeLoadingState()
-            showChartLoadingState()
         }
 
-        private fun setupViewForTradeType(tradeType: TradeType) {
-            when (tradeType) {
-                TradeType.BUY -> {
-                    //binding.root.setBackgroundColor(Color.GREEN)
-                    // Configurar vista de compra
-                }
-                TradeType.SELL -> {
-                    //binding.root.setBackgroundColor(Color.RED)
-                    // Configurar vista de venta
-                }
+        private fun setListeners() = with(binding) {
+            priceView.setOnDollarTypeChanged { dollarType ->
+                resetDataUIComponents()
+                actionDollarType?.invoke(dollarType)
             }
         }
 
-        // Métodos que llaman a las vistas específicas
         fun showPriceLoadingState() = with(binding) {
             priceView.showPriceLoadingState()
         }
 
-        fun showPriceDataSuccess(price: Price) {
-            binding.priceView.showPriceDataSuccess(price)
+        fun showPriceDataSuccess(price: Price) = with(binding) {
+            priceView.showPriceDataSuccess(price)
         }
 
         fun showPriceRangeLoadingState() = with(binding)  {
-            println("naty showPriceRangeLoadingState")
             priceRangeView.showPriceRangeLoadingState()
         }
 
-        fun showPriceRangeDataSuccess(priceRange: PriceRange) {
-            binding.priceRangeView.showPriceRangeDataSuccess(priceRange)
+        fun showPriceRangeDataSuccess(priceRange: PriceRange) = with(binding) {
+            priceRangeView.showPriceRangeDataSuccess(priceRange)
         }
 
-        fun showChartLoadingState() {
-            binding.dailyCandleChartView.showChartLoadingState()
+        fun showChartLoadingState() = with(binding) {
+            dailyCandleChartView.showChartLoadingState()
         }
 
-        fun showChartDataSuccess(dailyCandles: List<DailyCandle>) {
-            binding.dailyCandleChartView.showChartDataSuccess(dailyCandles)
+        fun showChartDataSuccess(dailyCandles: List<DailyCandle>) = with(binding) {
+            dailyCandleChartView.showChartDataSuccess(dailyCandles)
         }
 
-        fun resetDataUIComponents() {
-            binding.priceView.resetDataUIComponents()
-            binding.priceRangeView.resetDataUIComponents()
-            binding.dailyCandleChartView.resetDataUIComponents()
+        fun resetDataUIComponents() = with(binding) {
+            priceView.resetDataUIComponents()
+            priceRangeView.resetDataUIComponents()
+            dailyCandleChartView.resetDataUIComponents()
         }
     }
 }

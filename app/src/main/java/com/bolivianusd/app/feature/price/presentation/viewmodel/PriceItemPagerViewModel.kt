@@ -4,13 +4,13 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.bolivianusd.app.core.extensions.StateHolder
 import com.bolivianusd.app.feature.price.domain.model.DailyCandle
-import com.bolivianusd.app.shared.domain.model.Price
-import com.bolivianusd.app.shared.domain.model.PriceRange
 import com.bolivianusd.app.feature.price.domain.usecase.GetLatestCandlesUseCase
 import com.bolivianusd.app.feature.price.domain.usecase.ObservePriceRangeUseCase
 import com.bolivianusd.app.feature.price.domain.usecase.ObservePriceUseCase
 import com.bolivianusd.app.shared.domain.model.DollarType
 import com.bolivianusd.app.shared.domain.model.TradeType
+import com.bolivianusd.app.shared.domain.model.Price
+import com.bolivianusd.app.shared.domain.model.PriceRange
 import com.bolivianusd.app.shared.domain.state.UiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -27,10 +27,17 @@ class PriceItemPagerViewModel @Inject constructor(
     private val getLatestCandlesUseCase: GetLatestCandlesUseCase
 ) : ViewModel() {
 
+    val currentTradeType = StateHolder(TradeType.BUY)
     private val currentDollarTypes = mutableMapOf<TradeType, MutableStateFlow<DollarType>>()
     private val priceStates = mutableMapOf<TradeType, StateHolder<UiState<Price>>>()
     private val priceRangeStates = mutableMapOf<TradeType, StateHolder<UiState<PriceRange>>>()
     private val dailyCandlesStates = mutableMapOf<TradeType, StateHolder<UiState<List<DailyCandle>>>>()
+
+    fun setTradeType(tradeType: TradeType) {
+        if (currentTradeType.state.value != tradeType) {
+            currentTradeType.setValue(tradeType)
+        }
+    }
 
     fun setDollarType(tradeType: TradeType, dollarType: DollarType) {
         if (getDollarTypeFlow(tradeType).value != dollarType) {
@@ -54,10 +61,7 @@ class PriceItemPagerViewModel @Inject constructor(
     fun observePrice(tradeType: TradeType) {
         viewModelScope.launch {
             getDollarTypeFlow(tradeType).flatMapLatest { dollarType ->
-                observePriceUseCase.invoke(
-                    dollarType = dollarType,
-                    tradeType = tradeType
-                )
+                observePriceUseCase.invoke(dollarType, tradeType)
             }.collect { state ->
                 priceStates[tradeType]?.setValue(state)
             }
@@ -74,10 +78,7 @@ class PriceItemPagerViewModel @Inject constructor(
     fun observePriceRange(tradeType: TradeType) {
         viewModelScope.launch {
             getDollarTypeFlow(tradeType).flatMapLatest { dollarType ->
-                observePriceRangeUseCase.invoke(
-                    dollarType = dollarType,
-                    tradeType = tradeType
-                )
+                observePriceRangeUseCase.invoke(dollarType, tradeType)
             }.collect { state ->
                 priceRangeStates[tradeType]?.setValue(state)
             }
@@ -94,10 +95,7 @@ class PriceItemPagerViewModel @Inject constructor(
     fun getLatestCandles(tradeType: TradeType) {
         viewModelScope.launch {
             getDollarTypeFlow(tradeType).flatMapLatest { dollarType ->
-                getLatestCandlesUseCase.invoke(
-                    dollarType = dollarType,
-                    tradeType = tradeType
-                )
+                getLatestCandlesUseCase.invoke(dollarType, tradeType)
             }.collect { state ->
                 dailyCandlesStates[tradeType]?.setValue(state)
             }

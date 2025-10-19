@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.fragment.app.activityViewModels
+import androidx.viewpager2.widget.ViewPager2
 import com.bolivianusd.app.R
 import com.bolivianusd.app.core.base.BaseFragment
 import com.bolivianusd.app.core.extensions.collectFlow
@@ -14,13 +15,10 @@ import com.bolivianusd.app.shared.domain.model.DollarType
 import com.bolivianusd.app.shared.domain.model.TradeType
 import com.bolivianusd.app.shared.domain.state.UiState
 import com.google.android.material.tabs.TabLayoutMediator
-import kotlin.getValue
 
 class PriceFragment : BaseFragment<FragmentPriceBinding>() {
 
     private val viewModel: PriceItemPagerViewModel by activityViewModels()
-
-    private val tradeType = TradeType.BUY
     private val priceAdapter = PriceAdapter()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -35,7 +33,6 @@ class PriceFragment : BaseFragment<FragmentPriceBinding>() {
 
     override fun onStart() {
         super.onStart()
-        viewModel.observePriceAndCandles(tradeType)
     }
 
     override fun initViews() {
@@ -44,13 +41,18 @@ class PriceFragment : BaseFragment<FragmentPriceBinding>() {
     }
 
     override fun initData() {
-        viewModel.setDollarType(tradeType, DollarType.USDT)
+        viewModel.setTradeType(TradeType.BUY)
+        viewModel.setDollarType(TradeType.BUY, DollarType.USDT)
     }
 
     override fun setupObservers() {
-        setupPriceObserver()
-        setupPriceRangeObserver()
-        setupDailyCandleObserver()
+        collectFlow(viewModel.currentTradeType.state) { tradeType ->
+            resetDataUIComponents()
+            viewModel.observePriceAndCandles(tradeType)
+            setupPriceObserver(tradeType)
+            setupPriceRangeObserver(tradeType)
+            setupDailyCandleObserver(tradeType)
+        }
     }
 
     private fun setupViewPager() = with(binding) {
@@ -58,15 +60,29 @@ class PriceFragment : BaseFragment<FragmentPriceBinding>() {
             getString(R.string.price_view_pager_item_buy),
             getString(R.string.price_view_pager_item_sell)
         )
-
+        priceAdapter.setOnDollarTypeChanged { dollarType ->
+            viewModel.currentTradeType.state.value.let { tradeType ->
+                viewModel.setDollarType(tradeType, dollarType)
+            }
+        }
         viewPager.adapter = priceAdapter
+        viewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
+            override fun onPageSelected(position: Int) {
+                super.onPageSelected(position)
+                val newTradeType = when (position) {
+                    0 -> TradeType.BUY
+                    else -> TradeType.SELL
+                }
+                viewModel.setTradeType(newTradeType)
+            }
+        })
 
         TabLayoutMediator(tabLayout, viewPager) { tab, position ->
             tab.text = titles[position]
         }.attach()
     }
 
-    private fun setupPriceObserver() {
+    private fun setupPriceObserver(tradeType: TradeType) {
         collectFlow(viewModel.getPriceState(tradeType)) { state ->
             when (state) {
                 is UiState.Loading -> priceAdapter.showPriceLoadingState(tradeType)
@@ -76,9 +92,8 @@ class PriceFragment : BaseFragment<FragmentPriceBinding>() {
         }
     }
 
-    private fun setupPriceRangeObserver() {
+    private fun setupPriceRangeObserver(tradeType: TradeType) {
         collectFlow(viewModel.getPriceRangeState(tradeType)) { state ->
-            println("naty getPriceRangeState $state")
             when (state) {
                 is UiState.Loading -> priceAdapter.showPriceRangeLoadingState(tradeType)
                 is UiState.Success -> priceAdapter.showPriceRangeDataSuccess(tradeType, state.data)
@@ -87,7 +102,7 @@ class PriceFragment : BaseFragment<FragmentPriceBinding>() {
         }
     }
 
-    private fun setupDailyCandleObserver() {
+    private fun setupDailyCandleObserver(tradeType: TradeType) {
         collectFlow(viewModel.getDailyCandleState(tradeType)) { state ->
             when (state) {
                 is UiState.Loading -> priceAdapter.showChartLoadingState(tradeType)
@@ -98,7 +113,9 @@ class PriceFragment : BaseFragment<FragmentPriceBinding>() {
     }
 
     private fun resetDataUIComponents() {
-        priceAdapter.resetDataUIComponents(tradeType)
+        viewModel.currentTradeType.state.value.let { tradeType ->
+            priceAdapter.resetDataUIComponents(tradeType)
+        }
     }
 
     companion object {
@@ -106,4 +123,3 @@ class PriceFragment : BaseFragment<FragmentPriceBinding>() {
         fun newInstance() = PriceFragment()
     }
 }
-
