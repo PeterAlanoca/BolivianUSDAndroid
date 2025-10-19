@@ -34,7 +34,7 @@ class PriceViewModel @Inject constructor(
     private val dailyCandlesStates = mutableMapOf<TradeType, StateHolder<UiState<List<DailyCandle>>>>()
 
     fun setTradeType(tradeType: TradeType) {
-        if (currentTradeType.state.value != tradeType) {
+        if (currentTradeType.value != tradeType) {
             currentTradeType.setValue(tradeType)
         }
     }

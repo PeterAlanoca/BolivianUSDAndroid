@@ -37,32 +37,32 @@ class PriceAdapter : RecyclerView.Adapter<PriceAdapter.PriceHolder>() {
         this.actionDollarType = actionDollarType
     }
 
-    fun showPriceLoadingState(targetTradeType: TradeType) {
-        viewHolders[targetTradeType]?.showPriceLoadingState()
+    fun showPriceLoadingState(tradeType: TradeType) {
+        viewHolders[tradeType]?.showPriceLoadingState()
     }
 
-    fun showPriceDataSuccess(targetTradeType: TradeType, price: Price) {
-        viewHolders[targetTradeType]?.showPriceDataSuccess(price)
+    fun showPriceDataSuccess(tradeType: TradeType, price: Price) {
+        viewHolders[tradeType]?.showPriceDataSuccess(price)
     }
 
-    fun showPriceRangeLoadingState(targetTradeType: TradeType) {
-        viewHolders[targetTradeType]?.showPriceRangeLoadingState()
+    fun showPriceRangeLoadingState(tradeType: TradeType) {
+        viewHolders[tradeType]?.showPriceRangeLoadingState()
     }
 
-    fun showPriceRangeDataSuccess(targetTradeType: TradeType, priceRange: PriceRange) {
-        viewHolders[targetTradeType]?.showPriceRangeDataSuccess(priceRange)
+    fun showPriceRangeDataSuccess(tradeType: TradeType, priceRange: PriceRange) {
+        viewHolders[tradeType]?.showPriceRangeDataSuccess(priceRange)
     }
 
-    fun showChartLoadingState(targetTradeType: TradeType) {
-        viewHolders[targetTradeType]?.showChartLoadingState()
+    fun showChartLoadingState(tradeType: TradeType) {
+        viewHolders[tradeType]?.showChartLoadingState()
     }
 
-    fun showChartDataSuccess(targetTradeType: TradeType, dailyCandles: List<DailyCandle>) {
-        viewHolders[targetTradeType]?.showChartDataSuccess(dailyCandles)
+    fun showChartDataSuccess(tradeType: TradeType, dailyCandles: List<DailyCandle>) {
+        viewHolders[tradeType]?.showChartDataSuccess(dailyCandles)
     }
 
-    fun resetDataUIComponents(targetTradeType: TradeType) {
-        viewHolders[targetTradeType]?.resetDataUIComponents()
+    fun resetDataUIComponents(tradeType: TradeType) {
+        viewHolders[tradeType]?.resetDataUIComponents()
     }
 
     inner class PriceHolder(

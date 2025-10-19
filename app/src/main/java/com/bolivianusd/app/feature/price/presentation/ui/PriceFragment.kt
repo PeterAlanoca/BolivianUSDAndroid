@@ -61,7 +61,7 @@ class PriceFragment : BaseFragment<FragmentPriceBinding>() {
             getString(R.string.price_view_pager_item_sell)
         )
         priceAdapter.setOnDollarTypeChanged { dollarType ->
-            viewModel.currentTradeType.state.value.let { tradeType ->
+            viewModel.currentTradeType.value.let { tradeType ->
                 viewModel.setDollarType(tradeType, dollarType)
             }
         }
@@ -113,7 +113,7 @@ class PriceFragment : BaseFragment<FragmentPriceBinding>() {
     }
 
     private fun resetDataUIComponents() {
-        viewModel.currentTradeType.state.value.let { tradeType ->
+        viewModel.currentTradeType.value.let { tradeType ->
             priceAdapter.resetDataUIComponents(tradeType)
         }
     }
