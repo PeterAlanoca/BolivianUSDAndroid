@@ -10,7 +10,7 @@ import com.bolivianusd.app.core.base.BaseFragment
 import com.bolivianusd.app.core.extensions.collectFlow
 import com.bolivianusd.app.databinding.FragmentPriceBinding
 import com.bolivianusd.app.feature.price.presentation.adapter.PriceAdapter
-import com.bolivianusd.app.feature.price.presentation.viewmodel.PriceItemPagerViewModel
+import com.bolivianusd.app.feature.price.presentation.viewmodel.PriceViewModel
 import com.bolivianusd.app.shared.domain.model.DollarType
 import com.bolivianusd.app.shared.domain.model.TradeType
 import com.bolivianusd.app.shared.domain.state.UiState
@@ -18,7 +18,7 @@ import com.google.android.material.tabs.TabLayoutMediator
 
 class PriceFragment : BaseFragment<FragmentPriceBinding>() {
 
-    private val viewModel: PriceItemPagerViewModel by activityViewModels()
+    private val viewModel: PriceViewModel by activityViewModels()
     private val priceAdapter = PriceAdapter()
 
     override fun onCreate(savedInstanceState: Bundle?) {

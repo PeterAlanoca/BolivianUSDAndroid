@@ -21,7 +21,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class PriceItemPagerViewModel @Inject constructor(
+class PriceViewModel @Inject constructor(
     private val observePriceUseCase: ObservePriceUseCase,
     private val observePriceRangeUseCase: ObservePriceRangeUseCase,
     private val getLatestCandlesUseCase: GetLatestCandlesUseCase
