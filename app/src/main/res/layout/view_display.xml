@@ -46,7 +46,7 @@
                 android:textSize="@dimen/text_size_11"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                tools:text="12/09/25 10:35:01" />
+                tools:text="12/09/25 10:35:01 PM" />
 
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/exchangeRate"

@@ -10,7 +10,6 @@
         android:layout_width="@dimen/dimen_fifty"
         android:layout_height="@dimen/dimen_fifty"
         android:layout_gravity="center_horizontal"
-        android:layout_marginTop="@dimen/margin_5"
         android:background="@drawable/drawable_circle_java"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -67,15 +66,12 @@
 
     </RelativeLayout>
 
-    <com.google.android.material.textview.MaterialTextView
-        android:id="@+id/descriptionTextView"
-        android:layout_width="wrap_content"
+    <TextSwitcher
+        android:id="@+id/descriptionTextSwitcher"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:fontFamily="@font/sfuidisplay_medium"
-        android:text="@string/price_view_pager_item_parallel_dollar"
-        android:textAlignment="center"
-        android:textColor="@color/white_alpha_65"
-        android:textSize="@dimen/text_size_12"
+        android:inAnimation="@anim/anim_price_description_slide_in_up"
+        android:outAnimation="@anim/anim_price_description_slide_out_up"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/exchangeRateView" />
@@ -91,6 +87,6 @@
         app:kswThumbRangeRatio="2"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/descriptionTextView" />
+        app:layout_constraintTop_toBottomOf="@+id/descriptionTextSwitcher" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
