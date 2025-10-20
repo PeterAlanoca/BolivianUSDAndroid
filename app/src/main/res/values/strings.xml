@@ -7,6 +7,7 @@
     <string name="bob">BOB</string>
     <string name="zero_decimal">0.00</string>
     <string name="dot">•</string>
+    <string name="empty"></string>
 
     <!-- Price -->
     <string name="price_view_pager_item_buy">Compra</string>
@@ -18,6 +19,7 @@
     <string name="price_view_pager_item_more_zero">+0.0%</string>
     <string name="price_view_pager_item_bob_zero">BOB 00.00</string>
     <string name="price_view_pager_item_source_binance">Fuente: binance.com</string>
+    <string name="price_view_pager_item_source_bcb">Fuente: bcb.gob.bo</string>
     <string name="price_view_pager_item_range">Rango de precios</string>
     <string name="price_view_pager_item_low">Bajo</string>
     <string name="price_view_pager_item_middle">Medio</string>

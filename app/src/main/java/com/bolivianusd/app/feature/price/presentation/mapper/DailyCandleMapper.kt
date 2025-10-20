@@ -1,7 +1,9 @@
 package com.bolivianusd.app.feature.price.presentation.mapper
 
+import com.bolivianusd.app.R
 import com.bolivianusd.app.core.util.emptyString
 import com.bolivianusd.app.feature.price.domain.model.DailyCandle
+import com.bolivianusd.app.shared.domain.model.DollarType
 import com.github.mikephil.charting.data.CandleEntry
 
 fun List<DailyCandle>.toCandleEntries(): List<CandleEntry> {
@@ -28,4 +30,17 @@ fun List<DailyCandle>.getDateRangeLabel(): String {
     val startDate = this.firstOrNull()?.date ?: emptyString
     val endDate = this.lastOrNull()?.date ?: emptyString
     return "$startDate - $endDate"
+}
+
+fun List<DailyCandle>.getSource(): Int {
+    return try {
+        this.firstOrNull()?.let {
+            when (DollarType.valueOf(it.asset)) {
+                DollarType.USDT -> R.string.price_view_pager_item_source_binance
+                DollarType.USD -> R.string.price_view_pager_item_source_bcb
+            }
+        } ?: R.string.empty
+    } catch (_: Exception) {
+        R.string.empty
+    }
 }

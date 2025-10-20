@@ -18,6 +18,7 @@ import com.bolivianusd.app.core.util.emptyString
 import com.bolivianusd.app.databinding.ViewDailyCandleChartBinding
 import com.bolivianusd.app.feature.price.domain.model.DailyCandle
 import com.bolivianusd.app.feature.price.presentation.mapper.getDateRangeLabel
+import com.bolivianusd.app.feature.price.presentation.mapper.getSource
 import com.bolivianusd.app.feature.price.presentation.mapper.toCandleEntries
 import com.bolivianusd.app.feature.price.presentation.mapper.toDataSetLabel
 import com.bolivianusd.app.feature.price.presentation.mapper.toFiat
@@ -28,6 +29,9 @@ import com.github.mikephil.charting.data.CandleData
 import com.github.mikephil.charting.data.CandleDataSet
 import com.github.mikephil.charting.data.CandleEntry
 import com.github.mikephil.charting.formatter.ValueFormatter
+import java.text.DecimalFormat
+import java.text.DecimalFormatSymbols
+import java.util.Locale
 
 class DailyCandleChartView @JvmOverloads constructor(
     context: Context,
@@ -194,15 +198,15 @@ class DailyCandleChartView @JvmOverloads constructor(
     }
 
     private fun setChartData(dailyCandles: List<DailyCandle>) = with(binding.chart) {
-        //
         binding.updateTime.updatedTextView.text = dailyCandles.getDateRangeLabel()
 
         binding.updateTime.updateTextView.visible()
         binding.updateTime.dotTextView.visible()
         binding.updateTime.updatedTextView.visible()
-        //
+
+        labelTextView.setText(dailyCandles.getSource())
         labelTextView.visible()
-        //
+
         val entries = dailyCandles.toCandleEntries()
         val xAxisValues = dailyCandles.toXAxisValues()
         val dataSetLabel = dailyCandles.toDataSetLabel()
@@ -224,7 +228,9 @@ class DailyCandleChartView @JvmOverloads constructor(
         chart.axisRight.apply {
             valueFormatter = object : ValueFormatter() {
                 override fun getFormattedValue(value: Float): String {
-                    return "$fiat ${String.format("%.2f", value)}"
+                    val formatter = DecimalFormat("#,###.00", DecimalFormatSymbols(Locale.ENGLISH))
+                    val amount = formatter.format(value)
+                    return "$fiat $amount"
                 }
             }
         }

@@ -11,11 +11,11 @@ import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.isVisible
 import com.bolivianusd.app.R
 import com.bolivianusd.app.core.extensions.clearText
+import com.bolivianusd.app.core.extensions.getColorRes
 import com.bolivianusd.app.core.extensions.gone
 import com.bolivianusd.app.core.extensions.invisible
 import com.bolivianusd.app.core.extensions.visible
@@ -68,7 +68,7 @@ class PriceView @JvmOverloads constructor(
             textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 12f)
             textView.textAlignment = TEXT_ALIGNMENT_CENTER
             textView.typeface = ResourcesCompat.getFont(context, R.font.sfuidisplay_medium)
-            textView.setTextColor(ContextCompat.getColor(context, R.color.white_alpha_65))
+            textView.setTextColor(context.getColorRes(R.color.white_alpha_65))
             textView
         }
     }
