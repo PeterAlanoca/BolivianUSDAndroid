@@ -20,10 +20,11 @@
     <string name="price_view_pager_item_bob_zero">BOB 00.00</string>
     <string name="price_view_pager_item_source_binance">Fuente: binance.com</string>
     <string name="price_view_pager_item_source_bcb">Fuente: bcb.gob.bo</string>
-    <string name="price_view_pager_item_range">Rango de precios</string>
+    <string name="price_view_pager_item_range">Rango</string>
     <string name="price_view_pager_item_low">Bajo</string>
     <string name="price_view_pager_item_middle">Medio</string>
     <string name="price_view_pager_item_high">Alto</string>
+    <string name="price_view_pager_item_updated_at">12/09/25 10:35:01 P.M.</string>
 
     <!-- Calculator -->
     <string name="calculator_view_pager_item_buy">Compra</string>

@@ -19,22 +19,22 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <com.bolivianusd.app.feature.price.presentation.view.DailyCandleChartView
-            android:id="@+id/dailyCandleChartView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/margin_16"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/priceView" />
-
         <com.bolivianusd.app.feature.price.presentation.view.PriceRangeView
             android:id="@+id/priceRangeView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_20"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/dailyCandleChartView" />
+            app:layout_constraintTop_toBottomOf="@+id/priceView" />
+
+        <com.bolivianusd.app.feature.price.presentation.view.DailyCandleChartView
+            android:id="@+id/dailyCandleChartView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/priceRangeView" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

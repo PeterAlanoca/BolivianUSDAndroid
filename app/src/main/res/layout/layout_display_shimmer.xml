@@ -52,7 +52,7 @@
                 android:background="@drawable/bg_shimmer_cool_grey"
                 android:includeFontPadding="false"
                 android:fontFamily="@font/sfuidisplay_medium"
-                android:text="12/09/25 10:35:01 PM"
+                android:text="12/09/25 10:35:01 P.M."
                 android:textColor="@color/cool_grey"
                 android:textSize="@dimen/text_size_11" />
 

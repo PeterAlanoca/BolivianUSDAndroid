@@ -72,7 +72,6 @@ class PriceAdapter : RecyclerView.Adapter<PriceAdapter.PriceHolder>() {
         fun bind(tradeType: TradeType) {
             setListeners()
             resetDataUIComponents()
-            showPriceRangeLoadingState()//fix
         }
 
         private fun setListeners() = with(binding) {

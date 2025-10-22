@@ -26,6 +26,11 @@ class PriceRangeView @JvmOverloads constructor(
         ViewPriceRangeBinding.inflate(LayoutInflater.from(context), this, true)
     }
 
+    init {
+        resetDataUIComponents()
+        showPriceRangeLoadingState()
+    }
+
     fun resetDataUIComponents() {
         with(binding) {
             minTextView.clearText()
@@ -36,10 +41,14 @@ class PriceRangeView @JvmOverloads constructor(
             maxLabelTextView.clearText()
             rangeLabel.clearText()
             currencyTextView.clearText()
+            updateAtTextView.clearText()
             dotView.invisible()
             rangeTitle.invisible()
+            updateAtTextView.invisible()
             rangeTitleShimmer.visible()
             rangeTitleShimmer.startShimmer()
+            dateShimmerLayout.visible()
+            dateShimmerLayout.startShimmer()
         }
     }
 
@@ -69,6 +78,9 @@ class PriceRangeView @JvmOverloads constructor(
 
                 rangeTitle.visible()
                 rangeTitle.startAnimation(fadeIn)
+
+                updateAtTextView.visible()
+                updateAtTextView.startAnimation(fadeIn)
             }
         })
 
@@ -77,6 +89,9 @@ class PriceRangeView @JvmOverloads constructor(
         }
         if (rangeTitleShimmer.isVisible) {
             rangeTitleShimmer.startAnimation(fadeOut)
+        }
+        if (dateShimmerLayout.isVisible) {
+            dateShimmerLayout.startAnimation(fadeOut)
         }
     }
 
@@ -95,6 +110,7 @@ class PriceRangeView @JvmOverloads constructor(
             maxLabelTextView.text = this.description
         }
         rangeLabel.text = context.getString(R.string.price_view_pager_item_range)
+        updateAtTextView.text = priceRange.updatedAtFormat
         dotView.visible()
     }
 
@@ -103,6 +119,8 @@ class PriceRangeView @JvmOverloads constructor(
         shimmerLayout.gone()
         rangeTitleShimmer.stopShimmer()
         rangeTitleShimmer.gone()
+        dateShimmerLayout.stopShimmer()
+        dateShimmerLayout.gone()
     }
 
 }
