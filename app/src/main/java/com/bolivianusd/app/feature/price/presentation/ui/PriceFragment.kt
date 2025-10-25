@@ -57,8 +57,8 @@ class PriceFragment : BaseFragment<FragmentPriceBinding>() {
 
     private fun setupViewPager() = with(binding) {
         val titles = listOf(
-            getString(R.string.price_view_pager_item_buy),
-            getString(R.string.price_view_pager_item_sell)
+            getString(R.string.price_view_item_buy),
+            getString(R.string.price_view_item_sell)
         )
         priceAdapter.setOnDollarTypeChanged { dollarType ->
             viewModel.currentTradeType.value.let { tradeType ->

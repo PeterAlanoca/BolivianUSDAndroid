@@ -30,7 +30,7 @@
                 android:fontFamily="@font/sfuidisplay_bold"
                 android:includeFontPadding="false"
                 android:lineSpacingExtra="@dimen/line_spacing_extra_0"
-                android:text="@string/price_view_pager_item_range"
+                android:text="@string/price_view_item_range"
                 android:textColor="@color/cool_grey"
                 android:textSize="@dimen/text_size_16"
                 android:visibility="invisible"
@@ -113,7 +113,7 @@
             android:background="@drawable/bg_shimmer_cool_grey"
             android:fontFamily="@font/sfuidisplay_medium"
             android:includeFontPadding="false"
-            android:text="@string/price_view_pager_item_updated_at"
+            android:text="@string/price_view_item_updated_at"
             android:textColor="@color/cool_grey"
             android:textSize="@dimen/text_size_14" />
 
@@ -137,7 +137,7 @@
             android:fontFamily="@font/sfuidisplay_bold"
             android:includeFontPadding="false"
             android:lineSpacingExtra="@dimen/line_spacing_extra_0"
-            android:text="@string/price_view_pager_item_range"
+            android:text="@string/price_view_item_range"
             android:textColor="@color/white"
             android:textSize="@dimen/text_size_16" />
 
@@ -179,7 +179,7 @@
         app:layout_constraintBottom_toBottomOf="@+id/rangeTitle"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@id/rangeTitle"
-        tools:text="@string/price_view_pager_item_updated_at"
+        tools:text="@string/price_view_item_updated_at"
         tools:visibility="visible" />
 
     <com.google.android.material.card.MaterialCardView
@@ -249,7 +249,7 @@
                         android:layout_marginTop="@dimen/margin_2"
                         android:fontFamily="@font/sfuidisplay_medium"
                         android:includeFontPadding="false"
-                        android:text="@string/price_view_pager_item_low"
+                        android:text="@string/price_view_item_low"
                         android:textColor="@color/cool_grey"
                         android:textSize="@dimen/text_size_14"
                         android:visibility="invisible"
@@ -308,7 +308,7 @@
                         android:layout_marginTop="@dimen/margin_2"
                         android:fontFamily="@font/sfuidisplay_medium"
                         android:includeFontPadding="false"
-                        android:text="@string/price_view_pager_item_middle"
+                        android:text="@string/price_view_item_middle"
                         android:textColor="@color/cool_grey"
                         android:textSize="@dimen/text_size_14"
                         android:visibility="invisible"
@@ -367,7 +367,7 @@
                         android:layout_marginTop="@dimen/margin_2"
                         android:fontFamily="@font/sfuidisplay_medium"
                         android:includeFontPadding="false"
-                        android:text="@string/price_view_pager_item_high"
+                        android:text="@string/price_view_item_high"
                         android:textColor="@color/cool_grey"
                         android:textSize="@dimen/text_size_14"
                         android:visibility="invisible"
@@ -427,7 +427,7 @@
                     android:layout_marginTop="@dimen/margin_2"
                     android:fontFamily="@font/sfuidisplay_medium"
                     android:includeFontPadding="false"
-                    android:text="@string/price_view_pager_item_low"
+                    android:text="@string/price_view_item_low"
                     android:textColor="@color/white_alpha_65"
                     android:textSize="@dimen/text_size_14" />
 
@@ -457,7 +457,7 @@
                     android:layout_marginTop="@dimen/margin_2"
                     android:fontFamily="@font/sfuidisplay_medium"
                     android:includeFontPadding="false"
-                    android:text="@string/price_view_pager_item_middle"
+                    android:text="@string/price_view_item_middle"
                     android:textColor="@color/white_alpha_65"
                     android:textSize="@dimen/text_size_14" />
 
@@ -487,7 +487,7 @@
                     android:layout_marginTop="@dimen/margin_2"
                     android:fontFamily="@font/sfuidisplay_medium"
                     android:includeFontPadding="false"
-                    android:text="@string/price_view_pager_item_high"
+                    android:text="@string/price_view_item_high"
                     android:textColor="@color/white_alpha_65"
                     android:textSize="@dimen/text_size_14" />
 

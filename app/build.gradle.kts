@@ -121,6 +121,7 @@ dependencies {
     implementation(libs.circleimageview)
     implementation(libs.switchbutton)
     implementation(libs.shimmer)
+    implementation(libs.blurview)
 
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.analytics)

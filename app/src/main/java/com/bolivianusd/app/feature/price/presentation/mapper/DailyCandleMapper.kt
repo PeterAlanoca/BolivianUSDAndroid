@@ -8,12 +8,23 @@ import com.github.mikephil.charting.data.CandleEntry
 
 fun List<DailyCandle>.toCandleEntries(): List<CandleEntry> {
     return this.map {
-        CandleEntry(it.x, it.high, it.low, it.open, it.close)
+        CandleEntry(
+            it.x,
+            it.high,
+            it.low,
+            it.open,
+            it.close,
+            it.readableDate
+        )
     }
 }
 
 fun List<DailyCandle>.toXAxisValues(): List<String> {
-    return this.map { it.date }
+    return this.map { it.shortDate }
+}
+
+fun List<DailyCandle>.toXAxisValuesReadable(): List<String> {
+    return this.map { it.readableDate }
 }
 
 fun List<DailyCandle>.toDataSetLabel(): String {
@@ -27,8 +38,8 @@ fun List<DailyCandle>.toFiat(): String {
 }
 
 fun List<DailyCandle>.getDateRangeLabel(): String {
-    val startDate = this.firstOrNull()?.date ?: emptyString
-    val endDate = this.lastOrNull()?.date ?: emptyString
+    val startDate = this.firstOrNull()?.shortDate ?: emptyString
+    val endDate = this.lastOrNull()?.shortDate ?: emptyString
     return "$startDate - $endDate"
 }
 
@@ -36,8 +47,8 @@ fun List<DailyCandle>.getSource(): Int {
     return try {
         this.firstOrNull()?.let {
             when (DollarType.valueOf(it.asset)) {
-                DollarType.USDT -> R.string.price_view_pager_item_source_binance
-                DollarType.USD -> R.string.price_view_pager_item_source_bcb
+                DollarType.USDT -> R.string.price_view_item_source_binance
+                DollarType.USD -> R.string.price_view_item_source_bcb
             }
         } ?: R.string.empty
     } catch (_: Exception) {

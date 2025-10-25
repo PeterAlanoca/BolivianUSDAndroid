@@ -10,21 +10,26 @@
     <string name="empty"></string>
 
     <!-- Price -->
-    <string name="price_view_pager_item_buy">Compra</string>
-    <string name="price_view_pager_item_sell">Venta</string>
-    <string name="price_view_pager_item_parallel_dollar">DOLAR PARALELO</string>
-    <string name="price_view_pager_item_update">Historial</string>
-    <string name="price_view_pager_item_time">00/00 - 00/00</string>
-    <string name="price_view_pager_item_price_in_bob">PRECIO EN BOB</string>
-    <string name="price_view_pager_item_more_zero">+0.0%</string>
-    <string name="price_view_pager_item_bob_zero">BOB 00.00</string>
-    <string name="price_view_pager_item_source_binance">Fuente: binance.com</string>
-    <string name="price_view_pager_item_source_bcb">Fuente: bcb.gob.bo</string>
-    <string name="price_view_pager_item_range">Rango</string>
-    <string name="price_view_pager_item_low">Bajo</string>
-    <string name="price_view_pager_item_middle">Medio</string>
-    <string name="price_view_pager_item_high">Alto</string>
-    <string name="price_view_pager_item_updated_at">12/09/25 10:35:01 P.M.</string>
+    <string name="price_view_item_buy">Compra</string>
+    <string name="price_view_item_sell">Venta</string>
+    <string name="price_view_item_parallel_dollar">DOLAR PARALELO</string>
+    <string name="price_view_item_update">Historial</string>
+    <string name="price_view_item_time">00/00 - 00/00</string>
+    <string name="price_view_item_price_in_bob">PRECIO EN BOB</string>
+    <string name="price_view_item_more_zero">+0.0%</string>
+    <string name="price_view_item_bob_zero">BOB 00.00</string>
+    <string name="price_view_item_source_binance">Fuente: binance.com</string>
+    <string name="price_view_item_source_bcb">Fuente: bcb.gob.bo</string>
+    <string name="price_view_item_range">Rango</string>
+    <string name="price_view_item_low">Bajo</string>
+    <string name="price_view_item_middle">Medio</string>
+    <string name="price_view_item_high">Alto</string>
+    <string name="price_view_item_updated_at">12/09/25 10:35:01 P.M.</string>
+
+    <string name="price_view_item_low_">Bajo:</string>
+    <string name="price_view_item_high_">Alto:</string>
+    <string name="price_view_item_open_">Apertura:</string>
+    <string name="price_view_item_close_">Cierre:</string>
 
     <!-- Calculator -->
     <string name="calculator_view_pager_item_buy">Compra</string>

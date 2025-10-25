@@ -109,7 +109,7 @@ class PriceRangeView @JvmOverloads constructor(
             maxTextView.text = this.valueLabel
             maxLabelTextView.text = this.description
         }
-        rangeLabel.text = context.getString(R.string.price_view_pager_item_range)
+        rangeLabel.text = context.getString(R.string.price_view_item_range)
         updateAtTextView.text = priceRange.updatedAtFormat
         dotView.visible()
     }

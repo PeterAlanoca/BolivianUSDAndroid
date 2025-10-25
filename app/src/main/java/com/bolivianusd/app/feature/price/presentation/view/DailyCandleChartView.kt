@@ -28,7 +28,10 @@ import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.data.CandleData
 import com.github.mikephil.charting.data.CandleDataSet
 import com.github.mikephil.charting.data.CandleEntry
+import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.formatter.ValueFormatter
+import com.github.mikephil.charting.highlight.Highlight
+import com.github.mikephil.charting.listener.OnChartValueSelectedListener
 import java.text.DecimalFormat
 import java.text.DecimalFormatSymbols
 import java.util.Locale
@@ -135,14 +138,15 @@ class DailyCandleChartView @JvmOverloads constructor(
 
     private fun setupCandleStickChart() = with(binding.chart) {
         chart.apply {
+            marker = CandleMarkerView(context, R.layout.layout_marker_candle)
             setDrawBorders(false)
             setExtraOffsets(0f, 0f, 0f, 0f)
-            setTouchEnabled(false)
+            setTouchEnabled(true)
             setDragEnabled(false)
             setScaleEnabled(false)
             setPinchZoom(false)
             isDoubleTapToZoomEnabled = false
-            isHighlightPerTapEnabled = false
+            isHighlightPerTapEnabled = true
         }
         chart.legend.apply {
             isEnabled = true
@@ -168,7 +172,6 @@ class DailyCandleChartView @JvmOverloads constructor(
             gridColor = context.getColorRes(R.color.white_alpha_05)
             gridLineWidth = 1f
         }
-
         chart.xAxis.apply {
             position = XAxis.XAxisPosition.BOTTOM
             setDrawLabels(true)
@@ -177,6 +180,14 @@ class DailyCandleChartView @JvmOverloads constructor(
             textSize = 8f
             textColor = context.getColorRes(R.color.white_alpha_65)
         }
+        chart.setOnChartValueSelectedListener(object : OnChartValueSelectedListener {
+            override fun onValueSelected(e: Entry?, h: Highlight?) {
+            }
+
+            override fun onNothingSelected() {
+                hideMarker()
+            }
+        })
     }
 
     fun resetDataUIComponents() {
@@ -194,6 +205,7 @@ class DailyCandleChartView @JvmOverloads constructor(
             chart.chart.invisible()
             chart.valueData.invisible()
             chart.labelTextView.invisible()
+            hideMarker()
         }
     }
 
@@ -221,10 +233,11 @@ class DailyCandleChartView @JvmOverloads constructor(
             decreasingPaintStyle = Paint.Style.FILL
             increasingColor = context.getColorRes(R.color.green)
             increasingPaintStyle = Paint.Style.FILL
-            neutralColor = context.getColorRes(R.color.white_alpha_50)
+            neutralColor = context.getColorRes(R.color.yellow)
             setDrawValues(false)
+            setDrawHorizontalHighlightIndicator(false)
+            setDrawVerticalHighlightIndicator(false)
         }
-
         chart.axisRight.apply {
             valueFormatter = object : ValueFormatter() {
                 override fun getFormattedValue(value: Float): String {
@@ -234,7 +247,6 @@ class DailyCandleChartView @JvmOverloads constructor(
                 }
             }
         }
-
         chart.xAxis.apply {
             labelCount = xAxisValues.size
             valueFormatter = object : ValueFormatter() {
@@ -292,4 +304,9 @@ class DailyCandleChartView @JvmOverloads constructor(
         chart.valueData.invisible()
         chart.labelTextView.invisible()
     }
+
+    private fun hideMarker() = with(binding.chart) {
+        chart.highlightValue(null)
+    }
+
 }

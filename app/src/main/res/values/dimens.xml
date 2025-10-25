@@ -8,6 +8,7 @@
 
     <dimen name="radius_3">3dp</dimen>
     <dimen name="radius_5">5dp</dimen>
+    <dimen name="radius_10">10dp</dimen>
     <dimen name="radius_14">14dp</dimen>
 
     <dimen name="switch_radius">22dp</dimen>
@@ -36,6 +37,7 @@
     <dimen name="negative_margin_5">-5dp</dimen>
     <dimen name="negative_margin_30">-30dp</dimen>
 
+    <dimen name="padding_10">10dp</dimen>
     <dimen name="padding_20">20dp</dimen>
 
     <dimen name="text_size_9">9sp</dimen>
