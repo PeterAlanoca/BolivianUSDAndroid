@@ -33,7 +33,7 @@ class DailyCandlePostgrestDataSource @Inject constructor(
                     limit(limit)
                 }
                 .decodeList<DailyCandleDto>()
-            val candles = candlesDto.toDailyCandles()
+            val candles = candlesDto.toDailyCandles(dollarType)
             emit(candles)
         } catch (e: Exception) {
             throw PostgrestDataException.UnknownException(e)

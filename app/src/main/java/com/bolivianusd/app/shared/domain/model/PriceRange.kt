@@ -1,7 +1,7 @@
 package com.bolivianusd.app.shared.domain.model
 
+import com.bolivianusd.app.core.util.DateUtil
 import com.bolivianusd.app.core.util.emptyString
-import com.bolivianusd.app.core.util.formatterDate
 import java.math.BigDecimal
 
 data class PriceRange(
@@ -24,6 +24,6 @@ data class PriceRange(
                 "| ${max.description} ${max.valueLabel}"
 
     val updatedAtFormat: String
-        get() = formatterDate(updatedAt)
+        get() = DateUtil.formatterDate(updatedAt)
 
 }
