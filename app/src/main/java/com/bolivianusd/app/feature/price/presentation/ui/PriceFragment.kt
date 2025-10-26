@@ -31,10 +31,6 @@ class PriceFragment : BaseFragment<FragmentPriceBinding>() {
         container: ViewGroup?
     ) = FragmentPriceBinding.inflate(inflater, container, false)
 
-    override fun onStart() {
-        super.onStart()
-    }
-
     override fun initViews() {
         setupViewPager()
         resetDataUIComponents()

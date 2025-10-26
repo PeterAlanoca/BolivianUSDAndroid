@@ -10,22 +10,26 @@ import com.bolivianusd.app.shared.domain.model.TradeType
 import com.bolivianusd.app.shared.domain.state.UiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.flatMapLatest
-import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class CalculatorItemPagerViewModel @Inject constructor(
+class CalculatorViewModel @Inject constructor(
     private val getPriceRangePollingUseCase: GetPriceRangePollingUseCase
 ) : ViewModel() {
 
+    val currentTradeType = StateHolder(TradeType.BUY)
     private val currentDollarTypes = mutableMapOf<TradeType, MutableStateFlow<DollarType>>()
     private val priceRangeStates = mutableMapOf<TradeType, StateHolder<UiState<PriceRange>>>()
+
+    fun setTradeType(tradeType: TradeType) {
+        if (currentTradeType.value != tradeType) {
+            currentTradeType.setValue(tradeType)
+        }
+    }
 
     fun setDollarType(tradeType: TradeType, dollarType: DollarType) {
         if (getDollarTypeFlow(tradeType).value != dollarType) {
@@ -49,10 +53,7 @@ class CalculatorItemPagerViewModel @Inject constructor(
     fun observePriceRange(tradeType: TradeType) {
         viewModelScope.launch {
             getDollarTypeFlow(tradeType).flatMapLatest { dollarType ->
-                getPriceRangePollingUseCase.invoke(
-                    dollarType = dollarType,
-                    tradeType = tradeType
-                )
+                getPriceRangePollingUseCase.invoke(dollarType, tradeType)
             }.collect { state ->
                 priceRangeStates[tradeType]?.setValue(state)
             }
