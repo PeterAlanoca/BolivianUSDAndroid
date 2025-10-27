@@ -27,7 +27,7 @@ class PriceViewModel @Inject constructor(
     private val getLatestCandlesUseCase: GetLatestCandlesUseCase
 ) : ViewModel() {
 
-    val currentTradeType = StateHolder(TradeType.BUY)
+    val currentTradeType = StaterereHolder(TradeType.BUY)
     private val currentDollarTypes = mutableMapOf<TradeType, MutableStateFlow<DollarType>>()
     private val priceStates = mutableMapOf<TradeType, StateHolder<UiState<Price>>>()
     private val priceRangeStates = mutableMapOf<TradeType, StateHolder<UiState<PriceRange>>>()
