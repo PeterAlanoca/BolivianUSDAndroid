@@ -13,6 +13,7 @@ class CalculatorAdapter : RecyclerView.Adapter<CalculatorAdapter.CalculatorHolde
     private val items = listOf(TradeType.BUY, TradeType.SELL)
     private val viewHolders = mutableMapOf<TradeType, CalculatorHolder>()
     private var actionDollarType: ((DollarType) -> Unit)? = null
+    private var onFormatError: (() -> Unit)? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CalculatorHolder {
         val binding = ItemCalculatorBinding.inflate(
@@ -43,6 +44,10 @@ class CalculatorAdapter : RecyclerView.Adapter<CalculatorAdapter.CalculatorHolde
         viewHolders[tradeType]?.showPriceRangeDataSuccess(priceRange)
     }
 
+    fun setOnFormatError(listener: () -> Unit) {
+        onFormatError = listener
+    }
+
     fun resetUIComponents(tradeType: TradeType) {
         viewHolders[tradeType]?.resetUIComponents()
     }
@@ -61,6 +66,9 @@ class CalculatorAdapter : RecyclerView.Adapter<CalculatorAdapter.CalculatorHolde
                 resetUIComponents()
                 actionDollarType?.invoke(dollarType)
             }
+            displayView.setOnFormatError {
+                onFormatError?.invoke()
+            }
             keyboardView.setOnClearClickListener {
                 displayView.clearField()
             }
@@ -73,13 +81,12 @@ class CalculatorAdapter : RecyclerView.Adapter<CalculatorAdapter.CalculatorHolde
         }
 
         fun showPriceRangeLoadingState() = with(binding)  {
-            displayView.showShimmerLoading()
-            keyboardView.showShimmerLoading()
+            displayView.showPriceRangeLoadingState()
+            keyboardView.showPriceRangeLoadingState()
         }
 
         fun showPriceRangeDataSuccess(priceRange: PriceRange) = with(binding) {
-            displayView.setData(priceRange)
-            displayView.showContentView()
+            displayView.showPriceRangeDataSuccess(priceRange)
             keyboardView.showContentView()
         }
 

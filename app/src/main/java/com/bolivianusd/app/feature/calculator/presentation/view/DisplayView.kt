@@ -5,6 +5,7 @@ import android.content.Context
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.MotionEvent
+import android.view.View
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import android.view.inputmethod.InputMethodManager
@@ -32,16 +33,15 @@ class DisplayView @JvmOverloads constructor(
     private val binding: ViewDisplayBinding by lazy {
         ViewDisplayBinding.inflate(LayoutInflater.from(context), this, true)
     }
-
+    private var onDollarTypeChanged: ((DollarType) -> Unit)? = null
+    private var onFormatError: (() -> Unit)? = null
     private var exchangeRateValue = ZERO_D
     private var usdValue = ZERO_D
     private var bobValue = ZERO_D
 
     private var currentFocusField: EditText? = null
 
-    private var onDollarTypeChanged: ((DollarType) -> Unit)? = null
-
-    var dollarType = DollarType.USDT
+    private var dollarType = DollarType.USDT
 
     init {
         initView()
@@ -50,28 +50,12 @@ class DisplayView @JvmOverloads constructor(
         disableSystemKeyboard()
     }
 
-    fun setData(priceRange: PriceRange) = with(binding) {
-        exchangeRateValue = priceRange.median.value.toDouble()
-        usdValue = ONE_D
-        bobValue = exchangeRateValue * usdValue
-
-        priceRangeTextView.text = priceRange.descriptionLabel
-        updateAtTextView.text = priceRange.updatedAtFormat
-        etExchangeRate.setAmountValue(exchangeRateValue)
-        etUsd.setAmountValue(usdValue)
-        usdLabel.text = priceRange.asset
-        etBob.setAmountValue(bobValue)
-        bobLabel.text = priceRange.fiat
-
-        currentFocusField = etUsd.editText
-        etUsd.editText.postDelayed({
-            etUsd.editText.requestFocus()
-        }, DELAY_REQUEST_FOCUS)
-        updateExchangeRateLabel()
-    }
-
     fun setOnDollarTypeChanged(onDollarTypeChanged: ((DollarType) -> Unit)) {
         this.onDollarTypeChanged = onDollarTypeChanged
+    }
+
+    fun setOnFormatError(listener: () -> Unit) {
+        onFormatError = listener
     }
 
     fun deleteNumberField() = with(binding) {
@@ -122,7 +106,7 @@ class DisplayView @JvmOverloads constructor(
         }
     }
 
-    fun showShimmerLoading() = with(binding) {
+    fun showPriceRangeLoadingState() = with(binding) {
         displayShimmer.visible()
         shimmerLayout.priceRangeShimmerLayout.startShimmer()
         shimmerLayout.dateShimmerLayout.startShimmer()
@@ -134,7 +118,7 @@ class DisplayView @JvmOverloads constructor(
         displayView.gone()
     }
 
-    fun showContentView() = with(binding) {
+    fun showPriceRangeDataSuccess(priceRange: PriceRange) = with(binding) {
         if (displayView.isVisible) {
             return@with
         }
@@ -142,7 +126,7 @@ class DisplayView @JvmOverloads constructor(
         fadeOut.setAnimationListener(object : SimpleAnimationListener() {
             override fun onAnimationEnd(animation: Animation?) {
                 hideShimmerLoading()
-                //setPriceRangeData(priceRange)
+                setPriceRangeData(priceRange)
                 val fadeIn =
                     AnimationUtils.loadAnimation(context, R.anim.anim_view_fade_in)
                 displayView.visible()
@@ -152,6 +136,27 @@ class DisplayView @JvmOverloads constructor(
         if (displayShimmer.isVisible) {
             shimmerLayout.root.startAnimation(fadeOut)
         }
+    }
+
+    private fun setPriceRangeData(priceRange: PriceRange) = with(binding) {
+        exchangeRateValue = priceRange.median.value.toDouble()
+        usdValue = ONE_D
+        bobValue = exchangeRateValue * usdValue
+
+        priceRangeTextView.text = priceRange.descriptionLabel
+        updateAtTextView.text = priceRange.updatedAtFormat
+        etExchangeRate.setAmountValue(exchangeRateValue)
+        etUsd.setAmountValue(usdValue)
+        usdLabel.text = priceRange.asset
+        etBob.setAmountValue(bobValue)
+        bobLabel.text = priceRange.fiat
+
+        currentFocusField = etUsd.editText
+        etUsd.editText.postDelayed({
+            etUsd.editText.requestFocus()
+        }, DELAY_REQUEST_FOCUS)
+        updateExchangeRateLabel()
+        calculateMaxAmount()
     }
 
     fun resetUIComponents() = with(binding) {
@@ -183,31 +188,47 @@ class DisplayView @JvmOverloads constructor(
             dollarType = if (isChecked) DollarType.USD else DollarType.USDT
             onDollarTypeChanged?.invoke(dollarType)
         }
-        etExchangeRate.setOnAmountChangeListener { amount ->
-            validateRequestFocus()
-            etExchangeRate.post {
-                if (etExchangeRate.editText.hasFocus()) {
-                    exchangeRateValue = amount
-                    calculateFromExchangeRate()
+        etExchangeRate.apply {
+            setOnAmountChangeListener { amount ->
+                validateRequestFocus()
+                post {
+                    if (editText.hasFocus()) {
+                        exchangeRateValue = amount
+                        calculateFromExchangeRate()
+                        calculateMaxAmount()
+                    }
                 }
             }
-        }
-        etUsd.setOnAmountChangeListener { amount ->
-            validateRequestFocus()
-            etUsd.post {
-                if (etUsd.editText.hasFocus()) {
-                    usdValue = amount
-                    calculateFromUSD()
-                }
+            setOnFormatError {
+                showFormatError(exchangeRate)
             }
         }
-        etBob.setOnAmountChangeListener { amount ->
-            validateRequestFocus()
-            etBob.post {
-                if (etBob.editText.hasFocus()) {
-                    bobValue = amount
-                    calculateFromBOB()
+        etUsd.apply {
+            setOnAmountChangeListener { amount ->
+                validateRequestFocus()
+                post {
+                    if (editText.hasFocus()) {
+                        usdValue = amount
+                        calculateFromUSD()
+                    }
                 }
+            }
+            setOnFormatError {
+                showFormatError(usd)
+            }
+        }
+        etBob.apply {
+            setOnAmountChangeListener { amount ->
+                validateRequestFocus()
+                post {
+                    if (editText.hasFocus()) {
+                        bobValue = amount
+                        calculateFromBOB()
+                    }
+                }
+            }
+            setOnFormatError {
+                showFormatError(bob)
             }
         }
     }
@@ -237,47 +258,56 @@ class DisplayView @JvmOverloads constructor(
     }
 
     private fun calculateFromExchangeRate() {
-        // Cuando cambia la tasa de cambio, recalcular BOB basado en USD
         bobValue = exchangeRateValue * usdValue
+        binding.etBob.setAmountValue(ZERO_D)
         updateBobField()
     }
 
-
     private fun calculateFromUSD() {
-        // Cuando cambia USD, calcular BOB
         bobValue = exchangeRateValue * usdValue
         updateBobField()
     }
 
     private fun calculateFromBOB() {
-        // Cuando cambia BOB, calcular USD
-        usdValue = if (exchangeRateValue != 0.0) {
+        usdValue = if (exchangeRateValue != ZERO_D) {
             bobValue / exchangeRateValue
         } else {
-            0.0
+            ZERO_D
         }
         updateUsdField()
     }
 
+    private fun calculateMaxAmount() = with(binding) {
+        val maxUsd = 999999999.99
+        val maxBob = exchangeRateValue * maxUsd
+        etExchangeRate.setMaxAmount(9999.99)
+        etUsd.setMaxAmount(maxUsd)
+        etBob.setMaxAmount(maxBob)
+    }
+
     private fun updateBobField() = with(binding) {
-        // Actualizar campo BOB sin triggerear su listener
         if (!etBob.editText.hasFocus()) {
             etBob.setAmountValue(bobValue)
         }
     }
 
     private fun updateUsdField() = with(binding) {
-        // Actualizar campo USD sin triggerear su listener
         if (!etUsd.editText.hasFocus()) {
             etUsd.setAmountValue(usdValue)
         }
     }
 
     private fun updateExchangeRateField() = with(binding) {
-        // Actualizar campo tasa sin triggerear su listener
         if (!etExchangeRate.editText.hasFocus()) {
             etExchangeRate.setAmountValue(exchangeRateValue)
         }
+    }
+
+    private fun clearValues() = with(binding) {
+        usdValue = ZERO_D
+        bobValue = ZERO_D
+        etUsd.clearAmount()
+        etBob.clearAmount()
     }
 
     private fun appendNumber(amountEditText: AmountEditText, value: Int) {
@@ -376,6 +406,21 @@ class DisplayView @JvmOverloads constructor(
     private fun disableSystemKeyboard() {
         val imm = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         imm.hideSoftInputFromWindow(windowToken, 0)
+    }
+
+    private fun showFormatError(view: View) {
+        val animation = AnimationUtils.loadAnimation(context, R.anim.anim_shake_error)
+        animation.setAnimationListener(object : Animation.AnimationListener {
+            override fun onAnimationStart(animation: Animation?) {
+                onFormatError?.invoke()
+            }
+            override fun onAnimationRepeat(animation: Animation?) {}
+
+            override fun onAnimationEnd(animation: Animation?) {
+                clearValues()
+            }
+        })
+        view.startAnimation(animation)
     }
 
     private fun hideSystemKeyboard() {

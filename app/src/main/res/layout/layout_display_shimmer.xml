@@ -95,7 +95,7 @@
                         android:fontFamily="@font/sfuidisplay_medium"
                         android:text="TIPO DE CAMBIO"
                         android:textColor="@color/white_alpha_65"
-                        android:textSize="15sp"
+                        android:textSize="@dimen/text_size_13"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
@@ -189,7 +189,7 @@
                         android:fontFamily="@font/sfuidisplay_medium"
                         android:text="USD"
                         android:textColor="@color/white_alpha_65"
-                        android:textSize="15sp"
+                        android:textSize="@dimen/text_size_13"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
@@ -282,7 +282,7 @@
                         android:fontFamily="@font/sfuidisplay_medium"
                         android:text="BOB"
                         android:textColor="@color/white_alpha_65"
-                        android:textSize="15sp"
+                        android:textSize="@dimen/text_size_13"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />

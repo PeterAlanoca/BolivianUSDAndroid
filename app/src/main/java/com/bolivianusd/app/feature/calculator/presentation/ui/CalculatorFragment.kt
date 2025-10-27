@@ -9,6 +9,7 @@ import com.bolivianusd.app.R
 import com.bolivianusd.app.core.base.BaseFragment
 import com.bolivianusd.app.core.extensions.collectFlow
 import com.bolivianusd.app.core.extensions.hideSystemKeyboard
+import com.bolivianusd.app.core.extensions.showToastError
 import com.bolivianusd.app.core.util.ZERO
 import com.bolivianusd.app.databinding.FragmentCalculatorBinding
 import com.bolivianusd.app.feature.calculator.presentation.adapter.CalculatorAdapter
@@ -61,6 +62,9 @@ class CalculatorFragment : BaseFragment<FragmentCalculatorBinding>() {
             viewModel.currentTradeType.value.let { tradeType ->
                 viewModel.setDollarType(tradeType, dollarType)
             }
+        }
+        calculatorAdapter.setOnFormatError {
+            showToastError(getString(R.string.calculator_view_pager_item_input_error))
         }
         viewPager.adapter = calculatorAdapter
         viewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {

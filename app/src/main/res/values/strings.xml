@@ -25,7 +25,6 @@
     <string name="price_view_item_middle">Medio</string>
     <string name="price_view_item_high">Alto</string>
     <string name="price_view_item_updated_at">12/09/25 10:35:01 P.M.</string>
-
     <string name="price_view_item_low_">Bajo:</string>
     <string name="price_view_item_high_">Alto:</string>
     <string name="price_view_item_open_">Apertura:</string>
@@ -36,5 +35,6 @@
     <string name="calculator_view_pager_item_sell">Venta</string>
     <string name="calculator_view_pager_item_parallel_dollar">TIPO DE CAMBIO PARALELO</string>
     <string name="calculator_view_pager_item_official_dollar">TIPO DE CAMBIO OFICIAL</string>
+    <string name="calculator_view_pager_item_input_error">Los datos ingresados no son válidos. Por favor, verifícalos y vuelve a intentar.</string>
 
 </resources>

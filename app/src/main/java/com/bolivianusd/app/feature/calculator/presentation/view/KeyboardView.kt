@@ -39,7 +39,7 @@ class KeyboardView @JvmOverloads constructor(
         setupClickListeners()
     }
 
-    fun showShimmerLoading() = with(binding) {
+    fun showPriceRangeLoadingState() = with(binding) {
         keyboardShimmer.visible()
         shimmerLayout.root.startShimmer()
         keyboardView.gone()
@@ -53,7 +53,6 @@ class KeyboardView @JvmOverloads constructor(
         fadeOut.setAnimationListener(object : SimpleAnimationListener() {
             override fun onAnimationEnd(animation: Animation?) {
                 hideShimmerLoading()
-                //setPriceRangeData(priceRange)
                 val fadeIn =
                     AnimationUtils.loadAnimation(context, R.anim.anim_view_fade_in)
                 keyboardView.visible()

@@ -3,6 +3,7 @@ package com.bolivianusd.app.core.extensions
 import android.content.Context
 import android.view.inputmethod.InputMethodManager
 import androidx.fragment.app.Fragment
+import com.bolivianusd.app.core.view.CustomToast
 
 fun Fragment.hideSystemKeyboard() {
     val imm =
@@ -11,4 +12,8 @@ fun Fragment.hideSystemKeyboard() {
     activity?.let {
         imm.hideSoftInputFromWindow(it.currentFocus?.windowToken, 0)
     }
+}
+
+fun Fragment.showToastError(message: String) {
+    CustomToast.showTopError(requireContext(), message)
 }

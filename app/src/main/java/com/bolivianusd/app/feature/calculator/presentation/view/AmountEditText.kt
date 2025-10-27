@@ -7,6 +7,7 @@ import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.widget.EditText
 import android.widget.RelativeLayout
+import com.bolivianusd.app.core.util.ZERO_D
 import com.bolivianusd.app.databinding.ViewAmountEditTextBinding
 import java.text.DecimalFormat
 import java.text.DecimalFormatSymbols
@@ -21,8 +22,10 @@ class AmountEditText @JvmOverloads constructor(
     private val binding: ViewAmountEditTextBinding by lazy {
         ViewAmountEditTextBinding.inflate(LayoutInflater.from(context), this, true)
     }
+    private var onFormatError: (() -> Unit)? = null
     private var isFormatting = false
     private val decimalFormat: DecimalFormat
+    private var maxAmount = 100000.0
 
     val editText: EditText
         get() = binding.editText
@@ -47,12 +50,36 @@ class AmountEditText @JvmOverloads constructor(
 
     private fun setupTextWatcher() {
         binding.editText.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            private var previousText = ""
 
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+                previousText = s?.toString() ?: ""
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                if (isFormatting) return
+
+                val currentText = s?.toString() ?: ""
+                val cleanString = currentText.replace("[.,\\s]".toRegex(), "")
+
+                if (cleanString.isNotEmpty()) {
+                    try {
+                        val number = cleanString.toDouble() / 100.0
+                        if (number > maxAmount) {
+                            binding.editText.setText(previousText)
+                            binding.editText.setSelection(previousText.length)
+                            isFormatting = true
+                        }
+                    } catch (e: Exception) {
+                    }
+                }
+            }
 
             override fun afterTextChanged(editable: Editable?) {
-                if (isFormatting) return
+                if (isFormatting) {
+                    isFormatting = false
+                    return
+                }
 
                 isFormatting = true
 
@@ -60,7 +87,7 @@ class AmountEditText @JvmOverloads constructor(
                     val originalString = editable.toString()
 
                     if (originalString.isEmpty() || originalString.replace("[^\\d]".toRegex(), "").isEmpty()) {
-                        setAmountValue(0.0)
+                        setAmountValue(ZERO_D)
                         return
                     }
 
@@ -68,13 +95,15 @@ class AmountEditText @JvmOverloads constructor(
 
                     if (cleanString.isNotEmpty()) {
                         val number = cleanString.toDouble() / 100.0
-                        setFormattedAmount(number)
+                        if (number <= maxAmount) {
+                            setFormattedAmount(number)
+                        }
                     } else {
-                        setAmountValue(0.0)
+                        setAmountValue(ZERO_D)
                     }
                 } catch (e: Exception) {
                     e.printStackTrace()
-                    setAmountValue(0.0)
+                    setAmountValue(ZERO_D)
                 } finally {
                     isFormatting = false
                 }
@@ -82,21 +111,30 @@ class AmountEditText @JvmOverloads constructor(
         })
     }
 
-    private fun setFormattedAmount(amount: Double) {
-        val formatted = decimalFormat.format(amount)
-        if (binding.editText.text.toString() != formatted) {
-            binding.editText.setText(formatted)
-            binding.editText.setSelection(formatted.length)
+    private fun setFormattedAmount(amount: Double) = with(binding) {
+        try {
+            val formatted = decimalFormat.format(amount)
+            if (editText.text.toString() != formatted) {
+                editText.setText(formatted)
+                editText.setSelection(formatted.length)
+            }
+        } catch (e: Exception) {
+            onFormatError?.invoke()
+            editText.setSelection(editText.text.length)
         }
     }
 
-    fun getAmountValue(): Double {
-        val text = binding.editText.text.toString().replace(",", "")
+    fun getAmountValue(): Double = with(binding) {
+        val text = editText.text.toString().replace(",", "")
         return try {
             text.toDouble()
         } catch (e: Exception) {
-            0.0
+            ZERO_D
         }
+    }
+
+    fun setMaxAmount(maxAmount: Double) {
+        this.maxAmount = maxAmount
     }
 
     fun setAmountValue(amount: Double) {
@@ -106,7 +144,6 @@ class AmountEditText @JvmOverloads constructor(
     fun clearAmount() {
         setAmountValue(0.0)
     }
-
 
     fun setOnAmountChangeListener(listener: (Double) -> Unit) {
         binding.editText.addTextChangedListener(object : TextWatcher {
@@ -118,5 +155,9 @@ class AmountEditText @JvmOverloads constructor(
                 }
             }
         })
+    }
+
+    fun setOnFormatError(listener: () -> Unit) {
+        onFormatError = listener
     }
 }
