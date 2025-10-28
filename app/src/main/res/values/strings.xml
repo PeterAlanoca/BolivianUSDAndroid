@@ -36,5 +36,6 @@
     <string name="calculator_view_pager_item_parallel_dollar">TIPO DE CAMBIO PARALELO</string>
     <string name="calculator_view_pager_item_official_dollar">TIPO DE CAMBIO OFICIAL</string>
     <string name="calculator_view_pager_item_input_error">Los datos ingresados no son válidos. Por favor, verifícalos y vuelve a intentar.</string>
+    <string name="calculator_view_pager_item_price_range_error">Te sugerimos ingresar un valor entre %1$s y %2$s para obtener mejores resultados.</string>
 
 </resources>

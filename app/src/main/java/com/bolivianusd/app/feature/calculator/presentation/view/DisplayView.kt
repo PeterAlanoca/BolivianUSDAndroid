@@ -33,15 +33,15 @@ class DisplayView @JvmOverloads constructor(
     private val binding: ViewDisplayBinding by lazy {
         ViewDisplayBinding.inflate(LayoutInflater.from(context), this, true)
     }
+    private var currentFocusField: EditText? = null
     private var onDollarTypeChanged: ((DollarType) -> Unit)? = null
     private var onFormatError: (() -> Unit)? = null
+    private var onPriceRangeError: ((String) -> Unit)? = null
     private var exchangeRateValue = ZERO_D
     private var usdValue = ZERO_D
     private var bobValue = ZERO_D
-
-    private var currentFocusField: EditText? = null
-
     private var dollarType = DollarType.USDT
+    private var priceRange: PriceRange? = null
 
     init {
         initView()
@@ -54,8 +54,12 @@ class DisplayView @JvmOverloads constructor(
         this.onDollarTypeChanged = onDollarTypeChanged
     }
 
-    fun setOnFormatError(listener: () -> Unit) {
-        onFormatError = listener
+    fun setOnFormatError(onFormatError: () -> Unit) {
+        this.onFormatError = onFormatError
+    }
+
+    fun setOnPriceRangeError(onPriceRangeError: (String) -> Unit) {
+       this.onPriceRangeError = onPriceRangeError
     }
 
     fun deleteNumberField() = with(binding) {
@@ -139,6 +143,7 @@ class DisplayView @JvmOverloads constructor(
     }
 
     private fun setPriceRangeData(priceRange: PriceRange) = with(binding) {
+        this@DisplayView.priceRange = priceRange
         exchangeRateValue = priceRange.median.value.toDouble()
         usdValue = ONE_D
         bobValue = exchangeRateValue * usdValue
@@ -196,6 +201,7 @@ class DisplayView @JvmOverloads constructor(
                         exchangeRateValue = amount
                         calculateFromExchangeRate()
                         calculateMaxAmount()
+                        validatePriceRange()
                     }
                 }
             }
@@ -278,11 +284,24 @@ class DisplayView @JvmOverloads constructor(
     }
 
     private fun calculateMaxAmount() = with(binding) {
-        val maxUsd = 999999999.99
+        val maxUsd = USD_MAX_VALUE
         val maxBob = exchangeRateValue * maxUsd
-        etExchangeRate.setMaxAmount(9999.99)
+        etExchangeRate.setMaxAmount(EXCHANGE_RATE_MAX_VALUE)
         etUsd.setMaxAmount(maxUsd)
         etBob.setMaxAmount(maxBob)
+    }
+
+    private fun validatePriceRange() {
+        priceRange?.let {
+            val minValue = it.min.value.toDouble()
+            val maxValue = it.max.value.toDouble()
+            val minLabel = it.min.valueLabel
+            val maxLabel = it.max.valueLabel
+            if (exchangeRateValue < minValue || exchangeRateValue > maxValue) {
+                val message = context.getString(R.string.calculator_view_pager_item_price_range_error, minLabel, maxLabel)
+                onPriceRangeError?.invoke(message)
+            }
+        }
     }
 
     private fun updateBobField() = with(binding) {
@@ -439,6 +458,8 @@ class DisplayView @JvmOverloads constructor(
 
     companion object {
         private const val DELAY_REQUEST_FOCUS = 250L
+        private const val USD_MAX_VALUE = 999999999.99
+        private const val EXCHANGE_RATE_MAX_VALUE = 9999.99
     }
 
 }

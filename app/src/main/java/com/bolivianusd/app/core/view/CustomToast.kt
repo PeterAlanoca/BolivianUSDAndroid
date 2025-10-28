@@ -33,7 +33,7 @@ object CustomToast {
         )
     }
 
-    /*fun showTopWarning(context: Context, message: String) {
+    fun showTopWarning(context: Context, message: String) {
         showTopToast(
             context = context,
             message = message,
@@ -42,7 +42,7 @@ object CustomToast {
         )
     }
 
-    fun showTopInfo(context: Context, message: String) {
+    /*fun showTopInfo(context: Context, message: String) {
         showTopToast(
             context = context,
             message = message,

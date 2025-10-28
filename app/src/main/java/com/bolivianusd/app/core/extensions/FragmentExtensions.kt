@@ -17,3 +17,7 @@ fun Fragment.hideSystemKeyboard() {
 fun Fragment.showToastError(message: String) {
     CustomToast.showTopError(requireContext(), message)
 }
+
+fun Fragment.showToastWarning(message: String) {
+    CustomToast.showTopWarning(requireContext(), message)
+}
