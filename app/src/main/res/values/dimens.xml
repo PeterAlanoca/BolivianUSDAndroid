@@ -39,7 +39,10 @@
     <dimen name="negative_margin_5">-5dp</dimen>
     <dimen name="negative_margin_30">-30dp</dimen>
 
+    <dimen name="padding_0">0dp</dimen>
+    <dimen name="padding_8">8dp</dimen>
     <dimen name="padding_10">10dp</dimen>
+    <dimen name="padding_12">12dp</dimen>
     <dimen name="padding_14">14dp</dimen>
     <dimen name="padding_20">20dp</dimen>
 

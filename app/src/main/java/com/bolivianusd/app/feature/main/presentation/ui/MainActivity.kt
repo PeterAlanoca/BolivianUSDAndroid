@@ -1,6 +1,8 @@
 package com.bolivianusd.app.feature.main.presentation.ui
 
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import com.bolivianusd.app.R
@@ -33,6 +35,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun setupToolbar() = with(binding) {
         setSupportActionBar(toolbar)
+        supportActionBar?.setDisplayShowTitleEnabled(false)
     }
 
     private fun setupBottomNavigationView() = with(binding) {
@@ -60,4 +63,22 @@ class MainActivity : AppCompatActivity() {
         activeFragment = fragment
     }
 
+
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        menuInflater.inflate(R.menu.menu_toolbar_main, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.actionShare -> {
+                true
+            }
+            R.id.actionOff -> {
+                finish()
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
+    }
 }

@@ -35,9 +35,9 @@
         <item name="colorControlNormal">@color/martinique</item>
         <item name="colorControlActivated">@color/martinique</item>
         <item name="colorControlHighlight">@color/martinique</item>
-        <item name="android:statusBarColor">@android:color/transparent</item>
         <item name="android:windowNoTitle">true</item>
-        <item name="android:windowTranslucentStatus">true</item>
+        <item name="android:statusBarColor">@color/martinique</item>
+        <item name="android:windowTranslucentStatus">false</item>
         <item name="android:windowBackground">@color/martinique</item>
         <item name="android:navigationBarColor">@color/martinique</item>
     </style>
