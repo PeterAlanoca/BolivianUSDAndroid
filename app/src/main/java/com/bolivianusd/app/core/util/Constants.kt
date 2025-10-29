@@ -2,6 +2,7 @@ package com.bolivianusd.app.core.util
 
 const val ZERO = 0
 const val ONE = 1
+const val ONE_F = 1F
 
 const val ZERO_F = 0f
 const val THREE_F = 3f

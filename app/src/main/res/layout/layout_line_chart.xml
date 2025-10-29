@@ -92,13 +92,11 @@
                     android:layout_marginEnd="@dimen/margin_4"
                     android:layout_marginBottom="@dimen/margin_4"
                     android:background="@android:color/transparent"
-                    android:visibility="invisible"
                     app:layout_constraintBottom_toTopOf="@+id/labelTextView"
                     app:layout_constraintDimensionRatio="H,1:0.66"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    tools:visibility="visible" />
+                    app:layout_constraintTop_toTopOf="parent" />
 
                 <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/labelTextView"

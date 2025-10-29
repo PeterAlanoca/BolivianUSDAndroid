@@ -1,6 +1,9 @@
 package com.bolivianusd.app.shared.data.remote.firebase.firestore
 
+import com.bolivianusd.app.core.extensions.observeDocument
+import com.bolivianusd.app.core.managers.NetworkManager
 import com.bolivianusd.app.shared.data.exception.FirestoreDataException
+import com.bolivianusd.app.shared.data.exception.RealtimeDatabaseException
 import com.bolivianusd.app.shared.data.mapper.toPrice
 import com.bolivianusd.app.shared.data.mapper.toPriceRange
 import com.bolivianusd.app.shared.data.remote.firebase.dto.PriceFirestoreDto
@@ -13,46 +16,29 @@ import com.google.firebase.firestore.ListenerRegistration
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
+import kotlinx.coroutines.flow.emitAll
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
 class PriceUsdFirestoreDataSource @Inject constructor(
-    private val firebaseFirestore: FirebaseFirestore
+    private val firebaseFirestore: FirebaseFirestore,
+    private val networkManager: NetworkManager
+
 ) {
-
-    fun observePrice(tradeType: TradeType): Flow<Price> = callbackFlow {
-        val documentPath = when (tradeType) {
-            TradeType.BUY -> DOCUMENT_PRICE_BUY_PATH
-            TradeType.SELL -> DOCUMENT_PRICE_SELL_PATH
+    fun observePrice(tradeType: TradeType): Flow<Price> = flow {
+        if (!networkManager.hasInternetAccess()) {
+            throw FirestoreDataException.NoConnection()
         }
-        var listenerRegistration: ListenerRegistration? = null
-        try {
-            listenerRegistration = firebaseFirestore.collection(COLLECTION_PRICE_USD_PATH)
-                .document(documentPath)
-                .addSnapshotListener { snapshot, error ->
-                    if (error != null) {
-                        close(error)
-                        return@addSnapshotListener
-                    }
-
-                    if (snapshot != null && snapshot.exists()) {
-                         val dto = snapshot.toObject(PriceFirestoreDto::class.java)
-                         dto?.let {
-                             trySend(it.toPrice())
-                         } ?: run {
-                             close(FirestoreDataException.NullOrInvalidData())
-                         }
-                    } else {
-                        close(FirestoreDataException.DocumentNotFound(documentPath))
-                    }
+        emitAll(
+            flow = firebaseFirestore.observeDocument<PriceFirestoreDto, Price>(
+                collectionPath = COLLECTION_PRICE_USD_PATH,
+                documentPath = when (tradeType) {
+                    TradeType.BUY -> DOCUMENT_PRICE_BUY_PATH
+                    TradeType.SELL -> DOCUMENT_PRICE_SELL_PATH
                 }
-        } catch (e: Exception) {
-            close(e)
-        }
-        awaitClose {
-            listenerRegistration?.remove()
-        }
+            ) { dto -> dto.toPrice() }
+        )
     }
 
     fun observePriceRange(tradeType: TradeType): Flow<PriceRange> = callbackFlow {

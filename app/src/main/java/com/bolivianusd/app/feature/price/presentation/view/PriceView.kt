@@ -4,16 +4,13 @@ import android.content.Context
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.animation.AccelerateDecelerateInterpolator
-import android.view.animation.Animation
-import android.view.animation.AnimationUtils
 import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.core.view.isVisible
-import com.bolivianusd.app.R
 import com.bolivianusd.app.core.extensions.clearText
 import com.bolivianusd.app.core.extensions.gone
 import com.bolivianusd.app.core.extensions.invisible
 import com.bolivianusd.app.core.extensions.visible
-import com.bolivianusd.app.core.listeners.SimpleAnimationListener
+import com.bolivianusd.app.core.util.ONE_F
+import com.bolivianusd.app.core.util.ZERO_F
 import com.bolivianusd.app.databinding.ViewPriceBinding
 import com.bolivianusd.app.shared.domain.model.Price
 import com.bolivianusd.app.shared.domain.model.DollarType
@@ -54,30 +51,36 @@ class PriceView @JvmOverloads constructor(
     }
 
     fun showPriceLoadingState() = with(binding) {
-        priceValue.root.gone()
-        priceShimmer.root.visible()
+        priceValue.root.apply {
+            alpha = ZERO_F
+            gone()
+        }
+        priceShimmer.root.apply {
+            alpha = ONE_F
+            visible()
+        }
         priceShimmer.shimmerLayout.startShimmer()
     }
 
     fun showPriceDataSuccess(price: Price) = with(binding) {
-        if (priceValue.root.isVisible) {
-            setPriceData(price)
-            return@with
-        }
-        val fadeOut = AnimationUtils.loadAnimation(context, R.anim.anim_view_fade_out)
-        fadeOut.setAnimationListener(object : SimpleAnimationListener() {
-            override fun onAnimationEnd(animation: Animation?) {
+        priceShimmer.root.animate().cancel()
+        priceValue.root.animate().cancel()
+        setPriceData(price)
+        priceShimmer.root.animate()
+            .alpha(ZERO_F)
+            .setDuration(DURATION_ANIMATION_FADE_IN_OUT)
+            .withEndAction {
                 hidePriceLoading()
-                setPriceData(price)
-                val fadeIn =
-                    AnimationUtils.loadAnimation(context, R.anim.anim_view_fade_in)
-                priceValue.root.visible()
-                priceValue.root.startAnimation(fadeIn)
             }
-        })
-        if (priceShimmer.root.isVisible) {
-            priceShimmer.root.startAnimation(fadeOut)
+            .start()
+        priceValue.root.apply {
+            alpha = ZERO_F
+            visible()
         }
+        priceValue.root.animate()
+            .alpha(ONE_F)
+            .setDuration(DURATION_ANIMATION_FADE_IN_OUT)
+            .start()
     }
 
     private fun setPriceData(price: Price) {
@@ -95,10 +98,12 @@ class PriceView @JvmOverloads constructor(
     fun hidePriceLoading() = with(binding) {
         priceShimmer.shimmerLayout.stopShimmer()
         priceShimmer.root.gone()
+        priceShimmer.root.alpha = ONE_F
     }
 
     fun resetDataUIComponents() {
         with(binding.priceValue) {
+            alpha = ONE_F
             assetView.invisible()
             priceTextView.invisible()
             dollarTypeSwitch.invisible()
@@ -110,6 +115,7 @@ class PriceView @JvmOverloads constructor(
 
     companion object {
         private const val DURATION_ANIMATION_PRICE = 600L
+        private const val DURATION_ANIMATION_FADE_IN_OUT = 300L
     }
 
 }

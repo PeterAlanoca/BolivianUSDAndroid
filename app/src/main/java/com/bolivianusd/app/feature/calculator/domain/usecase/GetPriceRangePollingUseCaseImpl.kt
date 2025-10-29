@@ -36,7 +36,6 @@ class GetPriceRangePollingUseCaseImpl @Inject constructor(
                     }
                 delay(interval)
             }
-        }
-            .onStart { emit(UiState.Loading) }
+        }.onStart { emit(UiState.Loading) }
     }
 }

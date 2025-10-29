@@ -1,5 +1,7 @@
 package com.bolivianusd.app.shared.di
 
+import android.content.Context
+import com.bolivianusd.app.core.managers.NetworkManager
 import com.bolivianusd.app.shared.data.remote.firebase.firestore.PriceUsdFirestoreDataSource
 import com.bolivianusd.app.shared.data.remote.firebase.realtime.PriceUsdtRealtimeDataSource
 import com.bolivianusd.app.shared.data.repository.PriceRepositoryImpl
@@ -11,6 +13,7 @@ import com.google.firebase.firestore.MemoryCacheSettings
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import io.github.jan.supabase.SupabaseClient
 import io.github.jan.supabase.createSupabaseClient
@@ -21,6 +24,10 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 object SharedModule {
+
+    @Provides
+    @Singleton
+    fun provideNetworkManager(@ApplicationContext context: Context) = NetworkManager(context)
 
     @Provides
     @Singleton
@@ -55,13 +62,23 @@ object SharedModule {
 
     @Provides
     @Singleton
-    fun providePriceUsdtRealtimeDataSource(firebaseDatabase: FirebaseDatabase) =
-        PriceUsdtRealtimeDataSource(firebaseDatabase = firebaseDatabase)
+    fun providePriceUsdtRealtimeDataSource(
+        firebaseDatabase: FirebaseDatabase,
+        networkManager: NetworkManager
+    ) = PriceUsdtRealtimeDataSource(
+        firebaseDatabase = firebaseDatabase,
+        networkManager = networkManager
+    )
 
     @Provides
     @Singleton
-    fun providePriceUsdFirestoreDataSource(firebaseFirestore: FirebaseFirestore) =
-        PriceUsdFirestoreDataSource(firebaseFirestore = firebaseFirestore)
+    fun providePriceUsdFirestoreDataSource(
+        firebaseFirestore: FirebaseFirestore,
+        networkManager: NetworkManager
+    ) = PriceUsdFirestoreDataSource(
+        firebaseFirestore = firebaseFirestore,
+        networkManager = networkManager
+    )
 
     @Singleton
     @Provides
