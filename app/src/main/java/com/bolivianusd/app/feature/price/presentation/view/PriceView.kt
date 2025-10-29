@@ -5,6 +5,7 @@ import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.animation.AccelerateDecelerateInterpolator
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.view.isVisible
 import com.bolivianusd.app.core.extensions.clearText
 import com.bolivianusd.app.core.extensions.gone
 import com.bolivianusd.app.core.extensions.invisible
@@ -66,6 +67,9 @@ class PriceView @JvmOverloads constructor(
         priceShimmer.root.animate().cancel()
         priceValue.root.animate().cancel()
         setPriceData(price)
+        if (priceValue.root.isVisible) {
+            return@with
+        }
         priceShimmer.root.animate()
             .alpha(ZERO_F)
             .setDuration(DURATION_ANIMATION_FADE_IN_OUT)
