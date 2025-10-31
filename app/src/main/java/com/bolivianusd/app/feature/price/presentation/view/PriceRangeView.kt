@@ -4,7 +4,6 @@ import android.content.Context
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.core.view.isVisible
 import com.bolivianusd.app.R
 import com.bolivianusd.app.core.extensions.clearText
 import com.bolivianusd.app.core.extensions.invisible
@@ -93,7 +92,7 @@ class PriceRangeView @JvmOverloads constructor(
         rangeTitleShimmer.animate().cancel()
         dateShimmerLayout.animate().cancel()
         setPriceRangeData(priceRange)
-        if (rangeValue.isVisible) {
+        if (rangeValue.alpha == ONE_F && shimmerLayout.alpha == ONE_F) {
             return@with
         }
         shimmerLayout.animate()

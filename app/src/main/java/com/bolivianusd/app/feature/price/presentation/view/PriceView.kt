@@ -67,7 +67,7 @@ class PriceView @JvmOverloads constructor(
         priceShimmer.root.animate().cancel()
         priceValue.root.animate().cancel()
         setPriceData(price)
-        if (priceValue.root.isVisible) {
+        if (priceValue.root.isVisible && !priceShimmer.root.isVisible) {
             return@with
         }
         priceShimmer.root.animate()
