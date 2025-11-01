@@ -28,6 +28,7 @@ class GetPriceRangePollingUseCaseImpl @Inject constructor(
             while (currentCoroutineContext().isActive) {
                 priceRepository.getPriceRange(dollarType, tradeType)
                     .collect { dataState ->
+                        println("naty setupPriceRangeObserver ${dataState.toString()}")
                         val uiState = when (dataState) {
                             is DataState.Success -> UiState.Success(dataState.data)
                             is DataState.Error -> dataState.toUiStateError<PriceRange>()

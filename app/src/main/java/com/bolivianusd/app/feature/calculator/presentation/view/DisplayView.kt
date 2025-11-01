@@ -11,6 +11,7 @@ import android.view.animation.AnimationUtils
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.RelativeLayout
+import androidx.core.view.isVisible
 import com.bolivianusd.app.R
 import com.bolivianusd.app.core.extensions.getActivity
 import com.bolivianusd.app.core.extensions.getMaxLength
@@ -163,7 +164,9 @@ class DisplayView @JvmOverloads constructor(
         shimmerLayout.lottieAnimationShimmerLayout.animate().cancel()
         shimmerLayout.bobShimmerLayout.animate().cancel()
         setPriceRangeData(priceRange)
-        //encaso de que sea visible faltaria el reconociemitno facial
+        if (displayView.isVisible && !shimmerLayout.priceRangeShimmerLayout.isVisible) {
+            return@with
+        }
         shimmerLayout.priceRangeShimmerLayout.animate()
             .alpha(ZERO_F)
             .setDuration(DURATION_ANIMATION_FADE_IN_OUT)
@@ -204,25 +207,6 @@ class DisplayView @JvmOverloads constructor(
             .alpha(ONE_F)
             .setDuration(DURATION_ANIMATION_FADE_IN_OUT)
             .start()
-
-
-        /*if (displayView.isVisible) {
-            return@with
-        }
-        val fadeOut = AnimationUtils.loadAnimation(context, R.anim.anim_view_fade_out)
-        fadeOut.setAnimationListener(object : SimpleAnimationListener() {
-            override fun onAnimationEnd(animation: Animation?) {
-                hideShimmerLoading()
-                setPriceRangeData(priceRange)
-                val fadeIn =
-                    AnimationUtils.loadAnimation(context, R.anim.anim_view_fade_in)
-                displayView.visible()
-                displayView.startAnimation(fadeIn)
-            }
-        })
-        if (displayShimmer.isVisible) {
-            shimmerLayout.root.startAnimation(fadeOut)
-        }*/
     }
 
     private fun setPriceRangeData(priceRange: PriceRange) = with(binding) {
