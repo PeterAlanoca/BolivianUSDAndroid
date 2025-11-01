@@ -6,6 +6,19 @@
     android:layout_height="wrap_content"
     tools:context=".feature.calculator.presentation.view.DisplayView">
 
+
+    <LinearLayout
+        android:id="@+id/displayShimmer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="visible"
+        tools:visibility="gone">
+
+        <include
+            android:id="@+id/shimmerLayout"
+            layout="@layout/layout_display_shimmer" />
+    </LinearLayout>
+
     <LinearLayout
         android:id="@+id/displayView"
         android:layout_width="match_parent"
@@ -231,16 +244,6 @@
     </LinearLayout>
 
 
-    <LinearLayout
-        android:id="@+id/displayShimmer"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:visibility="visible"
-        tools:visibility="gone">
 
-        <include
-            android:id="@+id/shimmerLayout"
-            layout="@layout/layout_display_shimmer" />
-    </LinearLayout>
 
 </RelativeLayout>

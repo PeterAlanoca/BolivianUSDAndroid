@@ -120,7 +120,6 @@
 
             </com.facebook.shimmer.ShimmerFrameLayout>
 
-
         </com.google.android.material.card.MaterialCardView>
 
         <androidx.constraintlayout.widget.ConstraintLayout

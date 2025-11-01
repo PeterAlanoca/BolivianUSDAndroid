@@ -87,16 +87,14 @@ class PriceView @JvmOverloads constructor(
             .start()
     }
 
-    private fun setPriceData(price: Price) {
-        with(binding.priceValue) {
-            assetTextView.text = price.asset
-            fiatTextView.text = price.fiat
-            priceTextView.setText(price.priceLabel)
-            descriptionTextView.text = price.label
-            assetView.visible()
-            priceTextView.visible()
-            dollarTypeSwitch.visible()
-        }
+    private fun setPriceData(price: Price) = with(binding.priceValue) {
+        assetTextView.text = price.asset
+        fiatTextView.text = price.fiat
+        priceTextView.setText(price.priceLabel)
+        descriptionTextView.text = price.label
+        assetView.visible()
+        priceTextView.visible()
+        dollarTypeSwitch.visible()
     }
 
     fun hidePriceLoading() = with(binding) {
@@ -105,16 +103,14 @@ class PriceView @JvmOverloads constructor(
         priceShimmer.root.alpha = ONE_F
     }
 
-    fun resetDataUIComponents() {
-        with(binding.priceValue) {
-            alpha = ONE_F
-            assetView.invisible()
-            priceTextView.invisible()
-            dollarTypeSwitch.invisible()
-            assetTextView.clearText()
-            fiatTextView.clearText()
-            descriptionTextView.clearText()
-        }
+    fun resetDataUIComponents() = with(binding.priceValue) {
+        alpha = ONE_F
+        assetView.invisible()
+        priceTextView.invisible()
+        dollarTypeSwitch.invisible()
+        assetTextView.clearText()
+        fiatTextView.clearText()
+        descriptionTextView.clearText()
     }
 
     companion object {

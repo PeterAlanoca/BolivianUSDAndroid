@@ -11,15 +11,16 @@ import android.view.animation.AnimationUtils
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.RelativeLayout
-import androidx.core.view.isVisible
 import com.bolivianusd.app.R
 import com.bolivianusd.app.core.extensions.getActivity
 import com.bolivianusd.app.core.extensions.getMaxLength
 import com.bolivianusd.app.core.extensions.gone
+import com.bolivianusd.app.core.extensions.invisible
 import com.bolivianusd.app.core.extensions.visible
-import com.bolivianusd.app.core.listeners.SimpleAnimationListener
 import com.bolivianusd.app.core.util.ONE_D
+import com.bolivianusd.app.core.util.ONE_F
 import com.bolivianusd.app.core.util.ZERO_D
+import com.bolivianusd.app.core.util.ZERO_F
 import com.bolivianusd.app.databinding.ViewDisplayBinding
 import com.bolivianusd.app.shared.domain.model.DollarType
 import com.bolivianusd.app.shared.domain.model.PriceRange
@@ -111,7 +112,39 @@ class DisplayView @JvmOverloads constructor(
     }
 
     fun showPriceRangeLoadingState() = with(binding) {
-        displayShimmer.visible()
+        displayView.apply {
+            alpha = ZERO_F
+            gone()
+        }
+        shimmerLayout.priceRangeShimmerLayout.apply {
+            alpha = ONE_F
+            visible()
+        }
+        shimmerLayout.dateShimmerLayout.apply {
+            alpha = ONE_F
+            visible()
+        }
+        shimmerLayout.shimmerExchangeRateLayout.apply {
+            alpha = ONE_F
+            visible()
+        }
+        shimmerLayout.dollarTypeShimmerSwitch.apply {
+            alpha = ONE_F
+            visible()
+        }
+        shimmerLayout.usdShimmerLayout.apply {
+            alpha = ONE_F
+            visible()
+        }
+        shimmerLayout.lottieAnimationShimmerLayout.apply {
+            alpha = ONE_F
+            visible()
+        }
+        shimmerLayout.bobShimmerLayout.apply {
+            alpha = ONE_F
+            visible()
+        }
+
         shimmerLayout.priceRangeShimmerLayout.startShimmer()
         shimmerLayout.dateShimmerLayout.startShimmer()
         shimmerLayout.shimmerExchangeRateLayout.startShimmer()
@@ -119,11 +152,61 @@ class DisplayView @JvmOverloads constructor(
         shimmerLayout.usdShimmerLayout.startShimmer()
         shimmerLayout.lottieAnimationShimmerLayout.startShimmer()
         shimmerLayout.bobShimmerLayout.startShimmer()
-        displayView.gone()
     }
 
     fun showPriceRangeDataSuccess(priceRange: PriceRange) = with(binding) {
-        if (displayView.isVisible) {
+        shimmerLayout.priceRangeShimmerLayout.animate().cancel()
+        shimmerLayout.dateShimmerLayout.animate().cancel()
+        shimmerLayout.shimmerExchangeRateLayout.animate().cancel()
+        shimmerLayout.dollarTypeShimmerSwitch.animate().cancel()
+        shimmerLayout.usdShimmerLayout.animate().cancel()
+        shimmerLayout.lottieAnimationShimmerLayout.animate().cancel()
+        shimmerLayout.bobShimmerLayout.animate().cancel()
+        setPriceRangeData(priceRange)
+        //encaso de que sea visible faltaria el reconociemitno facial
+        shimmerLayout.priceRangeShimmerLayout.animate()
+            .alpha(ZERO_F)
+            .setDuration(DURATION_ANIMATION_FADE_IN_OUT)
+            .start()
+        shimmerLayout.dateShimmerLayout.animate()
+            .alpha(ZERO_F)
+            .setDuration(DURATION_ANIMATION_FADE_IN_OUT)
+            .start()
+        shimmerLayout.shimmerExchangeRateLayout.animate()
+            .alpha(ZERO_F)
+            .setDuration(DURATION_ANIMATION_FADE_IN_OUT)
+            .start()
+        shimmerLayout.dollarTypeShimmerSwitch.animate()
+            .alpha(ZERO_F)
+            .setDuration(DURATION_ANIMATION_FADE_IN_OUT)
+            .start()
+        shimmerLayout.usdShimmerLayout.animate()
+            .alpha(ZERO_F)
+            .setDuration(DURATION_ANIMATION_FADE_IN_OUT)
+            .start()
+        shimmerLayout.lottieAnimationShimmerLayout.animate()
+            .alpha(ZERO_F)
+            .setDuration(DURATION_ANIMATION_FADE_IN_OUT)
+            .start()
+        shimmerLayout.bobShimmerLayout.animate()
+            .alpha(ZERO_F)
+            .setDuration(DURATION_ANIMATION_FADE_IN_OUT)
+            .withEndAction {
+                hideShimmerLoading()
+            }
+            .start()
+
+        displayView.apply {
+            alpha = ZERO_F
+            visible()
+        }
+        displayView.animate()
+            .alpha(ONE_F)
+            .setDuration(DURATION_ANIMATION_FADE_IN_OUT)
+            .start()
+
+
+        /*if (displayView.isVisible) {
             return@with
         }
         val fadeOut = AnimationUtils.loadAnimation(context, R.anim.anim_view_fade_out)
@@ -139,7 +222,7 @@ class DisplayView @JvmOverloads constructor(
         })
         if (displayShimmer.isVisible) {
             shimmerLayout.root.startAnimation(fadeOut)
-        }
+        }*/
     }
 
     private fun setPriceRangeData(priceRange: PriceRange) = with(binding) {
@@ -165,14 +248,10 @@ class DisplayView @JvmOverloads constructor(
     }
 
     fun resetUIComponents() = with(binding) {
-        displayView.clearAnimation()
-        displayShimmer.clearAnimation()
-        displayView.gone()
-        displayShimmer.visible()
+        displayView.alpha = ONE_F
     }
 
     private fun hideShimmerLoading() = with(binding) {
-        displayShimmer.gone()
         shimmerLayout.priceRangeShimmerLayout.stopShimmer()
         shimmerLayout.dateShimmerLayout.stopShimmer()
         shimmerLayout.shimmerExchangeRateLayout.stopShimmer()
@@ -180,7 +259,20 @@ class DisplayView @JvmOverloads constructor(
         shimmerLayout.usdShimmerLayout.stopShimmer()
         shimmerLayout.lottieAnimationShimmerLayout.stopShimmer()
         shimmerLayout.bobShimmerLayout.stopShimmer()
-        displayView.visible()
+        shimmerLayout.priceRangeShimmerLayout.alpha = ONE_F
+        shimmerLayout.priceRangeShimmerLayout.invisible()
+        shimmerLayout.dateShimmerLayout.alpha = ONE_F
+        shimmerLayout.dateShimmerLayout.invisible()
+        shimmerLayout.shimmerExchangeRateLayout.alpha = ONE_F
+        shimmerLayout.shimmerExchangeRateLayout.invisible()
+        shimmerLayout.dollarTypeShimmerSwitch.alpha = ONE_F
+        shimmerLayout.dollarTypeShimmerSwitch.invisible()
+        shimmerLayout.usdShimmerLayout.alpha = ONE_F
+        shimmerLayout.usdShimmerLayout.invisible()
+        shimmerLayout.lottieAnimationShimmerLayout.alpha = ONE_F
+        shimmerLayout.lottieAnimationShimmerLayout.invisible()
+        shimmerLayout.bobShimmerLayout.alpha = ONE_F
+        shimmerLayout.bobShimmerLayout.invisible()
     }
 
     private fun initView() = with(binding) {
@@ -460,6 +552,7 @@ class DisplayView @JvmOverloads constructor(
         private const val DELAY_REQUEST_FOCUS = 250L
         private const val USD_MAX_VALUE = 999999999.99
         private const val EXCHANGE_RATE_MAX_VALUE = 9999.99
+        private const val DURATION_ANIMATION_FADE_IN_OUT = 300L
     }
 
 }
