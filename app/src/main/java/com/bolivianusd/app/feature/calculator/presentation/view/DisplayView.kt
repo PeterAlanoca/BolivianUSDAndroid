@@ -115,7 +115,7 @@ class DisplayView @JvmOverloads constructor(
     fun showPriceRangeLoadingState() = with(binding) {
         displayView.apply {
             alpha = ZERO_F
-            gone()
+            invisible()
         }
         shimmerLayout.priceRangeShimmerLayout.apply {
             alpha = ONE_F
@@ -233,6 +233,7 @@ class DisplayView @JvmOverloads constructor(
 
     fun resetUIComponents() = with(binding) {
         displayView.alpha = ONE_F
+        displayView.invisible()
     }
 
     private fun hideShimmerLoading() = with(binding) {
