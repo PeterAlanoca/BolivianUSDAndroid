@@ -7,16 +7,6 @@
     tools:context=".feature.calculator.presentation.view.KeyboardView">
 
     <LinearLayout
-        android:id="@+id/keyboardShimmer"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <include
-            android:id="@+id/shimmerLayout"
-            layout="@layout/layout_keyboard_shimmer" />
-    </LinearLayout>
-
-    <LinearLayout
         android:id="@+id/keyboardView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -191,5 +181,14 @@
         </LinearLayout>
     </LinearLayout>
 
+    <LinearLayout
+        android:id="@+id/keyboardShimmer"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <include
+            android:id="@+id/shimmerLayout"
+            layout="@layout/layout_keyboard_shimmer" />
+    </LinearLayout>
 
 </RelativeLayout>
