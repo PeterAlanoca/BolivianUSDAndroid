@@ -16,6 +16,7 @@
     <dimen name="switch_radius">22dp</dimen>
     <dimen name="switch_height">22dp</dimen>
 
+    <dimen name="elevation_8">8dp</dimen>
     <dimen name="elevation_12">12dp</dimen>
 
     <dimen name="margin_1">1dp</dimen>
