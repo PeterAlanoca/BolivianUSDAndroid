@@ -8,6 +8,7 @@ import androidx.viewpager2.widget.ViewPager2
 import com.bolivianusd.app.R
 import com.bolivianusd.app.core.base.BaseFragment
 import com.bolivianusd.app.core.extensions.collectFlow
+import com.bolivianusd.app.core.extensions.distinctByPrevious
 import com.bolivianusd.app.core.extensions.hideSystemKeyboard
 import com.bolivianusd.app.core.extensions.showToastError
 import com.bolivianusd.app.core.extensions.showToastWarning
@@ -26,11 +27,6 @@ class CalculatorFragment : BaseFragment<FragmentCalculatorBinding>() {
     private val viewModel: CalculatorViewModel by activityViewModels()
     private val calculatorAdapter = CalculatorAdapter()
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        isNotRecreate = false
-    }
-
     override fun getViewBinding(
         inflater: LayoutInflater,
         container: ViewGroup?
@@ -47,7 +43,7 @@ class CalculatorFragment : BaseFragment<FragmentCalculatorBinding>() {
     }
 
     override fun setupObservers() {
-        collectFlow(viewModel.currentTradeType.state) { tradeType ->
+        collectFlow(viewModel.currentTradeType.state.distinctByPrevious()) { tradeType ->
             resetDataUIComponents()
             viewModel.observePriceRange(tradeType)
             setupPriceRangeObserver(tradeType)

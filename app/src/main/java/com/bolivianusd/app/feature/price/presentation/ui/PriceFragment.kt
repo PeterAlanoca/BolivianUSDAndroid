@@ -8,6 +8,7 @@ import androidx.viewpager2.widget.ViewPager2
 import com.bolivianusd.app.R
 import com.bolivianusd.app.core.base.BaseFragment
 import com.bolivianusd.app.core.extensions.collectFlow
+import com.bolivianusd.app.core.extensions.distinctByPrevious
 import com.bolivianusd.app.databinding.FragmentPriceBinding
 import com.bolivianusd.app.feature.price.presentation.adapter.PriceAdapter
 import com.bolivianusd.app.feature.price.presentation.viewmodel.PriceViewModel
@@ -20,11 +21,6 @@ class PriceFragment : BaseFragment<FragmentPriceBinding>() {
 
     private val viewModel: PriceViewModel by activityViewModels()
     private val priceAdapter = PriceAdapter()
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        isNotRecreate = false
-    }
 
     override fun getViewBinding(
         inflater: LayoutInflater,
@@ -42,7 +38,7 @@ class PriceFragment : BaseFragment<FragmentPriceBinding>() {
     }
 
     override fun setupObservers() {
-        collectFlow(viewModel.currentTradeType.state) { tradeType ->
+        collectFlow(viewModel.currentTradeType.state.distinctByPrevious()) { tradeType ->
             resetDataUIComponents()
             viewModel.observePriceAndCandles(tradeType)
             setupPriceObserver(tradeType)
