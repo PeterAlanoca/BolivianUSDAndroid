@@ -3,7 +3,7 @@ package com.bolivianusd.app.feature.calculator.presentation.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.bolivianusd.app.core.extensions.StateHolder
-import com.bolivianusd.app.feature.calculator.domain.usecase.GetPriceRangePollingUseCase
+import com.bolivianusd.app.shared.domain.usecase.GetPriceRangePollingUseCase
 import com.bolivianusd.app.shared.domain.model.DollarType
 import com.bolivianusd.app.shared.domain.model.PriceRange
 import com.bolivianusd.app.shared.domain.model.TradeType

@@ -1,4 +1,4 @@
-package com.bolivianusd.app.feature.calculator.domain.usecase
+package com.bolivianusd.app.shared.domain.usecase
 
 import com.bolivianusd.app.core.extensions.toUiStateError
 import com.bolivianusd.app.shared.data.state.DataState

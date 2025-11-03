@@ -3,8 +3,8 @@ package com.bolivianusd.app.feature.price.presentation.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.bolivianusd.app.core.extensions.StateHolder
-import com.bolivianusd.app.feature.calculator.domain.usecase.GetPricePollingUseCase
-import com.bolivianusd.app.feature.calculator.domain.usecase.GetPriceRangePollingUseCase
+import com.bolivianusd.app.shared.domain.usecase.GetPricePollingUseCase
+import com.bolivianusd.app.shared.domain.usecase.GetPriceRangePollingUseCase
 import com.bolivianusd.app.feature.price.domain.model.DailyCandle
 import com.bolivianusd.app.feature.price.domain.usecase.GetLatestCandlesUseCase
 import com.bolivianusd.app.feature.price.domain.usecase.ObservePriceRangeUseCase

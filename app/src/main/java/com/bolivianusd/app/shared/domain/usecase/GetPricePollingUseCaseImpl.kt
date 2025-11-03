@@ -1,6 +1,7 @@
-package com.bolivianusd.app.feature.calculator.domain.usecase
+package com.bolivianusd.app.shared.domain.usecase
 
 import com.bolivianusd.app.core.extensions.toUiStateError
+import com.bolivianusd.app.shared.domain.usecase.GetPricePollingUseCase
 import com.bolivianusd.app.shared.data.state.DataState
 import com.bolivianusd.app.shared.domain.model.DollarType
 import com.bolivianusd.app.shared.domain.model.Price
