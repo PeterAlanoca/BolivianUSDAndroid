@@ -3,6 +3,7 @@ package com.bolivianusd.app.feature.calculator.domain.usecase
 import com.bolivianusd.app.core.extensions.toUiStateError
 import com.bolivianusd.app.shared.data.state.DataState
 import com.bolivianusd.app.shared.domain.model.DollarType
+import com.bolivianusd.app.shared.domain.model.Price
 import com.bolivianusd.app.shared.domain.model.PriceRange
 import com.bolivianusd.app.shared.domain.model.TradeType
 import com.bolivianusd.app.shared.domain.repository.PriceRepository
@@ -18,9 +19,9 @@ import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.isActive
 import javax.inject.Inject
 
-class GetPriceRangePollingUseCaseImpl @Inject constructor(
+class GetPricePollingUseCaseImpl @Inject constructor(
     private val priceRepository: PriceRepository
-) : GetPriceRangePollingUseCase {
+) : GetPricePollingUseCase {
 
     @OptIn(ExperimentalCoroutinesApi::class)
     override operator fun invoke(
@@ -28,19 +29,19 @@ class GetPriceRangePollingUseCaseImpl @Inject constructor(
         tradeType: TradeType,
         hasUserFocusFlow: Flow<Boolean>,
         interval: Long
-    ): Flow<UiState<PriceRange>> {
+    ): Flow<UiState<Price>> {
         return try {
             hasUserFocusFlow
                 .flatMapLatest { hasFocus ->
                     if (!hasFocus) {
-                        println("naty getPriceRange stopppp")
+                        println("naty getPrice stopppp")
                         emptyFlow()
                     } else {
                         flow {
                             while (currentCoroutineContext().isActive) {
-                                priceRepository.getPriceRange(dollarType, tradeType)
+                                priceRepository.getPrice(dollarType, tradeType)
                                     .collect { dataState ->
-                                        println("naty getPriceRange $dataState")
+                                        println("naty getPrice $dataState")
                                         val uiState = when (dataState) {
                                             is DataState.Success -> UiState.Success(dataState.data)
                                             is DataState.Error -> dataState.toUiStateError<PriceRange>()

@@ -56,6 +56,7 @@ abstract class BaseFragment<T : ViewBinding> : Fragment() {
         initDataResume()
         setListenersResume()
         configBottomBar()
+        onUserFocusChanged(true)
     }
 
     open fun initCreateView() {}
@@ -79,6 +80,19 @@ abstract class BaseFragment<T : ViewBinding> : Fragment() {
     open fun initDataResume() {}
 
     open fun configBottomBar() {}
+
+    open fun onUserFocusChanged(hasFocus: Boolean) {}
+
+    override fun onHiddenChanged(hidden: Boolean) {
+        super.onHiddenChanged(hidden)
+        onUserFocusChanged(!hidden)
+    }
+
+    override fun onPause() {
+        super.onPause()
+        onUserFocusChanged(false)
+    }
+
 
     override fun onDestroy() {
         super.onDestroy()

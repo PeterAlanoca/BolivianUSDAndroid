@@ -93,6 +93,11 @@ class PriceRangeView @JvmOverloads constructor(
         dateShimmerLayout.animate().cancel()
         setPriceRangeData(priceRange)
         if (rangeValue.alpha == ONE_F && shimmerLayout.alpha == ONE_F) {
+            //fix
+            rangeTitleShimmer.alpha = ZERO_F
+            dateShimmerLayout.alpha = ZERO_F
+            rangeTitle.visible()
+            updateAtTextView.visible()
             return@with
         }
         shimmerLayout.animate()

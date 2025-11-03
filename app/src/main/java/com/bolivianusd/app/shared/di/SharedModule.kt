@@ -2,6 +2,10 @@ package com.bolivianusd.app.shared.di
 
 import android.content.Context
 import com.bolivianusd.app.core.managers.NetworkManager
+import com.bolivianusd.app.feature.calculator.domain.usecase.GetPricePollingUseCase
+import com.bolivianusd.app.feature.calculator.domain.usecase.GetPricePollingUseCaseImpl
+import com.bolivianusd.app.feature.calculator.domain.usecase.GetPriceRangePollingUseCase
+import com.bolivianusd.app.feature.calculator.domain.usecase.GetPriceRangePollingUseCaseImpl
 import com.bolivianusd.app.shared.data.remote.firebase.firestore.PriceUsdFirestoreDataSource
 import com.bolivianusd.app.shared.data.remote.firebase.realtime.PriceUsdtRealtimeDataSource
 import com.bolivianusd.app.shared.data.repository.PriceRepositoryImpl
@@ -88,6 +92,14 @@ object SharedModule {
     ): PriceRepository = PriceRepositoryImpl(
         priceUsdtRealtimeDataSource = priceUsdtRealtimeDataSource,
         priceUsdFirestoreDataSource = priceUsdFirestoreDataSource
+    )
+
+    @Singleton
+    @Provides
+    fun provideGetPricePollingUseCase(
+        priceRepository: PriceRepository
+    ): GetPricePollingUseCase = GetPricePollingUseCaseImpl(
+        priceRepository = priceRepository
     )
 
 }

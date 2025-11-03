@@ -30,6 +30,13 @@ class PriceRepositoryImpl(
         }.toDataStateFlow()
     }
 
+    override fun getPrice(dollarType: DollarType, tradeType: TradeType): Flow<DataState<Price>> {
+        return when(dollarType) {
+            DollarType.USD -> priceUsdFirestoreDataSource.getPrice(tradeType)
+            DollarType.USDT -> priceUsdtRealtimeDataSource.getPrice(tradeType)
+        }.toDataStateFlow()
+    }
+
     override fun getPriceRange(dollarType: DollarType, tradeType: TradeType): Flow<DataState<PriceRange>> {
         return when(dollarType) {
             DollarType.USD -> priceUsdFirestoreDataSource.getPriceRange(tradeType)

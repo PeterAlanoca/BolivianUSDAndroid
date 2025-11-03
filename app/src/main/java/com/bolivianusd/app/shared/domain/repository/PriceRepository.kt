@@ -10,5 +10,6 @@ import kotlinx.coroutines.flow.Flow
 interface PriceRepository {
     fun observePrice(dollarType: DollarType, tradeType: TradeType): Flow<DataState<Price>>
     fun observePriceRange(dollarType: DollarType, tradeType: TradeType): Flow<DataState<PriceRange>>
+    fun getPrice(dollarType: DollarType, tradeType: TradeType): Flow<DataState<Price>>
     fun getPriceRange(dollarType: DollarType, tradeType: TradeType): Flow<DataState<PriceRange>>
 }

@@ -1,6 +1,5 @@
 package com.bolivianusd.app.feature.price.presentation.ui
 
-import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.fragment.app.activityViewModels
@@ -47,6 +46,10 @@ class PriceFragment : BaseFragment<FragmentPriceBinding>() {
         }
     }
 
+    override fun onUserFocusChanged(hasFocus: Boolean) {
+        viewModel.setUserFocus(hasFocus)
+    }
+
     private fun setupViewPager() = with(binding) {
         val titles = listOf(
             getString(R.string.price_view_item_buy),
@@ -86,6 +89,7 @@ class PriceFragment : BaseFragment<FragmentPriceBinding>() {
 
     private fun setupPriceRangeObserver(tradeType: TradeType) {
         collectFlow(viewModel.getPriceRangeState(tradeType)) { state ->
+            println("naty getPriceRangeState ${state.toString()}")
             when (state) {
                 is UiState.Loading -> priceAdapter.showPriceRangeLoadingState(tradeType)
                 is UiState.Success -> priceAdapter.showPriceRangeDataSuccess(tradeType, state.data)

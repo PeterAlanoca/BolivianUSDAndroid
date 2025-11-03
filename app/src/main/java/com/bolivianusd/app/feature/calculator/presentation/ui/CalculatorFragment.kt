@@ -1,6 +1,5 @@
 package com.bolivianusd.app.feature.calculator.presentation.ui
 
-import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.fragment.app.activityViewModels
@@ -48,6 +47,10 @@ class CalculatorFragment : BaseFragment<FragmentCalculatorBinding>() {
             viewModel.observePriceRange(tradeType)
             setupPriceRangeObserver(tradeType)
         }
+    }
+
+    override fun onUserFocusChanged(hasFocus: Boolean) {
+        viewModel.setUserFocus(hasFocus)
     }
 
     private fun setupViewPager() = with(binding) {

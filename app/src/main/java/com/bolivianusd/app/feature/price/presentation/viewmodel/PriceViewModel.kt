@@ -3,6 +3,8 @@ package com.bolivianusd.app.feature.price.presentation.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.bolivianusd.app.core.extensions.StateHolder
+import com.bolivianusd.app.feature.calculator.domain.usecase.GetPricePollingUseCase
+import com.bolivianusd.app.feature.calculator.domain.usecase.GetPriceRangePollingUseCase
 import com.bolivianusd.app.feature.price.domain.model.DailyCandle
 import com.bolivianusd.app.feature.price.domain.usecase.GetLatestCandlesUseCase
 import com.bolivianusd.app.feature.price.domain.usecase.ObservePriceRangeUseCase
@@ -24,6 +26,8 @@ import javax.inject.Inject
 class PriceViewModel @Inject constructor(
     private val observePriceUseCase: ObservePriceUseCase,
     private val observePriceRangeUseCase: ObservePriceRangeUseCase,
+    private val getPricePollingUseCase: GetPricePollingUseCase,
+    private val getPriceRangePollingUseCase: GetPriceRangePollingUseCase,
     private val getLatestCandlesUseCase: GetLatestCandlesUseCase
 ) : ViewModel() {
 
@@ -32,6 +36,12 @@ class PriceViewModel @Inject constructor(
     private val priceStates = mutableMapOf<TradeType, StateHolder<UiState<Price>>>()
     private val priceRangeStates = mutableMapOf<TradeType, StateHolder<UiState<PriceRange>>>()
     private val dailyCandlesStates = mutableMapOf<TradeType, StateHolder<UiState<List<DailyCandle>>>>()
+    private val hasUserFocusFlow = MutableStateFlow(false)
+    private val isObserving = mutableMapOf<TradeType, Boolean>()
+
+    fun setUserFocus(hasFocus: Boolean) {
+        hasUserFocusFlow.value = hasFocus
+    }
 
     fun setTradeType(tradeType: TradeType) {
         if (currentTradeType.value != tradeType) {
@@ -61,10 +71,22 @@ class PriceViewModel @Inject constructor(
     fun observePrice(tradeType: TradeType) {
         viewModelScope.launch {
             getDollarTypeFlow(tradeType).flatMapLatest { dollarType ->
-                observePriceUseCase.invoke(dollarType, tradeType)
+                getPricePollingUseCase.invoke(
+                    dollarType = dollarType,
+                    tradeType = tradeType,
+                    hasUserFocusFlow = hasUserFocusFlow,
+                    interval = 5000L
+                )
+                //observePriceUseCase.invoke(dollarType, tradeType)
             }.collect { state ->
-                priceStates[tradeType]?.setValue(state)
+                getPriceStateHolder(tradeType).setValue(state)
             }
+        }
+    }
+
+    private fun getPriceStateHolder(tradeType: TradeType): StateHolder<UiState<Price>> {
+        return priceStates.getOrPut(tradeType) {
+            StateHolder(UiState.Loading)
         }
     }
 
@@ -78,10 +100,22 @@ class PriceViewModel @Inject constructor(
     fun observePriceRange(tradeType: TradeType) {
         viewModelScope.launch {
             getDollarTypeFlow(tradeType).flatMapLatest { dollarType ->
-                observePriceRangeUseCase.invoke(dollarType, tradeType)
+                getPriceRangePollingUseCase.invoke(
+                    dollarType = dollarType,
+                    tradeType = tradeType,
+                    hasUserFocusFlow = hasUserFocusFlow,
+                    interval = 5000L
+                )
+                //observePriceRangeUseCase.invoke(dollarType, tradeType)
             }.collect { state ->
-                priceRangeStates[tradeType]?.setValue(state)
+                getPriceRangeStateHolder(tradeType).setValue(state)
             }
+        }
+    }
+
+    private fun getPriceRangeStateHolder(tradeType: TradeType): StateHolder<UiState<PriceRange>> {
+        return priceRangeStates.getOrPut(tradeType) {
+            StateHolder(UiState.Loading)
         }
     }
 
@@ -103,6 +137,10 @@ class PriceViewModel @Inject constructor(
     }
 
     fun observePriceAndCandles(tradeType: TradeType) {
+        if (isObserving[tradeType] == true) {
+            return
+        }
+        isObserving[tradeType] = true
         observePrice(tradeType)
         observePriceRange(tradeType)
         getLatestCandles(tradeType)
@@ -114,6 +152,7 @@ class PriceViewModel @Inject constructor(
     }
 
     fun clearTradeType(tradeType: TradeType) {
+        isObserving.remove(tradeType)
         priceStates.remove(tradeType)
         priceRangeStates.remove(tradeType)
         currentDollarTypes.remove(tradeType)

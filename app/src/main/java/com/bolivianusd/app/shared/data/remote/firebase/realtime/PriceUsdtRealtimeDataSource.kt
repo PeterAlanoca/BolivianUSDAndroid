@@ -51,6 +51,20 @@ class PriceUsdtRealtimeDataSource @Inject constructor(
         )
     }
 
+    fun getPrice(tradeType: TradeType): Flow<Price> = flow {
+        if (!networkManager.hasInternetAccess()) {
+            throw RealtimeDatabaseException.NoConnection()
+        }
+        emitAll(
+            flow = firebaseDatabase.get<PriceRealtimeDto>(
+                path = when (tradeType) {
+                    TradeType.BUY -> PRICE_BUY_PATH
+                    TradeType.SELL -> PRICE_SELL_PATH
+                }
+            ).map { dto -> dto.toPrice() }
+        )
+    }
+
     fun getPriceRange(tradeType: TradeType): Flow<PriceRange> = flow {
         if (!networkManager.hasInternetAccess()) {
             throw RealtimeDatabaseException.NoConnection()

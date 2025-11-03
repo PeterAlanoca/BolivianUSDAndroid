@@ -75,3 +75,27 @@ inline fun <reified T : Any, R> FirebaseFirestore.observeDocument(
     awaitClose { listener.remove() }
 }
 
+
+inline fun <reified T : Any, R> FirebaseFirestore.get(
+    collectionPath: String,
+    documentPath: String,
+    crossinline mapper: (T) -> R
+): Flow<R> = flow {
+    try {
+        val snapshot = collection(collectionPath)
+            .document(documentPath)
+            .get()
+            .await()
+
+        if (snapshot.exists()) {
+            val dto = snapshot.toObject(T::class.java)
+                ?: throw FirestoreDataException.NullOrInvalidData()
+            emit(mapper(dto))
+        } else {
+            throw FirestoreDataException.DocumentNotFound(documentPath)
+        }
+    } catch (e: Exception) {
+        throw FirestoreDataException.DocumentNotFound(documentPath)
+    }
+}
+

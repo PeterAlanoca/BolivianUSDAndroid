@@ -24,6 +24,12 @@ class CalculatorViewModel @Inject constructor(
     val currentTradeType = StateHolder(TradeType.BUY)
     private val currentDollarTypes = mutableMapOf<TradeType, MutableStateFlow<DollarType>>()
     private val priceRangeStates = mutableMapOf<TradeType, StateHolder<UiState<PriceRange>>>()
+    private val hasUserFocusFlow = MutableStateFlow(false)
+    private val isObserving = mutableMapOf<TradeType, Boolean>()
+
+    fun setUserFocus(hasFocus: Boolean) {
+        hasUserFocusFlow.value = hasFocus
+    }
 
     fun setTradeType(tradeType: TradeType) {
         if (currentTradeType.value != tradeType) {
@@ -51,12 +57,27 @@ class CalculatorViewModel @Inject constructor(
 
     @OptIn(ExperimentalCoroutinesApi::class)
     fun observePriceRange(tradeType: TradeType) {
+        if (isObserving[tradeType] == true) {
+            return
+        }
+        isObserving[tradeType] = true
         viewModelScope.launch {
             getDollarTypeFlow(tradeType).flatMapLatest { dollarType ->
-                getPriceRangePollingUseCase.invoke(dollarType, tradeType)
+                getPriceRangePollingUseCase.invoke(
+                    dollarType = dollarType,
+                    tradeType = tradeType,
+                    hasUserFocusFlow = hasUserFocusFlow,
+                    //interval = 5000L
+                )
             }.collect { state ->
-                priceRangeStates[tradeType]?.setValue(state)
+                getPriceRangeStateHolder(tradeType).setValue(state)
             }
+        }
+    }
+
+    private fun getPriceRangeStateHolder(tradeType: TradeType): StateHolder<UiState<PriceRange>> {
+        return priceRangeStates.getOrPut(tradeType) {
+            StateHolder(UiState.Loading)
         }
     }
 
@@ -66,6 +87,7 @@ class CalculatorViewModel @Inject constructor(
     }
 
     fun clearTradeType(tradeType: TradeType) {
+        isObserving.remove(tradeType)
         priceRangeStates.remove(tradeType)
         currentDollarTypes.remove(tradeType)
     }
