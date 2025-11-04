@@ -1,7 +1,11 @@
 package com.bolivianusd.app.shared.di
 
 import android.content.Context
+import androidx.room.Room
 import com.bolivianusd.app.core.managers.NetworkManager
+import com.bolivianusd.app.shared.data.local.room.AppDatabase
+import com.bolivianusd.app.shared.data.local.room.PriceRoomDataSource
+import com.bolivianusd.app.shared.data.local.room.dao.PriceDao
 import com.bolivianusd.app.shared.domain.usecase.GetPricePollingUseCase
 import com.bolivianusd.app.shared.domain.usecase.GetPricePollingUseCaseImpl
 import com.bolivianusd.app.shared.domain.usecase.GetPriceRangePollingUseCase
@@ -28,6 +32,22 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 object SharedModule {
+
+    @Provides
+    @Singleton
+    fun provideAppDatabase(@ApplicationContext context: Context): AppDatabase {
+        return Room.databaseBuilder(
+            context,
+            AppDatabase::class.java,
+            "app_database"
+        )
+            .fallbackToDestructiveMigration()
+            .build()
+    }
+
+    @Provides
+    @Singleton
+    fun providePriceDao(appDatabase: AppDatabase): PriceDao = appDatabase.priceDao()
 
     @Provides
     @Singleton
@@ -66,6 +86,14 @@ object SharedModule {
 
     @Provides
     @Singleton
+    fun providePriceRoomDataSource(
+        priceDao: PriceDao
+    ) = PriceRoomDataSource(
+        priceDao = priceDao
+    )
+
+    @Provides
+    @Singleton
     fun providePriceUsdtRealtimeDataSource(
         firebaseDatabase: FirebaseDatabase,
         networkManager: NetworkManager
@@ -88,10 +116,12 @@ object SharedModule {
     @Provides
     fun providePriceRepository(
         priceUsdtRealtimeDataSource: PriceUsdtRealtimeDataSource,
-        priceUsdFirestoreDataSource: PriceUsdFirestoreDataSource
+        priceUsdFirestoreDataSource: PriceUsdFirestoreDataSource,
+        priceRoomDataSource: PriceRoomDataSource
     ): PriceRepository = PriceRepositoryImpl(
         priceUsdtRealtimeDataSource = priceUsdtRealtimeDataSource,
-        priceUsdFirestoreDataSource = priceUsdFirestoreDataSource
+        priceUsdFirestoreDataSource = priceUsdFirestoreDataSource,
+        priceRoomDataSource = priceRoomDataSource
     )
 
     @Singleton
