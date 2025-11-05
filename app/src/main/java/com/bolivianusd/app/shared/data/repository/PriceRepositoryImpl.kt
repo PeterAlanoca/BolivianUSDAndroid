@@ -82,13 +82,40 @@ class PriceRepositoryImpl(
         }.toDataStateFlow()
     }
 
-    override fun getPriceRange(
-        dollarType: DollarType,
-        tradeType: TradeType
-    ): Flow<DataState<PriceRange>> {
-        return when (dollarType) {
+    override fun getPriceRange(dollarType: DollarType, tradeType: TradeType): Flow<DataState<PriceRange>> = flow {
+        priceRoomDataSource.getPriceRange(
+            dollarType = dollarType,
+            tradeType = tradeType
+        ).firstOrNull()?.let { localPriceRangeFlow ->
+            emit(DataState.Success(localPriceRangeFlow))
+        }
+        val remotePriceFlow = when (dollarType) {
             DollarType.USD -> priceUsdFirestoreDataSource.getPriceRange(tradeType)
             DollarType.USDT -> priceUsdtRealtimeDataSource.getPriceRange(tradeType)
         }.toDataStateFlow()
+
+        remotePriceFlow.collect { dataState ->
+            if (dataState is DataState.Success) {
+                priceRoomDataSource.savePriceRange(
+                    priceRange = dataState.data,
+                    tradeType = tradeType
+                )
+            }
+            emit(dataState)
+        }
+    }.catch {
+        emitAll(emptyFlow())
+    }
+
+    override fun hasLocalPriceRangeData(
+        dollarType: DollarType,
+        tradeType: TradeType
+    ): Flow<Boolean>  {
+        return priceRoomDataSource.getPriceRange(
+            dollarType = dollarType,
+            tradeType = tradeType
+        ).map {
+            it != null
+        }.take(1)
     }
 }

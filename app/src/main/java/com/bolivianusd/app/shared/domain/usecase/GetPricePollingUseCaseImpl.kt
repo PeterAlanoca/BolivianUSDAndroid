@@ -32,7 +32,6 @@ class GetPricePollingUseCaseImpl @Inject constructor(
         interval: Long
     ): Flow<UiState<Price>> = hasUserFocusFlow.flatMapLatest { hasFocus ->
         if (!hasFocus) {
-            println("naty getPrice stopped")
             emptyFlow()
         } else {
             flow {

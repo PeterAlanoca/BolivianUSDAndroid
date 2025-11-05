@@ -3,6 +3,7 @@ package com.bolivianusd.app.shared.domain.usecase
 import com.bolivianusd.app.core.extensions.toUiStateError
 import com.bolivianusd.app.shared.data.state.DataState
 import com.bolivianusd.app.shared.domain.model.DollarType
+import com.bolivianusd.app.shared.domain.model.Price
 import com.bolivianusd.app.shared.domain.model.PriceRange
 import com.bolivianusd.app.shared.domain.model.TradeType
 import com.bolivianusd.app.shared.domain.repository.PriceRepository
@@ -11,10 +12,12 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.currentCoroutineContext
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.emitAll
 import kotlinx.coroutines.flow.emptyFlow
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.isActive
 import javax.inject.Inject
 
@@ -28,32 +31,31 @@ class GetPriceRangePollingUseCaseImpl @Inject constructor(
         tradeType: TradeType,
         hasUserFocusFlow: Flow<Boolean>,
         interval: Long
-    ): Flow<UiState<PriceRange>> {
-        return try {
-            hasUserFocusFlow
-                .flatMapLatest { hasFocus ->
-                    if (!hasFocus) {
-                        println("naty getPriceRange stopppp")
-                        emptyFlow()
-                    } else {
-                        flow {
-                            while (currentCoroutineContext().isActive) {
-                                priceRepository.getPriceRange(dollarType, tradeType)
-                                    .collect { dataState ->
-                                        println("naty getPriceRange $dataState")
-                                        val uiState = when (dataState) {
-                                            is DataState.Success -> UiState.Success(dataState.data)
-                                            is DataState.Error -> dataState.toUiStateError<PriceRange>()
-                                        }
-                                        emit(uiState)
-                                    }
-                                delay(interval)
-                            }
-                        }.onStart { emit(UiState.Loading) }
-                    }
-                }
-        } catch (_: Exception) {
+    ): Flow<UiState<PriceRange>> = hasUserFocusFlow.flatMapLatest { hasFocus ->
+        if (!hasFocus) {
             emptyFlow()
+        } else {
+            flow {
+                val hasLocalData = priceRepository.hasLocalPriceRangeData(dollarType, tradeType)
+                    .firstOrNull() ?: false
+                if (!hasLocalData) {
+                    emit(UiState.Loading)
+                }
+                while (currentCoroutineContext().isActive) {
+                    priceRepository.getPriceRange(dollarType, tradeType)
+                        .collect { dataState ->
+                            val uiState = when (dataState) {
+                                is DataState.Success -> UiState.Success(dataState.data)
+                                is DataState.Error -> dataState.toUiStateError<Price>()
+                            }
+                            emit(uiState)
+                        }
+                    delay(interval)
+                }
+            }
         }
+    }.catch {
+        emitAll(emptyFlow())
     }
+
 }

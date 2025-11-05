@@ -16,5 +16,8 @@ interface PriceRepository {
     ): Flow<Boolean>
     fun observePriceRange(dollarType: DollarType, tradeType: TradeType): Flow<DataState<PriceRange>>
     fun getPriceRange(dollarType: DollarType, tradeType: TradeType): Flow<DataState<PriceRange>>
-
+    fun hasLocalPriceRangeData(
+        dollarType: DollarType,
+        tradeType: TradeType
+    ): Flow<Boolean>
 }

@@ -27,8 +27,7 @@ class ObservePriceRangeUseCaseImpl @Inject constructor(
                     is DataState.Success -> UiState.Success(dataState.data)
                     is DataState.Error -> dataState.toUiStateError<Price>()
                 }
-            }
-            .onStart { emit(UiState.Loading) }
+            }.onStart { emit(UiState.Loading) }
     }
 
 }

@@ -6,6 +6,7 @@ import com.bolivianusd.app.core.managers.NetworkManager
 import com.bolivianusd.app.shared.data.local.room.AppDatabase
 import com.bolivianusd.app.shared.data.local.room.PriceRoomDataSource
 import com.bolivianusd.app.shared.data.local.room.dao.PriceDao
+import com.bolivianusd.app.shared.data.local.room.dao.PriceRangeDao
 import com.bolivianusd.app.shared.domain.usecase.GetPricePollingUseCase
 import com.bolivianusd.app.shared.domain.usecase.GetPricePollingUseCaseImpl
 import com.bolivianusd.app.shared.domain.usecase.GetPriceRangePollingUseCase
@@ -51,6 +52,10 @@ object SharedModule {
 
     @Provides
     @Singleton
+    fun providePriceRangeDao(appDatabase: AppDatabase): PriceRangeDao = appDatabase.priceRangeDao()
+
+    @Provides
+    @Singleton
     fun provideNetworkManager(@ApplicationContext context: Context) = NetworkManager(context)
 
     @Provides
@@ -87,9 +92,11 @@ object SharedModule {
     @Provides
     @Singleton
     fun providePriceRoomDataSource(
-        priceDao: PriceDao
+        priceDao: PriceDao,
+        priceRangeDao: PriceRangeDao
     ) = PriceRoomDataSource(
-        priceDao = priceDao
+        priceDao = priceDao,
+        priceRangeDao = priceRangeDao
     )
 
     @Provides
