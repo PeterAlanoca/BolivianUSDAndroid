@@ -129,10 +129,20 @@ class PriceViewModel @Inject constructor(
     fun getLatestCandles(tradeType: TradeType) {
         viewModelScope.launch {
             getDollarTypeFlow(tradeType).flatMapLatest { dollarType ->
-                getLatestCandlesUseCase.invoke(dollarType, tradeType)
+                getLatestCandlesUseCase.invoke(
+                    dollarType = dollarType,
+                    tradeType = tradeType,
+                    hasUserFocusFlow = hasUserFocusFlow,
+                )
             }.collect { state ->
-                dailyCandlesStates[tradeType]?.setValue(state)
+                getLatestCandlesHolder(tradeType).setValue(state)
             }
+        }
+    }
+
+    private fun getLatestCandlesHolder(tradeType: TradeType): StateHolder<UiState<List<DailyCandle>>> {
+        return dailyCandlesStates.getOrPut(tradeType) {
+            StateHolder(UiState.Loading)
         }
     }
 

@@ -53,7 +53,6 @@ fun PriceRangeEntity.toPriceRange(): PriceRange {
     )
 }
 
-
 fun PriceRange.toPriceRangeEntity(tradeType: TradeType): PriceRangeEntity {
     return PriceRangeEntity(
         asset = this.asset,
