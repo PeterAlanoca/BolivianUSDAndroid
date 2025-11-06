@@ -56,7 +56,7 @@ object CustomToast {
         message: String,
         iconRes: Int,
         backgroundColor: Int,
-        duration: Int = Toast.LENGTH_SHORT
+        duration: Int = Toast.LENGTH_LONG
     ) {
         if (isToastShowing) {
             return

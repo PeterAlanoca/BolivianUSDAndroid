@@ -9,6 +9,10 @@
     <string name="dot">•</string>
     <string name="empty"></string>
 
+    <string name="error_no_connection_with_data_exception">No hay conexión a Internet. Los datos mostrados podrían no estar actualizados.</string>
+
+
+
     <!-- Price -->
     <string name="price_view_item_buy">Compra</string>
     <string name="price_view_item_sell">Venta</string>
