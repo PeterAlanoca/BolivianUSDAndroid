@@ -20,4 +20,6 @@ interface PriceRepository {
         dollarType: DollarType,
         tradeType: TradeType
     ): Flow<Boolean>
+    fun isEnabledSwitchDollar(): Boolean
+    fun getDelayPolling(): Long
 }

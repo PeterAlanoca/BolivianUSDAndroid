@@ -51,6 +51,10 @@ class PriceView @JvmOverloads constructor(
         this.onDollarTypeChanged = onDollarTypeChanged
     }
 
+    fun setEnabledSwitchDollar(isEnabled: Boolean) = with(binding) {
+        priceValue.dollarTypeSwitch.isEnabled = isEnabled
+    }
+
     fun showPriceLoadingState() = with(binding) {
         priceValue.root.apply {
             alpha = ZERO_F

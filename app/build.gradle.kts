@@ -79,6 +79,7 @@ android {
     }
     buildFeatures {
         viewBinding = true
+        buildConfig = true
     }
     lint {
         disable += "NullSafeMutableLiveData"
@@ -129,6 +130,7 @@ dependencies {
 
     implementation(libs.firebase.database)
     implementation(libs.firebase.firestore)
+    implementation(libs.firebase.config)
 
     implementation(platform(libs.supabase.bom))
     implementation(libs.supabase.postgrest.kt)

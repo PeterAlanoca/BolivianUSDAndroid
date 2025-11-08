@@ -31,8 +31,8 @@ class GetPricePollingUseCaseImpl @Inject constructor(
         dollarType: DollarType,
         tradeType: TradeType,
         hasUserFocusFlow: Flow<Boolean>,
-        interval: Long
     ): Flow<UiState<Price>> = hasUserFocusFlow.flatMapLatest { hasFocus ->
+        val interval = priceRepository.getDelayPolling()
         if (!hasFocus) {
             emptyFlow()
         } else {

@@ -2,6 +2,7 @@ package com.bolivianusd.app.shared.data.repository
 
 import com.bolivianusd.app.core.extensions.toDataStateFlow
 import com.bolivianusd.app.shared.data.local.room.PriceRoomDataSource
+import com.bolivianusd.app.shared.data.remote.firebase.config.PriceConfigDataSource
 import com.bolivianusd.app.shared.data.remote.firebase.firestore.PriceUsdFirestoreDataSource
 import com.bolivianusd.app.shared.data.remote.firebase.realtime.PriceUsdtRealtimeDataSource
 import com.bolivianusd.app.shared.data.state.DataState
@@ -22,7 +23,8 @@ import kotlinx.coroutines.flow.take
 class PriceRepositoryImpl(
     private val priceUsdtRealtimeDataSource: PriceUsdtRealtimeDataSource,
     private val priceUsdFirestoreDataSource: PriceUsdFirestoreDataSource,
-    private val priceRoomDataSource: PriceRoomDataSource
+    private val priceRoomDataSource: PriceRoomDataSource,
+    private val priceConfigDataSource: PriceConfigDataSource
 ) : PriceRepository {
 
     override fun observePrice(
@@ -118,4 +120,8 @@ class PriceRepositoryImpl(
             it != null
         }.take(1)
     }
+
+    override fun isEnabledSwitchDollar() = priceConfigDataSource.isEnabledSwitchDollar()
+
+    override fun getDelayPolling() = priceConfigDataSource.getDelayPolling()
 }

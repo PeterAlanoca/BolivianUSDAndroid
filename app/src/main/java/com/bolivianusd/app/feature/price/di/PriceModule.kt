@@ -31,7 +31,6 @@ object PriceModule {
         appDatabase: AppDatabase
     ): DailyCandleDao = appDatabase.dailyCandleDao()
 
-
     @Provides
     @Singleton
     fun provideDailyCandleRoomDataSource(

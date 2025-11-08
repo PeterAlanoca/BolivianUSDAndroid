@@ -2,11 +2,14 @@ package com.bolivianusd.app.shared.di
 
 import android.content.Context
 import androidx.room.Room
+import com.bolivianusd.app.BuildConfig
+import com.bolivianusd.app.R
 import com.bolivianusd.app.core.managers.NetworkManager
 import com.bolivianusd.app.shared.data.local.room.AppDatabase
 import com.bolivianusd.app.shared.data.local.room.PriceRoomDataSource
 import com.bolivianusd.app.shared.data.local.room.dao.PriceDao
 import com.bolivianusd.app.shared.data.local.room.dao.PriceRangeDao
+import com.bolivianusd.app.shared.data.remote.firebase.config.PriceConfigDataSource
 import com.bolivianusd.app.shared.domain.usecase.GetPricePollingUseCase
 import com.bolivianusd.app.shared.domain.usecase.GetPricePollingUseCaseImpl
 import com.bolivianusd.app.shared.domain.usecase.GetPriceRangePollingUseCase
@@ -15,10 +18,14 @@ import com.bolivianusd.app.shared.data.remote.firebase.firestore.PriceUsdFiresto
 import com.bolivianusd.app.shared.data.remote.firebase.realtime.PriceUsdtRealtimeDataSource
 import com.bolivianusd.app.shared.data.repository.PriceRepositoryImpl
 import com.bolivianusd.app.shared.domain.repository.PriceRepository
+import com.bolivianusd.app.shared.domain.usecase.IsEnabledSwitchDollarUseCase
+import com.bolivianusd.app.shared.domain.usecase.IsEnabledSwitchDollarUseCaseImpl
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.FirebaseFirestoreSettings
 import com.google.firebase.firestore.MemoryCacheSettings
+import com.google.firebase.remoteconfig.FirebaseRemoteConfig
+import com.google.firebase.remoteconfig.remoteConfigSettings
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -60,6 +67,20 @@ object SharedModule {
 
     @Provides
     @Singleton
+    fun provideFirebaseRemoteConfig(): FirebaseRemoteConfig {
+        val remoteConfig = FirebaseRemoteConfig.getInstance()
+        val configSettings = remoteConfigSettings {
+            minimumFetchIntervalInSeconds = if (BuildConfig.DEBUG) 0 else 3600
+            fetchTimeoutInSeconds = 60
+        }
+        remoteConfig.setConfigSettingsAsync(configSettings)
+        remoteConfig.setDefaultsAsync(R.xml.remote_config_defaults)
+        remoteConfig.fetchAndActivate()
+        return remoteConfig
+    }
+
+    @Provides
+    @Singleton
     fun provideFirebaseDatabase() = FirebaseDatabase.getInstance()
 
     @Provides
@@ -88,6 +109,14 @@ object SharedModule {
     @Provides
     @Singleton
     fun providePostgrest(client: SupabaseClient) = client.postgrest
+
+    @Provides
+    @Singleton
+    fun providePriceConfigDataSource(
+        remoteConfig: FirebaseRemoteConfig
+    ) = PriceConfigDataSource(
+        remoteConfig = remoteConfig
+    )
 
     @Provides
     @Singleton
@@ -124,11 +153,21 @@ object SharedModule {
     fun providePriceRepository(
         priceUsdtRealtimeDataSource: PriceUsdtRealtimeDataSource,
         priceUsdFirestoreDataSource: PriceUsdFirestoreDataSource,
-        priceRoomDataSource: PriceRoomDataSource
+        priceRoomDataSource: PriceRoomDataSource,
+        priceConfigDataSource: PriceConfigDataSource
     ): PriceRepository = PriceRepositoryImpl(
         priceUsdtRealtimeDataSource = priceUsdtRealtimeDataSource,
         priceUsdFirestoreDataSource = priceUsdFirestoreDataSource,
-        priceRoomDataSource = priceRoomDataSource
+        priceRoomDataSource = priceRoomDataSource,
+        priceConfigDataSource = priceConfigDataSource
+    )
+
+    @Singleton
+    @Provides
+    fun provideIsEnabledSwitchDollarUseCase(
+        priceRepository: PriceRepository
+    ): IsEnabledSwitchDollarUseCase = IsEnabledSwitchDollarUseCaseImpl(
+        priceRepository = priceRepository
     )
 
     @Singleton

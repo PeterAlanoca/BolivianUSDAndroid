@@ -11,6 +11,5 @@ interface GetPricePollingUseCase {
         dollarType: DollarType,
         tradeType: TradeType,
         hasUserFocusFlow: Flow<Boolean>,
-        interval: Long = 3000L
     ): Flow<UiState<Price>>
 }

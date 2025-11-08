@@ -14,6 +14,7 @@ import com.bolivianusd.app.shared.domain.model.TradeType
 import com.bolivianusd.app.shared.domain.model.Price
 import com.bolivianusd.app.shared.domain.model.PriceRange
 import com.bolivianusd.app.shared.domain.state.UiState
+import com.bolivianusd.app.shared.domain.usecase.IsEnabledSwitchDollarUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.delay
@@ -29,7 +30,8 @@ class PriceViewModel @Inject constructor(
     private val observePriceRangeUseCase: ObservePriceRangeUseCase,
     private val getPricePollingUseCase: GetPricePollingUseCase,
     private val getPriceRangePollingUseCase: GetPriceRangePollingUseCase,
-    private val getLatestCandlesUseCase: GetLatestCandlesUseCase
+    private val getLatestCandlesUseCase: GetLatestCandlesUseCase,
+    private val isEnabledSwitchDollarUseCase: IsEnabledSwitchDollarUseCase
 ) : ViewModel() {
 
     val currentTradeType = StateHolder(TradeType.BUY)
@@ -39,6 +41,8 @@ class PriceViewModel @Inject constructor(
     private val dailyCandlesStates = mutableMapOf<TradeType, StateHolder<UiState<List<DailyCandle>>>>()
     private val hasUserFocusFlow = MutableStateFlow(false)
     private val isObserving = mutableMapOf<TradeType, Boolean>()
+
+    fun isEnabledSwitchDollar() = isEnabledSwitchDollarUseCase.invoke()
 
     fun setUserFocus(hasFocus: Boolean) {
         hasUserFocusFlow.value = hasFocus
@@ -76,7 +80,6 @@ class PriceViewModel @Inject constructor(
                     dollarType = dollarType,
                     tradeType = tradeType,
                     hasUserFocusFlow = hasUserFocusFlow,
-                    interval = 5000L
                 )
                 //observePriceUseCase.invoke(dollarType, tradeType)
             }.collect { state ->
@@ -105,7 +108,6 @@ class PriceViewModel @Inject constructor(
                     dollarType = dollarType,
                     tradeType = tradeType,
                     hasUserFocusFlow = hasUserFocusFlow,
-                    interval = 5000L
                 )
                 //observePriceRangeUseCase.invoke(dollarType, tradeType)
             }.collect { state ->

@@ -58,6 +58,7 @@ class PriceFragment : BaseFragment<FragmentPriceBinding>() {
             setupPriceObserver(tradeType)
             setupPriceRangeObserver(tradeType)
             setupDailyCandleObserver(tradeType)
+            setEnabledSwitchDollar()
         }
     }
 
@@ -153,6 +154,11 @@ class PriceFragment : BaseFragment<FragmentPriceBinding>() {
                 }
             }
         }
+    }
+
+    private fun setEnabledSwitchDollar() {
+        val isEnabledSwitchDollar = viewModel.isEnabledSwitchDollar()
+        priceAdapter.setEnabledSwitchDollar(isEnabledSwitchDollar)
     }
 
     private fun resetDataUIComponents() {

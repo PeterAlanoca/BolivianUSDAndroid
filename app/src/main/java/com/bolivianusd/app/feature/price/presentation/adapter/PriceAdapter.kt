@@ -37,6 +37,12 @@ class PriceAdapter : RecyclerView.Adapter<PriceAdapter.PriceHolder>() {
         this.actionDollarType = actionDollarType
     }
 
+    fun setEnabledSwitchDollar(isEnabled: Boolean) {
+        viewHolders.forEach {
+            it.value.setEnabledSwitchDollar(isEnabled)
+        }
+    }
+
     fun showPriceLoadingState(tradeType: TradeType) {
         viewHolders[tradeType]?.showPriceLoadingState()
     }
@@ -79,6 +85,10 @@ class PriceAdapter : RecyclerView.Adapter<PriceAdapter.PriceHolder>() {
                 resetDataUIComponents()
                 actionDollarType?.invoke(dollarType)
             }
+        }
+
+        fun setEnabledSwitchDollar(isEnabled: Boolean) = with(binding) {
+            priceView.setEnabledSwitchDollar(isEnabled)
         }
 
         fun showPriceLoadingState() = with(binding) {
