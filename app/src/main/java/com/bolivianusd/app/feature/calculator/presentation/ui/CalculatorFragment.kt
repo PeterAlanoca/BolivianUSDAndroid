@@ -58,6 +58,7 @@ class CalculatorFragment : BaseFragment<FragmentCalculatorBinding>() {
             resetDataUIComponents()
             viewModel.observePriceRange(tradeType)
             setupPriceRangeObserver(tradeType)
+            setEnabledSwitchDollar()
         }
     }
 
@@ -117,6 +118,11 @@ class CalculatorFragment : BaseFragment<FragmentCalculatorBinding>() {
                 }
             }
         }
+    }
+
+    private fun setEnabledSwitchDollar() {
+        val isEnabledSwitchDollar = viewModel.isEnabledSwitchDollar()
+        calculatorAdapter.setEnabledSwitchDollar(isEnabledSwitchDollar)
     }
 
     private fun resetDataUIComponents() {

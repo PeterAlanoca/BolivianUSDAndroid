@@ -56,6 +56,10 @@ class DisplayView @JvmOverloads constructor(
         this.onDollarTypeChanged = onDollarTypeChanged
     }
 
+    fun setEnabledSwitchDollar(isEnabled: Boolean) = with(binding) {
+        dollarTypeSwitch.isEnabled = isEnabled
+    }
+
     fun setOnFormatError(onFormatError: () -> Unit) {
         this.onFormatError = onFormatError
     }

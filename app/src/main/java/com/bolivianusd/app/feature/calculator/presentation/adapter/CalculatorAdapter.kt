@@ -37,6 +37,12 @@ class CalculatorAdapter : RecyclerView.Adapter<CalculatorAdapter.CalculatorHolde
         this.actionDollarType = actionDollarType
     }
 
+    fun setEnabledSwitchDollar(isEnabled: Boolean) {
+        viewHolders.forEach {
+            it.value.setEnabledSwitchDollar(isEnabled)
+        }
+    }
+
     fun showPriceRangeLoadingState(tradeType: TradeType) {
         viewHolders[tradeType]?.showPriceRangeLoadingState()
     }
@@ -86,6 +92,10 @@ class CalculatorAdapter : RecyclerView.Adapter<CalculatorAdapter.CalculatorHolde
             keyboardView.setOnNumberClickListener {
                 displayView.appendNumberField(it)
             }
+        }
+
+        fun setEnabledSwitchDollar(isEnabled: Boolean) = with(binding) {
+            displayView.setEnabledSwitchDollar(isEnabled)
         }
 
         fun showPriceRangeLoadingState() = with(binding)  {

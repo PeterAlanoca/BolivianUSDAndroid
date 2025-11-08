@@ -12,6 +12,7 @@ import com.bolivianusd.app.core.extensions.gone
 import com.bolivianusd.app.core.extensions.showToastError
 import com.bolivianusd.app.core.extensions.showToastWarning
 import com.bolivianusd.app.core.extensions.visible
+import com.bolivianusd.app.core.util.ZERO
 import com.bolivianusd.app.databinding.FragmentPriceBinding
 import com.bolivianusd.app.feature.price.domain.model.DailyCandle
 import com.bolivianusd.app.feature.price.presentation.adapter.PriceAdapter
@@ -81,7 +82,7 @@ class PriceFragment : BaseFragment<FragmentPriceBinding>() {
             override fun onPageSelected(position: Int) {
                 super.onPageSelected(position)
                 val newTradeType = when (position) {
-                    0 -> TradeType.BUY
+                    ZERO -> TradeType.BUY
                     else -> TradeType.SELL
                 }
                 viewModel.setTradeType(newTradeType)
