@@ -6,5 +6,11 @@ sealed class PostgrestDataException(message: String) : Exception(message) {
             cause?.let { initCause(it) }
         }
     }
+
+    class NoConnection : PostgrestDataException(
+        "No internet connection detected. " +
+                "Unable to reach Supabase Database. " +
+                "Please check your network connection and try again."
+    )
 }
 

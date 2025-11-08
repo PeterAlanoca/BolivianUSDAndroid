@@ -37,6 +37,7 @@ class GetPricePollingUseCaseImpl @Inject constructor(
             emptyFlow()
         } else {
             flow {
+                var price: Price? = null
                 val hasLocalData = priceRepository.hasLocalPriceData(dollarType, tradeType)
                     .firstOrNull() ?: false
                 if (!hasLocalData) {
@@ -48,7 +49,10 @@ class GetPricePollingUseCaseImpl @Inject constructor(
                         .collect { dataState ->
                             println("naty getPrice")
                             val uiState = when (dataState) {
-                                is DataState.Success -> UiState.Success(dataState.data)
+                                is DataState.Success -> {
+                                    price = dataState.data
+                                    UiState.Success(price)
+                                }
                                 is DataState.Error -> {
                                     polling = false
                                     when (dataState.throwable) {
@@ -56,6 +60,7 @@ class GetPricePollingUseCaseImpl @Inject constructor(
                                         is FirestoreDataException.NoConnection -> {
                                             val exception = if (hasLocalData) {
                                                 NoConnectionWithDataException()
+                                                    .setData(price)
                                             } else {
                                                 NoConnectionWithOutDataException()
                                             }

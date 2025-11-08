@@ -27,6 +27,7 @@ private fun createErrorState(throwable: Throwable): DataState.Error {
             is RealtimeDatabaseException.Cancelled -> "Operación de base de datos cancelada"
             is RealtimeDatabaseException.NoConnection -> "Sin conexion a internet con Realtime"
             is PostgrestDataException.UnknownException -> "Fallo inesperado en la comunicación con Supabase"
+            is PostgrestDataException.NoConnection -> "Sin conexion a internet con Supabase"
             is IOException -> "Error de conexión de red"
             else -> "Error desconocido: ${throwable.message ?: "sin detalles"}"
         }

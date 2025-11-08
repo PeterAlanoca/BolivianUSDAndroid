@@ -13,11 +13,14 @@ import com.bolivianusd.app.core.extensions.showToastError
 import com.bolivianusd.app.core.extensions.showToastWarning
 import com.bolivianusd.app.core.extensions.visible
 import com.bolivianusd.app.databinding.FragmentPriceBinding
+import com.bolivianusd.app.feature.price.domain.model.DailyCandle
 import com.bolivianusd.app.feature.price.presentation.adapter.PriceAdapter
 import com.bolivianusd.app.feature.price.presentation.viewmodel.PriceViewModel
 import com.bolivianusd.app.shared.domain.exception.NoConnectionWithOutDataException
 import com.bolivianusd.app.shared.domain.exception.NoConnectionWithDataException
 import com.bolivianusd.app.shared.domain.model.DollarType
+import com.bolivianusd.app.shared.domain.model.Price
+import com.bolivianusd.app.shared.domain.model.PriceRange
 import com.bolivianusd.app.shared.domain.model.TradeType
 import com.bolivianusd.app.shared.domain.state.UiState
 import com.google.android.material.tabs.TabLayoutMediator
@@ -91,14 +94,18 @@ class PriceFragment : BaseFragment<FragmentPriceBinding>() {
 
     private fun setupPriceObserver(tradeType: TradeType) {
         collectFlow(viewModel.getPriceState(tradeType)) { state ->
-            println("naty getPriceState ${state.toString()}")
+            //println("naty getPriceState ${state.toString()}")
             when (state) {
                 is UiState.Loading -> priceAdapter.showPriceLoadingState(tradeType)
                 is UiState.Success -> priceAdapter.showPriceDataSuccess(tradeType, state.data)
                 is UiState.Error -> {
                     when (state.throwable) {
-                        is NoConnectionWithDataException ->
+                        is NoConnectionWithDataException -> {
+                            state.throwable.getData<Price>()?.let {
+                                priceAdapter.showPriceDataSuccess(tradeType, it)
+                            }
                             showToastWarning(getString(R.string.error_no_connection_with_data_exception))
+                        }
                         is NoConnectionWithOutDataException -> showNoConnectionWithOutData()
                         else -> showToastError(getString(R.string.error_generic_exception))
                     }
@@ -114,12 +121,14 @@ class PriceFragment : BaseFragment<FragmentPriceBinding>() {
                 is UiState.Success -> priceAdapter.showPriceRangeDataSuccess(tradeType, state.data)
                 is UiState.Error -> {
                     when (state.throwable) {
-                        is NoConnectionWithDataException ->
+                        is NoConnectionWithDataException -> {
+                            state.throwable.getData<PriceRange>()?.let {
+                                priceAdapter.showPriceRangeDataSuccess(tradeType, it)
+                            }
                             showToastWarning(getString(R.string.error_no_connection_with_data_exception))
-                        is NoConnectionWithOutDataException -> showNoConnectionWithOutData()
-                        else -> {
-
                         }
+                        is NoConnectionWithOutDataException -> showNoConnectionWithOutData()
+                        else -> showToastError(getString(R.string.error_generic_exception))
                     }
                 }
             }
@@ -133,12 +142,14 @@ class PriceFragment : BaseFragment<FragmentPriceBinding>() {
                 is UiState.Success -> priceAdapter.showChartDataSuccess(tradeType, state.data)
                 is UiState.Error -> {
                     when (state.throwable) {
-                        is NoConnectionWithDataException ->
+                        is NoConnectionWithDataException -> {
+                            state.throwable.getData<List<DailyCandle>>()?.let {
+                                priceAdapter.showChartDataSuccess(tradeType, it)
+                            }
                             showToastWarning(getString(R.string.error_no_connection_with_data_exception))
-                        is NoConnectionWithOutDataException -> showNoConnectionWithOutData()
-                        else -> {
-
                         }
+                        is NoConnectionWithOutDataException -> showNoConnectionWithOutData()
+                        else -> showToastError(getString(R.string.error_generic_exception))
                     }
                 }
             }

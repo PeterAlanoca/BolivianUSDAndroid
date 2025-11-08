@@ -1,5 +1,6 @@
 package com.bolivianusd.app.feature.price.di
 
+import com.bolivianusd.app.core.managers.NetworkManager
 import com.bolivianusd.app.feature.price.data.local.room.DailyCandleRoomDataSource
 import com.bolivianusd.app.feature.price.data.local.room.dao.DailyCandleDao
 import com.bolivianusd.app.feature.price.data.remote.supabase.postgrest.DailyCandlePostgrestDataSource
@@ -41,8 +42,11 @@ object PriceModule {
 
     @Provides
     @Singleton
-    fun provideDailyCandlePostgrestDataSource(postgrest: Postgrest) =
-        DailyCandlePostgrestDataSource(postgrest = postgrest)
+    fun provideDailyCandlePostgrestDataSource(postgrest: Postgrest, networkManager: NetworkManager) =
+        DailyCandlePostgrestDataSource(
+            postgrest = postgrest,
+            networkManager = networkManager
+        )
 
     @Singleton
     @Provides

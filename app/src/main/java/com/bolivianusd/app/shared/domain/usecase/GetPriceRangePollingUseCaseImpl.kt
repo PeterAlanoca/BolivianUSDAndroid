@@ -1,15 +1,17 @@
 package com.bolivianusd.app.shared.domain.usecase
 
 import com.bolivianusd.app.core.extensions.toUiStateError
+import com.bolivianusd.app.shared.data.exception.FirestoreDataException
+import com.bolivianusd.app.shared.data.exception.RealtimeDatabaseException
 import com.bolivianusd.app.shared.data.state.DataState
+import com.bolivianusd.app.shared.domain.exception.NoConnectionWithDataException
+import com.bolivianusd.app.shared.domain.exception.NoConnectionWithOutDataException
 import com.bolivianusd.app.shared.domain.model.DollarType
-import com.bolivianusd.app.shared.domain.model.Price
 import com.bolivianusd.app.shared.domain.model.PriceRange
 import com.bolivianusd.app.shared.domain.model.TradeType
 import com.bolivianusd.app.shared.domain.repository.PriceRepository
 import com.bolivianusd.app.shared.domain.state.UiState
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.currentCoroutineContext
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
@@ -18,7 +20,6 @@ import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.isActive
 import javax.inject.Inject
 
 class GetPriceRangePollingUseCaseImpl @Inject constructor(
@@ -36,17 +37,40 @@ class GetPriceRangePollingUseCaseImpl @Inject constructor(
             emptyFlow()
         } else {
             flow {
+                var priceRange: PriceRange? = null
                 val hasLocalData = priceRepository.hasLocalPriceRangeData(dollarType, tradeType)
                     .firstOrNull() ?: false
                 if (!hasLocalData) {
                     emit(UiState.Loading)
                 }
-                while (currentCoroutineContext().isActive) {
+                var polling = true
+                while (polling) {
                     priceRepository.getPriceRange(dollarType, tradeType)
                         .collect { dataState ->
                             val uiState = when (dataState) {
-                                is DataState.Success -> UiState.Success(dataState.data)
-                                is DataState.Error -> dataState.toUiStateError<Price>()
+                                is DataState.Success -> {
+                                    priceRange = dataState.data
+                                    UiState.Success(priceRange)
+                                }
+                                is DataState.Error -> {
+                                    polling = false
+                                    when (dataState.throwable) {
+                                        is RealtimeDatabaseException.NoConnection,
+                                        is FirestoreDataException.NoConnection -> {
+                                            val exception = if (hasLocalData) {
+                                                NoConnectionWithDataException()
+                                                    .setData(priceRange)
+                                            } else {
+                                                NoConnectionWithOutDataException()
+                                            }
+                                            UiState.Error(
+                                                throwable = exception,
+                                                message = exception.message
+                                            )
+                                        }
+                                        else -> dataState.toUiStateError<PriceRange>()
+                                    }
+                                }
                             }
                             emit(uiState)
                         }

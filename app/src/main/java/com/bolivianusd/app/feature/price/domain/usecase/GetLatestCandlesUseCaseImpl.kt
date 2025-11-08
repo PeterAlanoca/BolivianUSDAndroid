@@ -3,7 +3,10 @@ package com.bolivianusd.app.feature.price.domain.usecase
 import com.bolivianusd.app.core.extensions.toUiStateError
 import com.bolivianusd.app.feature.price.domain.model.DailyCandle
 import com.bolivianusd.app.feature.price.domain.repository.DailyCandleRepository
+import com.bolivianusd.app.shared.data.exception.PostgrestDataException
 import com.bolivianusd.app.shared.data.state.DataState
+import com.bolivianusd.app.shared.domain.exception.NoConnectionWithDataException
+import com.bolivianusd.app.shared.domain.exception.NoConnectionWithOutDataException
 import com.bolivianusd.app.shared.domain.model.DollarType
 import com.bolivianusd.app.shared.domain.model.TradeType
 import com.bolivianusd.app.shared.domain.state.UiState
@@ -30,6 +33,7 @@ class GetLatestCandlesUseCaseImpl @Inject constructor(
             emptyFlow()
         } else {
             flow {
+                var candles: List<DailyCandle>? = null
                 val hasLocalData = dailyCandleRepository.hasLocalCandlesData(dollarType, tradeType)
                     .firstOrNull() ?: false
                 if (!hasLocalData) {
@@ -38,8 +42,27 @@ class GetLatestCandlesUseCaseImpl @Inject constructor(
                 dailyCandleRepository.getLatestCandles(dollarType, tradeType)
                     .collect { dataState ->
                         val uiState = when (dataState) {
-                            is DataState.Success -> UiState.Success(dataState.data)
-                            is DataState.Error -> dataState.toUiStateError<List<DailyCandle>>()
+                            is DataState.Success -> {
+                                candles = dataState.data
+                                UiState.Success(candles)
+                            }
+                            is DataState.Error -> {
+                                when (dataState.throwable) {
+                                    is PostgrestDataException.NoConnection -> {
+                                        val exception = if (hasLocalData) {
+                                            NoConnectionWithDataException()
+                                                .setData(candles)
+                                        } else {
+                                            NoConnectionWithOutDataException()
+                                        }
+                                        UiState.Error(
+                                            throwable = exception,
+                                            message = exception.message
+                                        )
+                                    }
+                                    else -> dataState.toUiStateError<List<DailyCandle>>()
+                                }
+                            }
                         }
                         emit(uiState)
                     }
