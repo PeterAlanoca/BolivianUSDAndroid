@@ -12,7 +12,6 @@ import com.bolivianusd.app.shared.domain.model.TradeType
 import com.bolivianusd.app.shared.domain.repository.PriceRepository
 import com.bolivianusd.app.shared.domain.state.UiState
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.currentCoroutineContext
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
@@ -21,7 +20,6 @@ import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.isActive
 import javax.inject.Inject
 
 class GetPricePollingUseCaseImpl @Inject constructor(

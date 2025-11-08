@@ -8,7 +8,10 @@ import com.bolivianusd.app.R
 import com.bolivianusd.app.core.base.BaseFragment
 import com.bolivianusd.app.core.extensions.collectFlow
 import com.bolivianusd.app.core.extensions.distinctByPrevious
+import com.bolivianusd.app.core.extensions.gone
+import com.bolivianusd.app.core.extensions.showToastError
 import com.bolivianusd.app.core.extensions.showToastWarning
+import com.bolivianusd.app.core.extensions.visible
 import com.bolivianusd.app.databinding.FragmentPriceBinding
 import com.bolivianusd.app.feature.price.presentation.adapter.PriceAdapter
 import com.bolivianusd.app.feature.price.presentation.viewmodel.PriceViewModel
@@ -32,6 +35,12 @@ class PriceFragment : BaseFragment<FragmentPriceBinding>() {
     override fun initViews() {
         setupViewPager()
         resetDataUIComponents()
+    }
+
+    override fun setListeners() = with(binding) {
+        errorView.retryButton.setOnClickListener {
+            retry()
+        }
     }
 
     override fun initData() {
@@ -90,11 +99,8 @@ class PriceFragment : BaseFragment<FragmentPriceBinding>() {
                     when (state.throwable) {
                         is NoConnectionWithDataException ->
                             showToastWarning(getString(R.string.error_no_connection_with_data_exception))
-                        is NoConnectionWithOutDataException -> {
-                        }
-                        else -> {
-
-                        }
+                        is NoConnectionWithOutDataException -> showNoConnectionWithOutData()
+                        else -> showToastError(getString(R.string.error_generic_exception))
                     }
                 }
             }
@@ -106,7 +112,16 @@ class PriceFragment : BaseFragment<FragmentPriceBinding>() {
             when (state) {
                 is UiState.Loading -> priceAdapter.showPriceRangeLoadingState(tradeType)
                 is UiState.Success -> priceAdapter.showPriceRangeDataSuccess(tradeType, state.data)
-                is UiState.Error -> Unit
+                is UiState.Error -> {
+                    when (state.throwable) {
+                        is NoConnectionWithDataException ->
+                            showToastWarning(getString(R.string.error_no_connection_with_data_exception))
+                        is NoConnectionWithOutDataException -> showNoConnectionWithOutData()
+                        else -> {
+
+                        }
+                    }
+                }
             }
         }
     }
@@ -116,7 +131,16 @@ class PriceFragment : BaseFragment<FragmentPriceBinding>() {
             when (state) {
                 is UiState.Loading -> priceAdapter.showChartLoadingState(tradeType)
                 is UiState.Success -> priceAdapter.showChartDataSuccess(tradeType, state.data)
-                is UiState.Error -> Unit
+                is UiState.Error -> {
+                    when (state.throwable) {
+                        is NoConnectionWithDataException ->
+                            showToastWarning(getString(R.string.error_no_connection_with_data_exception))
+                        is NoConnectionWithOutDataException -> showNoConnectionWithOutData()
+                        else -> {
+
+                        }
+                    }
+                }
             }
         }
     }
@@ -124,6 +148,19 @@ class PriceFragment : BaseFragment<FragmentPriceBinding>() {
     private fun resetDataUIComponents() {
         viewModel.currentTradeType.value.let { tradeType ->
             priceAdapter.resetDataUIComponents(tradeType)
+        }
+    }
+
+    private fun showNoConnectionWithOutData() = with(binding) {
+        errorView.root.visible()
+        contentView.gone()
+    }
+
+    private fun retry() = with(binding) {
+        errorView.root.gone()
+        contentView.visible()
+        viewModel.currentTradeType.value.let { tradeType ->
+            viewModel.refresh(tradeType)
         }
     }
 

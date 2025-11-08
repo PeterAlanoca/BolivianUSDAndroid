@@ -16,6 +16,7 @@ import com.bolivianusd.app.shared.domain.model.PriceRange
 import com.bolivianusd.app.shared.domain.state.UiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.flatMapLatest
@@ -157,8 +158,14 @@ class PriceViewModel @Inject constructor(
     }
 
     fun refresh(tradeType: TradeType) {
-        val current = getDollarTypeFlow(tradeType).value
-        getDollarTypeFlow(tradeType).value = current
+        hasUserFocusFlow.value = false
+        getPriceStateHolder(tradeType).setValue(UiState.Loading)
+        getPriceRangeStateHolder(tradeType).setValue(UiState.Loading)
+        getLatestCandlesHolder(tradeType).setValue(UiState.Loading)
+        viewModelScope.launch {
+            delay(REFRESH_DELAY)
+            hasUserFocusFlow.value = true
+        }
     }
 
     fun clearTradeType(tradeType: TradeType) {
@@ -167,5 +174,9 @@ class PriceViewModel @Inject constructor(
         priceRangeStates.remove(tradeType)
         currentDollarTypes.remove(tradeType)
         dailyCandlesStates.remove(tradeType)
+    }
+
+    companion object {
+        private const val REFRESH_DELAY = 100L
     }
 }
