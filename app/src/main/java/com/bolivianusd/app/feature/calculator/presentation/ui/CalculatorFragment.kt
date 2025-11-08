@@ -8,14 +8,19 @@ import com.bolivianusd.app.R
 import com.bolivianusd.app.core.base.BaseFragment
 import com.bolivianusd.app.core.extensions.collectFlow
 import com.bolivianusd.app.core.extensions.distinctByPrevious
+import com.bolivianusd.app.core.extensions.gone
 import com.bolivianusd.app.core.extensions.hideSystemKeyboard
 import com.bolivianusd.app.core.extensions.showToastError
 import com.bolivianusd.app.core.extensions.showToastWarning
+import com.bolivianusd.app.core.extensions.visible
 import com.bolivianusd.app.core.util.ZERO
 import com.bolivianusd.app.databinding.FragmentCalculatorBinding
 import com.bolivianusd.app.feature.calculator.presentation.adapter.CalculatorAdapter
 import com.bolivianusd.app.feature.calculator.presentation.viewmodel.CalculatorViewModel
+import com.bolivianusd.app.shared.domain.exception.NoConnectionWithDataException
+import com.bolivianusd.app.shared.domain.exception.NoConnectionWithOutDataException
 import com.bolivianusd.app.shared.domain.model.DollarType
+import com.bolivianusd.app.shared.domain.model.PriceRange
 import com.bolivianusd.app.shared.domain.model.TradeType
 import com.bolivianusd.app.shared.domain.state.UiState
 import com.google.android.material.tabs.TabLayoutMediator
@@ -35,6 +40,13 @@ class CalculatorFragment : BaseFragment<FragmentCalculatorBinding>() {
         setupViewPager()
         resetDataUIComponents()
     }
+
+    override fun setListeners() = with(binding) {
+        errorView.retryButton.setOnClickListener {
+            retry()
+        }
+    }
+
 
     override fun initData() = with(binding) {
         viewModel.setTradeType(TradeType.BUY)
@@ -91,7 +103,18 @@ class CalculatorFragment : BaseFragment<FragmentCalculatorBinding>() {
             when (state) {
                 is UiState.Loading -> calculatorAdapter.showPriceRangeLoadingState(tradeType)
                 is UiState.Success -> calculatorAdapter.showPriceRangeDataSuccess(tradeType, state.data)
-                is UiState.Error -> Unit
+                is UiState.Error -> {
+                    when (state.throwable) {
+                        is NoConnectionWithDataException -> {
+                            state.throwable.getData<PriceRange>()?.let {
+                                calculatorAdapter.showPriceRangeDataSuccess(tradeType, it)
+                            }
+                            showToastWarning(getString(R.string.error_no_connection_with_data_exception))
+                        }
+                        is NoConnectionWithOutDataException -> showNoConnectionWithOutData()
+                        else -> showToastError(getString(R.string.error_generic_exception))
+                    }
+                }
             }
         }
     }
@@ -100,6 +123,19 @@ class CalculatorFragment : BaseFragment<FragmentCalculatorBinding>() {
         viewModel.currentTradeType.value.let { tradeType ->
             calculatorAdapter.resetUIComponents(tradeType)
         }
+    }
+
+    private fun retry() = with(binding) {
+        errorView.root.gone()
+        contentView.visible()
+        viewModel.currentTradeType.value.let { tradeType ->
+            viewModel.refresh(tradeType)
+        }
+    }
+
+    private fun showNoConnectionWithOutData() = with(binding) {
+        errorView.root.visible()
+        contentView.gone()
     }
 
     override fun onResume() {

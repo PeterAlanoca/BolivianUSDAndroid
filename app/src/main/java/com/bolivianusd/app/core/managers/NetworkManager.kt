@@ -24,8 +24,8 @@ class NetworkManager(private val context: Context) {
         try {
             val url = URL(GOOGLE_URL)
             (url.openConnection() as HttpURLConnection).run {
-                connectTimeout = 10000
-                readTimeout = 10000
+                connectTimeout = TIME_OUT
+                readTimeout = TIME_OUT
                 requestMethod = "GET"
                 connect()
                 responseCode == 204
@@ -42,5 +42,6 @@ class NetworkManager(private val context: Context) {
 
     companion object {
         private const val GOOGLE_URL = "https://clients3.google.com/generate_204"
+        private const val TIME_OUT = 60000
     }
 }
