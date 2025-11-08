@@ -94,7 +94,6 @@ class PriceFragment : BaseFragment<FragmentPriceBinding>() {
 
     private fun setupPriceObserver(tradeType: TradeType) {
         collectFlow(viewModel.getPriceState(tradeType)) { state ->
-            //println("naty getPriceState ${state.toString()}")
             when (state) {
                 is UiState.Loading -> priceAdapter.showPriceLoadingState(tradeType)
                 is UiState.Success -> priceAdapter.showPriceDataSuccess(tradeType, state.data)

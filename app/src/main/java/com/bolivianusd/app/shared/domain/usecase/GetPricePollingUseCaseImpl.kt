@@ -47,7 +47,6 @@ class GetPricePollingUseCaseImpl @Inject constructor(
                 while (polling) {
                     priceRepository.getPrice(dollarType, tradeType)
                         .collect { dataState ->
-                            println("naty getPrice")
                             val uiState = when (dataState) {
                                 is DataState.Success -> {
                                     price = dataState.data
