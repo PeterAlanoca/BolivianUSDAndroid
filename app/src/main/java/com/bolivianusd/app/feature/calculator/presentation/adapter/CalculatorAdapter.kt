@@ -1,8 +1,12 @@
 package com.bolivianusd.app.feature.calculator.presentation.adapter
 
+import android.os.Handler
+import android.os.Looper
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.bolivianusd.app.R
+import com.bolivianusd.app.core.extensions.getColorRes
 import com.bolivianusd.app.databinding.ItemCalculatorBinding
 import com.bolivianusd.app.shared.domain.model.DollarType
 import com.bolivianusd.app.shared.domain.model.PriceRange
@@ -12,6 +16,7 @@ class CalculatorAdapter : RecyclerView.Adapter<CalculatorAdapter.CalculatorHolde
 
     private val items = listOf(TradeType.BUY, TradeType.SELL)
     private val viewHolders = mutableMapOf<TradeType, CalculatorHolder>()
+    private var actionRefresh: (() -> Unit)? = null
     private var actionDollarType: ((DollarType) -> Unit)? = null
     private var onFormatError: (() -> Unit)? = null
     private var onPriceRangeError: ((String) -> Unit)? = null
@@ -32,6 +37,10 @@ class CalculatorAdapter : RecyclerView.Adapter<CalculatorAdapter.CalculatorHolde
     }
 
     override fun getItemCount(): Int = items.size
+
+    fun setOnRefresh(actionRefresh: () -> Unit) {
+        this.actionRefresh = actionRefresh
+    }
 
     fun setOnDollarTypeChanged(actionDollarType: (DollarType) -> Unit) {
         this.actionDollarType = actionDollarType
@@ -69,6 +78,7 @@ class CalculatorAdapter : RecyclerView.Adapter<CalculatorAdapter.CalculatorHolde
 
         fun bind(tradeType: TradeType) {
             setListeners()
+            setupSwipeRefresh()
             resetUIComponents()
         }
 
@@ -76,6 +86,12 @@ class CalculatorAdapter : RecyclerView.Adapter<CalculatorAdapter.CalculatorHolde
             displayView.setOnDollarTypeChanged { dollarType ->
                 resetUIComponents()
                 actionDollarType?.invoke(dollarType)
+            }
+            swipeRefreshLayout.setOnRefreshListener {
+                actionRefresh?.invoke()
+                Handler(Looper.getMainLooper()).postDelayed({
+                    swipeRefreshLayout.isRefreshing = false
+                }, DELAY_SWIPE_REFRESH)
             }
             displayView.setOnFormatError {
                 onFormatError?.invoke()
@@ -91,6 +107,15 @@ class CalculatorAdapter : RecyclerView.Adapter<CalculatorAdapter.CalculatorHolde
             }
             keyboardView.setOnNumberClickListener {
                 displayView.appendNumberField(it)
+            }
+        }
+
+        private fun setupSwipeRefresh() = with(binding) {
+            swipeRefreshLayout.apply {
+                setColorSchemeResources(
+                    R.color.java
+                )
+                setProgressBackgroundColorSchemeColor(context.getColorRes(R.color.rhino))
             }
         }
 
@@ -112,5 +137,9 @@ class CalculatorAdapter : RecyclerView.Adapter<CalculatorAdapter.CalculatorHolde
             displayView.resetUIComponents()
             keyboardView.resetUIComponents()
         }
+    }
+
+    companion object {
+        private const val DELAY_SWIPE_REFRESH = 400L
     }
 }

@@ -1,8 +1,12 @@
 package com.bolivianusd.app.feature.price.presentation.adapter
 
+import android.os.Handler
+import android.os.Looper
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.bolivianusd.app.R
+import com.bolivianusd.app.core.extensions.getColorRes
 import com.bolivianusd.app.databinding.ItemPriceBinding
 import com.bolivianusd.app.feature.price.domain.model.DailyCandle
 import com.bolivianusd.app.shared.domain.model.DollarType
@@ -14,6 +18,7 @@ class PriceAdapter : RecyclerView.Adapter<PriceAdapter.PriceHolder>() {
 
     private val items = listOf(TradeType.BUY, TradeType.SELL)
     private val viewHolders = mutableMapOf<TradeType, PriceHolder>()
+    private var actionRefresh: (() -> Unit)? = null
     private var actionDollarType: ((DollarType) -> Unit)? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PriceHolder {
@@ -32,6 +37,10 @@ class PriceAdapter : RecyclerView.Adapter<PriceAdapter.PriceHolder>() {
     }
 
     override fun getItemCount(): Int = items.size
+
+    fun setOnRefresh(actionRefresh: () -> Unit) {
+        this.actionRefresh = actionRefresh
+    }
 
     fun setOnDollarTypeChanged(actionDollarType: (DollarType) -> Unit) {
         this.actionDollarType = actionDollarType
@@ -77,6 +86,7 @@ class PriceAdapter : RecyclerView.Adapter<PriceAdapter.PriceHolder>() {
 
         fun bind(tradeType: TradeType) {
             setListeners()
+            setupSwipeRefresh()
             resetDataUIComponents()
         }
 
@@ -84,6 +94,21 @@ class PriceAdapter : RecyclerView.Adapter<PriceAdapter.PriceHolder>() {
             priceView.setOnDollarTypeChanged { dollarType ->
                 resetDataUIComponents()
                 actionDollarType?.invoke(dollarType)
+            }
+            swipeRefreshLayout.setOnRefreshListener {
+                actionRefresh?.invoke()
+                Handler(Looper.getMainLooper()).postDelayed({
+                    swipeRefreshLayout.isRefreshing = false
+                }, DELAY_SWIPE_REFRESH)
+            }
+        }
+
+        private fun setupSwipeRefresh() = with(binding) {
+            swipeRefreshLayout.apply {
+                setColorSchemeResources(
+                    R.color.java
+                )
+                setProgressBackgroundColorSchemeColor(context.getColorRes(R.color.rhino))
             }
         }
 
@@ -120,5 +145,9 @@ class PriceAdapter : RecyclerView.Adapter<PriceAdapter.PriceHolder>() {
             priceRangeView.resetDataUIComponents()
             dailyCandleChartView.resetDataUIComponents()
         }
+    }
+
+    companion object {
+        private const val DELAY_SWIPE_REFRESH = 400L
     }
 }
