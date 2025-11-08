@@ -110,6 +110,7 @@ dependencies {
     implementation(libs.androidx.biometric)
     implementation(libs.androidx.lifecycle.livedata.ktx)
     implementation(libs.androidx.multidex)
+    implementation(libs.androidx.swiperefreshlayout)
 
     implementation(libs.hilt.android)
     kapt(libs.hilt.android.compiler)

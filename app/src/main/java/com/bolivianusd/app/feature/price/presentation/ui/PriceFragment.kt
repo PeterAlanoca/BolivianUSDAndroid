@@ -1,5 +1,7 @@
 package com.bolivianusd.app.feature.price.presentation.ui
 
+import android.os.Handler
+import android.os.Looper
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.fragment.app.activityViewModels
@@ -8,6 +10,7 @@ import com.bolivianusd.app.R
 import com.bolivianusd.app.core.base.BaseFragment
 import com.bolivianusd.app.core.extensions.collectFlow
 import com.bolivianusd.app.core.extensions.distinctByPrevious
+import com.bolivianusd.app.core.extensions.getColorRes
 import com.bolivianusd.app.core.extensions.gone
 import com.bolivianusd.app.core.extensions.showToastError
 import com.bolivianusd.app.core.extensions.showToastWarning
@@ -37,12 +40,16 @@ class PriceFragment : BaseFragment<FragmentPriceBinding>() {
     ) = FragmentPriceBinding.inflate(inflater, container, false)
 
     override fun initViews() {
+        setupSwipeRefresh()
         setupViewPager()
         resetDataUIComponents()
     }
 
     override fun setListeners() = with(binding) {
         errorView.retryButton.setOnClickListener {
+            retry()
+        }
+        swipeRefreshLayout.setOnRefreshListener {
             retry()
         }
     }
@@ -65,6 +72,15 @@ class PriceFragment : BaseFragment<FragmentPriceBinding>() {
 
     override fun onUserFocusChanged(hasFocus: Boolean) {
         viewModel.setUserFocus(hasFocus)
+    }
+
+    private fun setupSwipeRefresh() = with(binding) {
+        swipeRefreshLayout.apply {
+            setColorSchemeResources(
+                R.color.java
+            )
+            setProgressBackgroundColorSchemeColor(context.getColorRes(R.color.rhino))
+        }
     }
 
     private fun setupViewPager() = with(binding) {
@@ -179,9 +195,13 @@ class PriceFragment : BaseFragment<FragmentPriceBinding>() {
         viewModel.currentTradeType.value.let { tradeType ->
             viewModel.refresh(tradeType)
         }
+        Handler(Looper.getMainLooper()).postDelayed({
+            swipeRefreshLayout.isRefreshing = false
+        }, DELAY_SWIPE_REFRESH)
     }
 
     companion object {
+        private const val DELAY_SWIPE_REFRESH = 500L
         const val TAG = "PriceFragment"
         fun newInstance() = PriceFragment()
     }

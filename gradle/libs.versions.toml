@@ -8,6 +8,7 @@ fragmentKtx = "1.8.9"
 ktorClientAndroid = "2.3.5"
 multidex = "2.0.1"
 roomRuntime = "2.8.3"
+swiperefreshlayout = "1.1.0"
 switchbutton = "2.1.0"
 lifecycleLivedataKtx = "2.9.4"
 biometric = "1.1.0"
@@ -42,6 +43,7 @@ androidx-room-compiler = { module = "androidx.room:room-compiler", version.ref =
 androidx-room-ktx = { module = "androidx.room:room-ktx", version.ref = "roomRuntime" }
 androidx-room-runtime = { module = "androidx.room:room-runtime", version.ref = "roomRuntime" }
 androidx-room-testing = { module = "androidx.room:room-testing", version.ref = "roomRuntime" }
+androidx-swiperefreshlayout = { module = "androidx.swiperefreshlayout:swiperefreshlayout", version.ref = "swiperefreshlayout" }
 blurview = { module = "com.github.Dimezis:BlurView", version.ref = "blurview" }
 firebase-analytics = { module = "com.google.firebase:firebase-analytics" }
 firebase-config = { module = "com.google.firebase:firebase-config" }
