@@ -15,6 +15,10 @@ plugins {
     id("com.github.triplet.play") version "3.8.6"
 }
 
+val secretProperties = Properties().apply {
+    load(FileInputStream(rootProject.file("secret.properties")))
+}
+
 val keystoreProperties = Properties().apply {
     load(FileInputStream(rootProject.file("keystore.properties")))
 }
@@ -34,12 +38,18 @@ android {
 
     defaultConfig {
         applicationId = "com.bolivianusd.app"
-        minSdk = 23
+        minSdk = 26
         targetSdk = 34
         versionCode = System.getenv("BUILD_NUMBER")?.toIntOrNull() ?: 8
         versionName = "1.0"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         multiDexEnabled  = true
+
+        buildConfigField("String", "DATABASE_NAME", "\"app_database\"")
+        buildConfigField("Long", "REMOTE_CONFIG_FETCH_INTERVAL", "3600L")
+        buildConfigField("Long", "REMOTE_CONFIG_TIME_OUT", "60L")
+        buildConfigField("String", "CIPHER_KEY", "\"${secretProperties["cipherKey"]}\"")
+        buildConfigField("String", "CIPHER_IV", "\"${secretProperties["cipherIv"]}\"")
     }
 
     buildTypes {
@@ -58,16 +68,22 @@ android {
     productFlavors {
         create("production") {
             dimension = "env"
+            buildConfigField("String", "SUPABASE_URL", "\"${secretProperties["supabaseUrlProd"]}\"")
+            buildConfigField("String", "SUPABASE_KEY", "\"${secretProperties["supabaseKeyProd"]}\"")
         }
         create("certification") {
             dimension = "env"
             applicationIdSuffix = ".cert"
             versionNameSuffix = "-cert"
+            buildConfigField("String", "SUPABASE_URL", "${secretProperties["supabaseUrlCert"]}\"")
+            buildConfigField("String", "SUPABASE_KEY", "${secretProperties["supabaseKeyCert"]}\"")
         }
         create("develop") {
             dimension = "env"
             applicationIdSuffix = ".dev"
             versionNameSuffix = "-dev"
+            buildConfigField("String", "SUPABASE_URL", "\"${secretProperties["supabaseUrlDev"]}\"")
+            buildConfigField("String", "SUPABASE_KEY", "\"${secretProperties["supabaseKeyDev"]}\"")
         }
     }
     compileOptions {

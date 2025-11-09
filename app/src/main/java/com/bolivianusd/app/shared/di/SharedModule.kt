@@ -5,6 +5,8 @@ import androidx.room.Room
 import com.bolivianusd.app.BuildConfig
 import com.bolivianusd.app.R
 import com.bolivianusd.app.core.managers.NetworkManager
+import com.bolivianusd.app.core.util.ZERO_L
+import com.bolivianusd.app.core.util.encryptor.AESCipher
 import com.bolivianusd.app.shared.data.local.room.AppDatabase
 import com.bolivianusd.app.shared.data.local.room.PriceRoomDataSource
 import com.bolivianusd.app.shared.data.local.room.dao.PriceDao
@@ -43,14 +45,16 @@ object SharedModule {
 
     @Provides
     @Singleton
+    fun providesAESCipher() = AESCipher(BuildConfig.CIPHER_KEY, BuildConfig.CIPHER_IV)
+
+    @Provides
+    @Singleton
     fun provideAppDatabase(@ApplicationContext context: Context): AppDatabase {
         return Room.databaseBuilder(
-            context,
-            AppDatabase::class.java,
-            "app_database"
-        )
-            .fallbackToDestructiveMigration()
-            .build()
+            context = context,
+            klass = AppDatabase::class.java,
+            name = BuildConfig.DATABASE_NAME
+        ).fallbackToDestructiveMigration(false).build()
     }
 
     @Provides
@@ -70,8 +74,8 @@ object SharedModule {
     fun provideFirebaseRemoteConfig(): FirebaseRemoteConfig {
         val remoteConfig = FirebaseRemoteConfig.getInstance()
         val configSettings = remoteConfigSettings {
-            minimumFetchIntervalInSeconds = if (BuildConfig.DEBUG) 0 else 3600
-            fetchTimeoutInSeconds = 60
+            minimumFetchIntervalInSeconds = if (BuildConfig.DEBUG) ZERO_L else BuildConfig.REMOTE_CONFIG_FETCH_INTERVAL
+            fetchTimeoutInSeconds = BuildConfig.REMOTE_CONFIG_TIME_OUT
         }
         remoteConfig.setConfigSettingsAsync(configSettings)
         remoteConfig.setDefaultsAsync(R.xml.remote_config_defaults)
@@ -89,7 +93,6 @@ object SharedModule {
         val settings = FirebaseFirestoreSettings.Builder()
             .setLocalCacheSettings(MemoryCacheSettings.newBuilder().build())
             .build()
-
         return FirebaseFirestore.getInstance().apply {
             firestoreSettings = settings
         }
@@ -97,10 +100,10 @@ object SharedModule {
 
     @Provides
     @Singleton
-    fun provideSupabaseClient(): SupabaseClient {
+    fun provideSupabaseClient(aesCipher: AESCipher): SupabaseClient {
         return createSupabaseClient(
-            supabaseUrl = "https://lerpekuagrjuizzdxomj.supabase.co",
-            supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxlcnBla3VhZ3JqdWl6emR4b21qIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTc5NTQ0MzUsImV4cCI6MjA3MzUzMDQzNX0.9vPwdjuIPf09Z5mwblVX1fkIc0-IYhQmUTqacSN5F0s"
+            supabaseUrl = aesCipher.decrypt(BuildConfig.SUPABASE_URL),
+            supabaseKey = aesCipher.decrypt(BuildConfig.SUPABASE_KEY)
         ) {
             install(Postgrest)
         }
