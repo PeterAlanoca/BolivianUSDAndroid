@@ -10,7 +10,7 @@
     <string name="empty"></string>
     <string name="retry">Reintentar</string>
     <string name="shared">Compartir</string>
-
+    <string name="feature_disable_temp">Esta función está deshabilitada temporalmente por mantenimiento técnico</string>
     <string name="error_no_connection_with_data_exception">No hay conexión a Internet. Los datos mostrados podrían no estar actualizados.</string>
     <string name="error_no_connection_with_out_data_exception">No hay conexión a Internet. Por favor, verifica tu conexión e inténtalo nuevamente.</string>
     <string name="error_generic_exception">Ha ocurrido un error. Por favor, inténtalo nuevamente más tarde.</string>

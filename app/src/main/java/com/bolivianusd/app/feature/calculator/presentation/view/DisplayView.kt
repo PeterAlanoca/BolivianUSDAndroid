@@ -11,6 +11,7 @@ import android.view.animation.AnimationUtils
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.RelativeLayout
+import android.widget.Toast
 import androidx.core.view.isVisible
 import com.bolivianusd.app.R
 import com.bolivianusd.app.core.extensions.getActivity
@@ -58,6 +59,7 @@ class DisplayView @JvmOverloads constructor(
 
     fun setEnabledSwitchDollar(isEnabled: Boolean) = with(binding) {
         dollarTypeSwitch.isEnabled = isEnabled
+        dollarTypeView.isVisible = !isEnabled
     }
 
     fun setOnFormatError(onFormatError: () -> Unit) {
@@ -273,6 +275,11 @@ class DisplayView @JvmOverloads constructor(
         dollarTypeSwitch.setOnCheckedChangeListener { _, isChecked ->
             dollarType = if (isChecked) DollarType.USD else DollarType.USDT
             onDollarTypeChanged?.invoke(dollarType)
+        }
+        dollarTypeView.setOnClickListener {
+            if (!dollarTypeSwitch.isEnabled) {
+                Toast.makeText(context, R.string.feature_disable_temp, Toast.LENGTH_SHORT).show()
+            }
         }
         etExchangeRate.apply {
             setOnAmountChangeListener { amount ->

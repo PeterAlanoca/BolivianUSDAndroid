@@ -92,4 +92,15 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/descriptionTextView" />
 
+    <View
+        android:id="@+id/dollarTypeView"
+        android:layout_width="@dimen/dimen_zero"
+        android:layout_height="@dimen/dimen_zero"
+        android:visibility="gone"
+        android:background="@android:color/transparent"
+        app:layout_constraintTop_toTopOf="@+id/dollarTypeSwitch"
+        app:layout_constraintStart_toStartOf="@+id/dollarTypeSwitch"
+        app:layout_constraintEnd_toEndOf="@+id/dollarTypeSwitch"
+        app:layout_constraintBottom_toBottomOf="@+id/dollarTypeSwitch" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
