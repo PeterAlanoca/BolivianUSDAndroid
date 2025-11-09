@@ -40,8 +40,8 @@ android {
         applicationId = "com.bolivianusd.app"
         minSdk = 26
         targetSdk = 35
-        versionCode = System.getenv("BUILD_NUMBER")?.toIntOrNull() ?: 8
-        versionName = "1.0"
+        versionCode = System.getenv("BUILD_NUMBER")?.toIntOrNull() ?: 100001
+        versionName = "1.0.0"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         multiDexEnabled  = true
 
