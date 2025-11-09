@@ -22,3 +22,5 @@ const val emptyBar = "███"
 
 const val plus = "+"
 const val minus = "-"
+
+const val MIME_TYPE_IMAGE_PNG = "image/png"

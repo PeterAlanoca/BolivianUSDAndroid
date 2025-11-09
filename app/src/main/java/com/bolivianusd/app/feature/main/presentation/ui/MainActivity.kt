@@ -1,5 +1,6 @@
 package com.bolivianusd.app.feature.main.presentation.ui
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
@@ -12,6 +13,8 @@ import com.bolivianusd.app.databinding.ActivityMainBinding
 import com.bolivianusd.app.feature.calculator.presentation.ui.CalculatorFragment
 import com.bolivianusd.app.feature.price.presentation.ui.PriceFragment
 import dagger.hilt.android.AndroidEntryPoint
+import com.bolivianusd.app.core.extensions.captureAsBitmap
+import com.bolivianusd.app.core.util.MIME_TYPE_IMAGE_PNG
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
@@ -72,6 +75,7 @@ class MainActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.actionShare -> {
+                shared()
                 true
             }
             R.id.actionOff -> {
@@ -81,4 +85,18 @@ class MainActivity : AppCompatActivity() {
             else -> super.onOptionsItemSelected(item)
         }
     }
+
+    private fun shared() = with(binding) {
+        frameLayout.captureAsBitmap(
+            context = applicationContext
+        )?.let { uri ->
+            val intent = Intent(Intent.ACTION_SEND).apply {
+                type = MIME_TYPE_IMAGE_PNG
+                putExtra(Intent.EXTRA_STREAM, uri)
+                addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+            }
+            startActivity(Intent.createChooser(intent, getString(R.string.shared)))
+        }
+    }
+
 }
