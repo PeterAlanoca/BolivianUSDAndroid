@@ -11,4 +11,9 @@ interface DailyCandleRepository {
         dollarType: DollarType,
         tradeType: TradeType
     ): Flow<DataState<List<DailyCandle>>>
+
+    fun hasLocalCandlesData(
+        dollarType: DollarType,
+        tradeType: TradeType
+    ): Flow<Boolean>
 }

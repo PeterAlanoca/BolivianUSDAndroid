@@ -14,3 +14,14 @@ fun String.toMonthDayFormat(): String {
         emptyString
     }
 }
+
+fun String.toReadableDate(): String {
+    return try {
+        val inputFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+        val outputFormat = SimpleDateFormat("dd 'de' MMMM 'de' yyyy", Locale("es", "ES"))
+        val date = inputFormat.parse(this)
+        outputFormat.format(date)
+    } catch (e: Exception) {
+        emptyString
+    }
+}

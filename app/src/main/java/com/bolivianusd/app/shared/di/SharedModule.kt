@@ -1,16 +1,37 @@
 package com.bolivianusd.app.shared.di
 
+import android.content.Context
+import androidx.room.Room
+import com.bolivianusd.app.BuildConfig
+import com.bolivianusd.app.R
+import com.bolivianusd.app.core.managers.NetworkManager
+import com.bolivianusd.app.core.util.ZERO_L
+import com.bolivianusd.app.core.util.encryptor.AESCipher
+import com.bolivianusd.app.shared.data.local.room.AppDatabase
+import com.bolivianusd.app.shared.data.local.room.PriceRoomDataSource
+import com.bolivianusd.app.shared.data.local.room.dao.PriceDao
+import com.bolivianusd.app.shared.data.local.room.dao.PriceRangeDao
+import com.bolivianusd.app.shared.data.remote.firebase.config.PriceConfigDataSource
+import com.bolivianusd.app.shared.domain.usecase.GetPricePollingUseCase
+import com.bolivianusd.app.shared.domain.usecase.GetPricePollingUseCaseImpl
+import com.bolivianusd.app.shared.domain.usecase.GetPriceRangePollingUseCase
+import com.bolivianusd.app.shared.domain.usecase.GetPriceRangePollingUseCaseImpl
 import com.bolivianusd.app.shared.data.remote.firebase.firestore.PriceUsdFirestoreDataSource
 import com.bolivianusd.app.shared.data.remote.firebase.realtime.PriceUsdtRealtimeDataSource
 import com.bolivianusd.app.shared.data.repository.PriceRepositoryImpl
 import com.bolivianusd.app.shared.domain.repository.PriceRepository
+import com.bolivianusd.app.shared.domain.usecase.IsEnabledSwitchDollarUseCase
+import com.bolivianusd.app.shared.domain.usecase.IsEnabledSwitchDollarUseCaseImpl
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.FirebaseFirestoreSettings
 import com.google.firebase.firestore.MemoryCacheSettings
+import com.google.firebase.remoteconfig.FirebaseRemoteConfig
+import com.google.firebase.remoteconfig.remoteConfigSettings
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import io.github.jan.supabase.SupabaseClient
 import io.github.jan.supabase.createSupabaseClient
@@ -24,6 +45,46 @@ object SharedModule {
 
     @Provides
     @Singleton
+    fun providesAESCipher() = AESCipher(BuildConfig.CIPHER_KEY, BuildConfig.CIPHER_IV)
+
+    @Provides
+    @Singleton
+    fun provideAppDatabase(@ApplicationContext context: Context): AppDatabase {
+        return Room.databaseBuilder(
+            context = context,
+            klass = AppDatabase::class.java,
+            name = BuildConfig.DATABASE_NAME
+        ).fallbackToDestructiveMigration(false).build()
+    }
+
+    @Provides
+    @Singleton
+    fun providePriceDao(appDatabase: AppDatabase): PriceDao = appDatabase.priceDao()
+
+    @Provides
+    @Singleton
+    fun providePriceRangeDao(appDatabase: AppDatabase): PriceRangeDao = appDatabase.priceRangeDao()
+
+    @Provides
+    @Singleton
+    fun provideNetworkManager(@ApplicationContext context: Context) = NetworkManager(context)
+
+    @Provides
+    @Singleton
+    fun provideFirebaseRemoteConfig(): FirebaseRemoteConfig {
+        val remoteConfig = FirebaseRemoteConfig.getInstance()
+        val configSettings = remoteConfigSettings {
+            minimumFetchIntervalInSeconds = if (BuildConfig.DEBUG) ZERO_L else BuildConfig.REMOTE_CONFIG_FETCH_INTERVAL
+            fetchTimeoutInSeconds = BuildConfig.REMOTE_CONFIG_TIME_OUT
+        }
+        remoteConfig.setConfigSettingsAsync(configSettings)
+        remoteConfig.setDefaultsAsync(R.xml.remote_config_defaults)
+        remoteConfig.fetchAndActivate()
+        return remoteConfig
+    }
+
+    @Provides
+    @Singleton
     fun provideFirebaseDatabase() = FirebaseDatabase.getInstance()
 
     @Provides
@@ -32,7 +93,6 @@ object SharedModule {
         val settings = FirebaseFirestoreSettings.Builder()
             .setLocalCacheSettings(MemoryCacheSettings.newBuilder().build())
             .build()
-
         return FirebaseFirestore.getInstance().apply {
             firestoreSettings = settings
         }
@@ -40,10 +100,10 @@ object SharedModule {
 
     @Provides
     @Singleton
-    fun provideSupabaseClient(): SupabaseClient {
+    fun provideSupabaseClient(aesCipher: AESCipher): SupabaseClient {
         return createSupabaseClient(
-            supabaseUrl = "https://lerpekuagrjuizzdxomj.supabase.co",
-            supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxlcnBla3VhZ3JqdWl6emR4b21qIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTc5NTQ0MzUsImV4cCI6MjA3MzUzMDQzNX0.9vPwdjuIPf09Z5mwblVX1fkIc0-IYhQmUTqacSN5F0s"
+            supabaseUrl = aesCipher.decrypt(BuildConfig.SUPABASE_URL),
+            supabaseKey = aesCipher.decrypt(BuildConfig.SUPABASE_KEY)
         ) {
             install(Postgrest)
         }
@@ -55,22 +115,78 @@ object SharedModule {
 
     @Provides
     @Singleton
-    fun providePriceUsdtRealtimeDataSource(firebaseDatabase: FirebaseDatabase) =
-        PriceUsdtRealtimeDataSource(firebaseDatabase = firebaseDatabase)
+    fun providePriceConfigDataSource(
+        remoteConfig: FirebaseRemoteConfig
+    ) = PriceConfigDataSource(
+        remoteConfig = remoteConfig
+    )
 
     @Provides
     @Singleton
-    fun providePriceUsdFirestoreDataSource(firebaseFirestore: FirebaseFirestore) =
-        PriceUsdFirestoreDataSource(firebaseFirestore = firebaseFirestore)
+    fun providePriceRoomDataSource(
+        priceDao: PriceDao,
+        priceRangeDao: PriceRangeDao
+    ) = PriceRoomDataSource(
+        priceDao = priceDao,
+        priceRangeDao = priceRangeDao
+    )
+
+    @Provides
+    @Singleton
+    fun providePriceUsdtRealtimeDataSource(
+        firebaseDatabase: FirebaseDatabase,
+        networkManager: NetworkManager
+    ) = PriceUsdtRealtimeDataSource(
+        firebaseDatabase = firebaseDatabase,
+        networkManager = networkManager
+    )
+
+    @Provides
+    @Singleton
+    fun providePriceUsdFirestoreDataSource(
+        firebaseFirestore: FirebaseFirestore,
+        networkManager: NetworkManager
+    ) = PriceUsdFirestoreDataSource(
+        firebaseFirestore = firebaseFirestore,
+        networkManager = networkManager
+    )
 
     @Singleton
     @Provides
     fun providePriceRepository(
         priceUsdtRealtimeDataSource: PriceUsdtRealtimeDataSource,
-        priceUsdFirestoreDataSource: PriceUsdFirestoreDataSource
+        priceUsdFirestoreDataSource: PriceUsdFirestoreDataSource,
+        priceRoomDataSource: PriceRoomDataSource,
+        priceConfigDataSource: PriceConfigDataSource
     ): PriceRepository = PriceRepositoryImpl(
         priceUsdtRealtimeDataSource = priceUsdtRealtimeDataSource,
-        priceUsdFirestoreDataSource = priceUsdFirestoreDataSource
+        priceUsdFirestoreDataSource = priceUsdFirestoreDataSource,
+        priceRoomDataSource = priceRoomDataSource,
+        priceConfigDataSource = priceConfigDataSource
+    )
+
+    @Singleton
+    @Provides
+    fun provideIsEnabledSwitchDollarUseCase(
+        priceRepository: PriceRepository
+    ): IsEnabledSwitchDollarUseCase = IsEnabledSwitchDollarUseCaseImpl(
+        priceRepository = priceRepository
+    )
+
+    @Singleton
+    @Provides
+    fun provideGetPricePollingUseCase(
+        priceRepository: PriceRepository
+    ): GetPricePollingUseCase = GetPricePollingUseCaseImpl(
+        priceRepository = priceRepository
+    )
+
+    @Singleton
+    @Provides
+    fun provideGetPriceRangePollingUseCase(
+        priceRepository: PriceRepository
+    ): GetPriceRangePollingUseCase = GetPriceRangePollingUseCaseImpl(
+        priceRepository = priceRepository
     )
 
 }

@@ -10,7 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="@dimen/margin_20"
-        android:layout_marginTop="@dimen/margin_12"
+        android:layout_marginTop="@dimen/margin_8"
         android:layout_marginBottom="@dimen/margin_20"
         app:cardBackgroundColor="@color/rhino"
         app:cardCornerRadius="@dimen/radius_14"
@@ -65,7 +65,7 @@
                         android:background="@drawable/bg_shimmer_cool_grey"
                         android:fontFamily="@font/sfuidisplay_regular"
                         android:includeFontPadding="false"
-                        android:text="@string/price_view_pager_item_source_binance"
+                        android:text="@string/price_view_item_source_binance"
                         android:textColor="@color/cool_grey"
                         android:textSize="@dimen/text_size_10"
                         app:layout_constraintBottom_toBottomOf="parent"
@@ -92,13 +92,11 @@
                     android:layout_marginEnd="@dimen/margin_4"
                     android:layout_marginBottom="@dimen/margin_4"
                     android:background="@android:color/transparent"
-                    android:visibility="invisible"
                     app:layout_constraintBottom_toTopOf="@+id/labelTextView"
                     app:layout_constraintDimensionRatio="H,1:0.66"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    tools:visibility="visible" />
+                    app:layout_constraintTop_toTopOf="parent" />
 
                 <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/labelTextView"
@@ -108,7 +106,7 @@
                     android:layout_marginBottom="@dimen/margin_10"
                     android:fontFamily="@font/sfuidisplay_regular"
                     android:includeFontPadding="false"
-                    android:text="@string/price_view_pager_item_source_binance"
+                    android:text="@string/price_view_item_source_binance"
                     android:textColor="@color/java"
                     android:textSize="@dimen/text_size_10"
                     app:layout_constraintBottom_toBottomOf="parent"

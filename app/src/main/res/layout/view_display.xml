@@ -6,12 +6,25 @@
     android:layout_height="wrap_content"
     tools:context=".feature.calculator.presentation.view.DisplayView">
 
+
+    <LinearLayout
+        android:id="@+id/displayShimmer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="visible"
+        tools:visibility="gone">
+
+        <include
+            android:id="@+id/shimmerLayout"
+            layout="@layout/layout_display_shimmer" />
+    </LinearLayout>
+
     <LinearLayout
         android:id="@+id/displayView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:visibility="gone"
+        android:visibility="invisible"
         tools:visibility="visible">
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -46,7 +59,7 @@
                 android:textSize="@dimen/text_size_11"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                tools:text="12/09/25 10:35:01" />
+                tools:text="12/09/25 10:35:01 PM" />
 
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/exchangeRate"
@@ -57,7 +70,7 @@
                 android:layout_marginBottom="25dp"
                 app:cardBackgroundColor="@color/rhino"
                 app:cardCornerRadius="@dimen/radius_14"
-                app:cardElevation="@dimen/elevation_12"
+                app:cardElevation="@dimen/elevation_8"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/priceRangeTextView">
@@ -74,7 +87,7 @@
                         android:layout_height="match_parent"
                         android:fontFamily="@font/sfuidisplay_medium"
                         android:textColor="@color/white_alpha_65"
-                        android:textSize="15sp"
+                        android:textSize="@dimen/text_size_13"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
@@ -113,7 +126,6 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
-
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <com.google.android.material.card.MaterialCardView
@@ -125,7 +137,7 @@
                 android:layout_marginBottom="25dp"
                 app:cardBackgroundColor="@color/rhino"
                 app:cardCornerRadius="@dimen/radius_14"
-                app:cardElevation="@dimen/elevation_12"
+                app:cardElevation="@dimen/elevation_8"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/exchangeRate">
@@ -142,7 +154,7 @@
                         android:layout_height="match_parent"
                         android:fontFamily="@font/sfuidisplay_medium"
                         android:textColor="@color/white_alpha_65"
-                        android:textSize="15sp"
+                        android:textSize="@dimen/text_size_13"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
@@ -186,10 +198,10 @@
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="@dimen/margin_20"
                 android:layout_marginTop="35dp"
-                android:layout_marginBottom="@dimen/margin_10"
+                android:layout_marginBottom="@dimen/margin_16"
                 app:cardBackgroundColor="@color/rhino"
                 app:cardCornerRadius="@dimen/radius_14"
-                app:cardElevation="@dimen/elevation_12"
+                app:cardElevation="@dimen/elevation_8"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -208,7 +220,7 @@
                         android:layout_height="match_parent"
                         android:fontFamily="@font/sfuidisplay_medium"
                         android:textColor="@color/white_alpha_65"
-                        android:textSize="15sp"
+                        android:textSize="@dimen/text_size_13"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
@@ -232,16 +244,6 @@
     </LinearLayout>
 
 
-    <LinearLayout
-        android:id="@+id/displayShimmer"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:visibility="visible"
-        tools:visibility="gone">
 
-        <include
-            android:id="@+id/shimmerLayout"
-            layout="@layout/layout_display_shimmer" />
-    </LinearLayout>
 
 </RelativeLayout>

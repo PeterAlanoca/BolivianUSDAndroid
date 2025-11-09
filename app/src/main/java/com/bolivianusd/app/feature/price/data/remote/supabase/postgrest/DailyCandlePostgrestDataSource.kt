@@ -1,5 +1,6 @@
 package com.bolivianusd.app.feature.price.data.remote.supabase.postgrest
 
+import com.bolivianusd.app.core.managers.NetworkManager
 import com.bolivianusd.app.feature.price.data.mapper.toDailyCandles
 import com.bolivianusd.app.feature.price.data.remote.supabase.dto.DailyCandleDto
 import com.bolivianusd.app.feature.price.domain.model.DailyCandle
@@ -13,7 +14,8 @@ import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
 class DailyCandlePostgrestDataSource @Inject constructor(
-    private val postgrest: Postgrest
+    private val postgrest: Postgrest,
+    private val networkManager: NetworkManager
 ) {
 
     fun getCandles(
@@ -21,6 +23,9 @@ class DailyCandlePostgrestDataSource @Inject constructor(
         tradeType: TradeType,
         limit: Long = 10
     ): Flow<List<DailyCandle>> = flow {
+        if (!networkManager.hasInternetAccess()) {
+            throw PostgrestDataException.NoConnection()
+        }
         try {
             val candlesDto = postgrest[TABLE_NAME]
                 .select {
@@ -33,7 +38,7 @@ class DailyCandlePostgrestDataSource @Inject constructor(
                     limit(limit)
                 }
                 .decodeList<DailyCandleDto>()
-            val candles = candlesDto.toDailyCandles()
+            val candles = candlesDto.toDailyCandles(dollarType)
             emit(candles)
         } catch (e: Exception) {
             throw PostgrestDataException.UnknownException(e)

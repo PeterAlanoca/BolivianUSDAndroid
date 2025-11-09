@@ -21,9 +21,13 @@ private fun createErrorState(throwable: Throwable): DataState.Error {
         message = when (throwable) {
             is FirestoreDataException.NullOrInvalidData -> "Datos de Firestore inválidos o nulos"
             is FirestoreDataException.DocumentNotFound -> "Documento no encontrado en Firestore"
+            is FirestoreDataException.Cancelled -> "Operación de Firestore cancelada"
+            is FirestoreDataException.NoConnection -> "Sin conexion a internet con Realtime"
             is RealtimeDatabaseException.NullOrInvalidData -> "Datos de Realtime Database inválidos"
             is RealtimeDatabaseException.Cancelled -> "Operación de base de datos cancelada"
+            is RealtimeDatabaseException.NoConnection -> "Sin conexion a internet con Realtime"
             is PostgrestDataException.UnknownException -> "Fallo inesperado en la comunicación con Supabase"
+            is PostgrestDataException.NoConnection -> "Sin conexion a internet con Supabase"
             is IOException -> "Error de conexión de red"
             else -> "Error desconocido: ${throwable.message ?: "sin detalles"}"
         }

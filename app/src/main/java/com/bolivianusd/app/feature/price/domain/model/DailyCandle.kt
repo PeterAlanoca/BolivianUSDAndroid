@@ -8,5 +8,6 @@ data class DailyCandle(
     val low: Float,
     val open: Float,
     val close: Float,
-    val date: String
+    var shortDate: String,
+    val readableDate: String
 )

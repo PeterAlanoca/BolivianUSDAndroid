@@ -7,26 +7,41 @@
     <string name="bob">BOB</string>
     <string name="zero_decimal">0.00</string>
     <string name="dot">•</string>
+    <string name="empty"></string>
+    <string name="retry">Reintentar</string>
+    <string name="shared">Compartir</string>
+
+    <string name="error_no_connection_with_data_exception">No hay conexión a Internet. Los datos mostrados podrían no estar actualizados.</string>
+    <string name="error_no_connection_with_out_data_exception">No hay conexión a Internet. Por favor, verifica tu conexión e inténtalo nuevamente.</string>
+    <string name="error_generic_exception">Ha ocurrido un error. Por favor, inténtalo nuevamente más tarde.</string>
 
     <!-- Price -->
-    <string name="price_view_pager_item_buy">Compra</string>
-    <string name="price_view_pager_item_sell">Venta</string>
-    <string name="price_view_pager_item_parallel_dollar">DOLAR PARALELO</string>
-    <string name="price_view_pager_item_update">Historial</string>
-    <string name="price_view_pager_item_time">00/00 - 00/00</string>
-    <string name="price_view_pager_item_price_in_bob">PRECIO EN BOB</string>
-    <string name="price_view_pager_item_more_zero">+0.0%</string>
-    <string name="price_view_pager_item_bob_zero">BOB 00.00</string>
-    <string name="price_view_pager_item_source_binance">Fuente: binance.com</string>
-    <string name="price_view_pager_item_range">Rango de precios</string>
-    <string name="price_view_pager_item_low">Bajo</string>
-    <string name="price_view_pager_item_middle">Medio</string>
-    <string name="price_view_pager_item_high">Alto</string>
+    <string name="price_view_item_buy">Compra</string>
+    <string name="price_view_item_sell">Venta</string>
+    <string name="price_view_item_parallel_dollar">DOLAR PARALELO</string>
+    <string name="price_view_item_update">Historial</string>
+    <string name="price_view_item_time">00/00 - 00/00</string>
+    <string name="price_view_item_price_in_bob">PRECIO EN BOB</string>
+    <string name="price_view_item_more_zero">+0.0%</string>
+    <string name="price_view_item_bob_zero">BOB 00.00</string>
+    <string name="price_view_item_source_binance">Fuente: binance.com</string>
+    <string name="price_view_item_source_bcb">Fuente: bcb.gob.bo</string>
+    <string name="price_view_item_range">Rango</string>
+    <string name="price_view_item_low">Bajo</string>
+    <string name="price_view_item_middle">Medio</string>
+    <string name="price_view_item_high">Alto</string>
+    <string name="price_view_item_updated_at">12/09/25 10:35:01 P.M.</string>
+    <string name="price_view_item_low_">Bajo:</string>
+    <string name="price_view_item_high_">Alto:</string>
+    <string name="price_view_item_open_">Apertura:</string>
+    <string name="price_view_item_close_">Cierre:</string>
 
     <!-- Calculator -->
     <string name="calculator_view_pager_item_buy">Compra</string>
     <string name="calculator_view_pager_item_sell">Venta</string>
     <string name="calculator_view_pager_item_parallel_dollar">TIPO DE CAMBIO PARALELO</string>
     <string name="calculator_view_pager_item_official_dollar">TIPO DE CAMBIO OFICIAL</string>
+    <string name="calculator_view_pager_item_input_error">Los datos ingresados no son válidos. Por favor, verifícalos y vuelve a intentar.</string>
+    <string name="calculator_view_pager_item_price_range_error">Te sugerimos ingresar un valor entre %1$s y %2$s para obtener mejores resultados.</string>
 
 </resources>

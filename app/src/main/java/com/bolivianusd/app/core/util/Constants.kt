@@ -2,6 +2,7 @@ package com.bolivianusd.app.core.util
 
 const val ZERO = 0
 const val ONE = 1
+const val ONE_F = 1F
 
 const val ZERO_F = 0f
 const val THREE_F = 3f
@@ -13,6 +14,7 @@ const val ELEVEN_F = 11f
 
 const val NEGATIVE_SIX_F = -6f
 
+const val ZERO_L = 0L
 const val ZERO_D = 0.0
 const val ONE_D = 1.0
 
@@ -21,3 +23,5 @@ const val emptyBar = "███"
 
 const val plus = "+"
 const val minus = "-"
+
+const val MIME_TYPE_IMAGE_PNG = "image/png"

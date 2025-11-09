@@ -1,5 +1,8 @@
 package com.bolivianusd.app.feature.price.di
 
+import com.bolivianusd.app.core.managers.NetworkManager
+import com.bolivianusd.app.feature.price.data.local.room.DailyCandleRoomDataSource
+import com.bolivianusd.app.feature.price.data.local.room.dao.DailyCandleDao
 import com.bolivianusd.app.feature.price.data.remote.supabase.postgrest.DailyCandlePostgrestDataSource
 import com.bolivianusd.app.feature.price.data.repository.DailyCandleRepositoryImpl
 import com.bolivianusd.app.feature.price.domain.repository.DailyCandleRepository
@@ -9,6 +12,7 @@ import com.bolivianusd.app.feature.price.domain.usecase.ObservePriceRangeUseCase
 import com.bolivianusd.app.feature.price.domain.usecase.ObservePriceRangeUseCaseImpl
 import com.bolivianusd.app.feature.price.domain.usecase.ObservePriceUseCase
 import com.bolivianusd.app.feature.price.domain.usecase.ObservePriceUseCaseImpl
+import com.bolivianusd.app.shared.data.local.room.AppDatabase
 import com.bolivianusd.app.shared.domain.repository.PriceRepository
 import dagger.Module
 import dagger.Provides
@@ -23,15 +27,34 @@ object PriceModule {
 
     @Provides
     @Singleton
-    fun provideDailyCandlePostgrestDataSource(postgrest: Postgrest) =
-        DailyCandlePostgrestDataSource(postgrest = postgrest)
+    fun provideDailyCandleDao(
+        appDatabase: AppDatabase
+    ): DailyCandleDao = appDatabase.dailyCandleDao()
+
+    @Provides
+    @Singleton
+    fun provideDailyCandleRoomDataSource(
+        dailyCandleDao: DailyCandleDao
+    ) = DailyCandleRoomDataSource(
+        dailyCandleDao = dailyCandleDao
+    )
+
+    @Provides
+    @Singleton
+    fun provideDailyCandlePostgrestDataSource(postgrest: Postgrest, networkManager: NetworkManager) =
+        DailyCandlePostgrestDataSource(
+            postgrest = postgrest,
+            networkManager = networkManager
+        )
 
     @Singleton
     @Provides
     fun provideDailyCandleRepository(
-        dailyCandlePostgrestDataSource: DailyCandlePostgrestDataSource
+        dailyCandlePostgrestDataSource: DailyCandlePostgrestDataSource,
+        dailyCandleRoomDataSource: DailyCandleRoomDataSource
     ): DailyCandleRepository = DailyCandleRepositoryImpl(
-        dailyCandlePostgrestDataSource = dailyCandlePostgrestDataSource
+        dailyCandlePostgrestDataSource = dailyCandlePostgrestDataSource,
+        dailyCandleRoomDataSource = dailyCandleRoomDataSource
     )
 
     @Singleton

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<defaultsMap>
+    <entry>
+        <key>enabled_switch_dollar</key>
+        <value>false</value>
+    </entry>
+    <entry>
+        <key>delay_polling</key>
+        <value>10000</value>
+    </entry>
+</defaultsMap>

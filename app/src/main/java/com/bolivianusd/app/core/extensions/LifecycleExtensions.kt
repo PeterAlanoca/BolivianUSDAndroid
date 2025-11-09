@@ -5,7 +5,11 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.launch
 
 inline fun <T> LifecycleOwner.collectFlow(
@@ -26,3 +30,17 @@ fun LifecycleOwner.collectFlows(block: suspend CoroutineScope.() -> Unit) {
         }
     }
 }
+
+fun <T> Flow<T>.distinctByPrevious(): Flow<T> = flow {
+    var previous: T? = null
+    collect { value ->
+        if (value != previous) {
+            previous = value
+            emit(value)
+        }
+    }
+}.shareIn(
+    scope = CoroutineScope(Dispatchers.Default),
+    started = SharingStarted.Lazily,
+    replay = 0
+)

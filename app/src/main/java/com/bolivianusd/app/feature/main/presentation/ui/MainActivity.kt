@@ -1,18 +1,20 @@
 package com.bolivianusd.app.feature.main.presentation.ui
 
+import android.content.Intent
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import com.bolivianusd.app.R
 import com.bolivianusd.app.core.extensions.exit
 import com.bolivianusd.app.core.extensions.onBackPressed
-import com.bolivianusd.app.core.extensions.pushFragment
 import com.bolivianusd.app.databinding.ActivityMainBinding
 import com.bolivianusd.app.feature.calculator.presentation.ui.CalculatorFragment
-import com.bolivianusd.app.feature.news.presentation.ui.NewsFragment
 import com.bolivianusd.app.feature.price.presentation.ui.PriceFragment
 import dagger.hilt.android.AndroidEntryPoint
+import com.bolivianusd.app.core.extensions.captureAsBitmap
+import com.bolivianusd.app.core.util.MIME_TYPE_IMAGE_PNG
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
@@ -20,27 +22,30 @@ class MainActivity : AppCompatActivity() {
     private val binding: ActivityMainBinding by lazy {
         ActivityMainBinding.inflate(layoutInflater)
     }
+    private val priceFragment = PriceFragment.newInstance()
+
+    private val calculatorFragment = CalculatorFragment.newInstance()
+
+    private var activeFragment: Fragment? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
         onBackPressed { exit() }
         setupToolbar()
-        setupFragments()
         setupBottomNavigationView()
     }
 
     private fun setupToolbar() = with(binding) {
         setSupportActionBar(toolbar)
+        supportActionBar?.setDisplayShowTitleEnabled(false)
     }
 
     private fun setupBottomNavigationView() = with(binding) {
-        //bottomNavigationView.isVisible = false
         bottomNavigationView.setOnItemSelectedListener {
             when (it.itemId) {
-                R.id.actionPrice -> showFragment(priceFragment)
-                R.id.actionCalculator -> showFragment(calculatorFragment)
-                //R.id.actionNews -> goToNews()
+                R.id.actionPrice -> showFragment(priceFragment, PriceFragment.TAG)
+                R.id.actionCalculator -> showFragment(calculatorFragment, CalculatorFragment.TAG)
             }
             true
         }
@@ -48,55 +53,50 @@ class MainActivity : AppCompatActivity() {
     }
 
 
-    private fun showFragment(fragment: Fragment) {
-        // Si ya está visible, no hacemos nada
-        if (fragment == activeFragment) return
-
-        supportFragmentManager.beginTransaction()
-            .hide(activeFragment!!) // ocultamos el anterior
-            .show(fragment)          // mostramos el nuevo
-            .commitAllowingStateLoss()
-
-        activeFragment = fragment // actualizamos el fragment activo
-    }
-
-    val priceFragment = PriceFragment.newInstance()
-
-    private fun goToPrice() {
-        pushFragment(
-            fragment = priceFragment,
-            containerViewId = R.id.frameLayout,
-            tag = PriceFragment.TAG
-        )
-    }
-
-    val calculatorFragment = CalculatorFragment.newInstance()
-
-    private var activeFragment: Fragment? = null
-
-
-    private fun setupFragments() {
-        supportFragmentManager.beginTransaction()
-            .add(R.id.frameLayout, calculatorFragment, CalculatorFragment.TAG)
-            .hide(calculatorFragment)
-            .add(R.id.frameLayout, priceFragment, PriceFragment.TAG)
-            .commit()
-
-        activeFragment = priceFragment
+    private fun showFragment(fragment: Fragment, tag: String) {
+        val current = activeFragment
+        val transaction = supportFragmentManager.beginTransaction()
+        if (current != null) transaction.hide(current)
+        if (!fragment.isAdded) {
+            transaction.add(R.id.frameLayout, fragment, tag)
+        } else {
+            transaction.show(fragment)
+        }
+        transaction.commit()
+        activeFragment = fragment
     }
 
 
-    private fun goToCalculator() {
-        pushFragment(
-            fragment = calculatorFragment,
-            containerViewId = R.id.frameLayout,
-            tag = CalculatorFragment.TAG
-        )
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        menuInflater.inflate(R.menu.menu_toolbar_main, menu)
+        return true
     }
 
-    private fun goToNews() {
-        val fragment = NewsFragment.newInstance()
-        pushFragment(fragment, R.id.frameLayout, NewsFragment.TAG)
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.actionShare -> {
+                shared()
+                true
+            }
+            R.id.actionOff -> {
+                finish()
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
+    }
+
+    private fun shared() = with(binding) {
+        frameLayout.captureAsBitmap(
+            context = applicationContext
+        )?.let { uri ->
+            val intent = Intent(Intent.ACTION_SEND).apply {
+                type = MIME_TYPE_IMAGE_PNG
+                putExtra(Intent.EXTRA_STREAM, uri)
+                addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+            }
+            startActivity(Intent.createChooser(intent, getString(R.string.shared)))
+        }
     }
 
 }

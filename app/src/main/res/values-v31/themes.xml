@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="Base.Theme.BolivianUSD" parent="Theme.Material3.DayNight.NoActionBar">
+        <item name="colorPrimary">@color/mirage</item>
+        <item name="colorPrimaryDark">@color/mirage</item>
+        <item name="colorAccent">@color/mirage</item>
+        <item name="colorControlNormal">@color/mirage</item>
+        <item name="colorControlActivated">@color/mirage</item>
+        <item name="colorControlHighlight">@color/mirage</item>
+        <item name="android:statusBarColor">@color/martinique</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowTranslucentStatus">false</item>
+        <item name="android:windowBackground">@color/mirage</item>
+        <item name="android:navigationBarColor">@color/mirage</item>
+        <item name="android:windowSplashScreenBackground">@drawable/drawable_splash</item>
+        <item name="android:windowSplashScreenAnimatedIcon">@drawable/drawable_splash</item>
+        <item name="android:windowSplashScreenIconBackgroundColor">@color/martinique</item>
+    </style>
+
+    <style name="Theme.Splash" parent="Theme.MaterialComponents.Light.NoActionBar">
+        <item name="colorPrimary">@color/martinique</item>
+        <item name="colorPrimaryDark">@color/martinique</item>
+        <item name="colorAccent">@color/martinique</item>
+        <item name="colorControlNormal">@color/martinique</item>
+        <item name="colorControlActivated">@color/martinique</item>
+        <item name="colorControlHighlight">@color/martinique</item>
+        <item name="android:statusBarColor">@color/martinique</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowTranslucentStatus">false</item>
+        <item name="android:windowBackground">@color/martinique</item>
+        <item name="android:navigationBarColor">@color/martinique</item>
+        <item name="android:windowSplashScreenBackground">@drawable/drawable_splash</item>
+        <item name="android:windowSplashScreenAnimatedIcon">@drawable/drawable_splash</item>
+        <item name="android:windowSplashScreenIconBackgroundColor">@color/martinique</item>
+    </style>
+</resources>

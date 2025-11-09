@@ -3,16 +3,13 @@ package com.bolivianusd.app.feature.price.presentation.view
 import android.content.Context
 import android.util.AttributeSet
 import android.view.LayoutInflater
-import android.view.animation.Animation
-import android.view.animation.AnimationUtils
 import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.core.view.isVisible
 import com.bolivianusd.app.R
 import com.bolivianusd.app.core.extensions.clearText
-import com.bolivianusd.app.core.extensions.gone
 import com.bolivianusd.app.core.extensions.invisible
 import com.bolivianusd.app.core.extensions.visible
-import com.bolivianusd.app.core.listeners.SimpleAnimationListener
+import com.bolivianusd.app.core.util.ONE_F
+import com.bolivianusd.app.core.util.ZERO_F
 import com.bolivianusd.app.databinding.ViewPriceRangeBinding
 import com.bolivianusd.app.shared.domain.model.PriceRange
 
@@ -26,6 +23,11 @@ class PriceRangeView @JvmOverloads constructor(
         ViewPriceRangeBinding.inflate(LayoutInflater.from(context), this, true)
     }
 
+    init {
+        resetDataUIComponents()
+        showPriceRangeLoadingState()
+    }
+
     fun resetDataUIComponents() {
         with(binding) {
             minTextView.clearText()
@@ -36,48 +38,109 @@ class PriceRangeView @JvmOverloads constructor(
             maxLabelTextView.clearText()
             rangeLabel.clearText()
             currencyTextView.clearText()
-            dotView.invisible()
+            updateAtTextView.clearText()
+            rangeTitle.alpha = ONE_F
             rangeTitle.invisible()
+            dotView.invisible()
+            updateAtTextView.alpha = ONE_F
+            updateAtTextView.invisible()
             rangeTitleShimmer.visible()
             rangeTitleShimmer.startShimmer()
+            dateShimmerLayout.visible()
+            dateShimmerLayout.startShimmer()
         }
     }
 
     fun showPriceRangeLoadingState() = with(binding) {
-        rangeValue.invisible()
-        shimmerLayout.visible()
+        rangeValue.apply {
+            alpha = ZERO_F
+            invisible()
+        }
+        rangeTitle.apply {
+            alpha = ZERO_F
+            invisible()
+        }
+        updateAtTextView.apply {
+            alpha = ZERO_F
+            invisible()
+        }
+
+        shimmerLayout.apply {
+            alpha = ONE_F
+            visible()
+        }
         shimmerLayout.startShimmer()
-        rangeTitle.invisible()
-        rangeTitleShimmer.visible()
+
+        rangeTitleShimmer.apply {
+            alpha = ONE_F
+            visible()
+        }
         rangeTitleShimmer.startShimmer()
+
+        dateShimmerLayout.apply {
+            alpha = ONE_F
+            visible()
+        }
+        dateShimmerLayout.startShimmer()
     }
 
     fun showPriceRangeDataSuccess(priceRange: PriceRange) = with(binding) {
-        if (rangeValue.isVisible) {
-            setPriceRangeData(priceRange)
+        rangeValue.animate().cancel()
+        rangeTitle.animate().cancel()
+        updateAtTextView.animate().cancel()
+        shimmerLayout.animate().cancel()
+        rangeTitleShimmer.animate().cancel()
+        dateShimmerLayout.animate().cancel()
+        setPriceRangeData(priceRange)
+        if (rangeValue.alpha == ONE_F && shimmerLayout.alpha == ONE_F) {
+            //fix
+            rangeTitleShimmer.alpha = ZERO_F
+            dateShimmerLayout.alpha = ZERO_F
+            rangeTitle.visible()
+            updateAtTextView.visible()
             return@with
         }
-        val fadeOut = AnimationUtils.loadAnimation(context, R.anim.anim_view_fade_out)
-        fadeOut.setAnimationListener(object : SimpleAnimationListener() {
-            override fun onAnimationEnd(animation: Animation?) {
+        shimmerLayout.animate()
+            .alpha(ZERO_F)
+            .setDuration(DURATION_ANIMATION_FADE_IN_OUT)
+            .start()
+        rangeTitleShimmer.animate()
+            .alpha(ZERO_F)
+            .setDuration(DURATION_ANIMATION_FADE_IN_OUT)
+            .start()
+        dateShimmerLayout.animate()
+            .alpha(ZERO_F)
+            .setDuration(DURATION_ANIMATION_FADE_IN_OUT)
+            .withEndAction {
                 hidePriceRangeLoading()
-                setPriceRangeData(priceRange)
-                val fadeIn =
-                    AnimationUtils.loadAnimation(context, R.anim.anim_view_fade_in)
-                rangeValue.visible()
-                rangeValue.startAnimation(fadeIn)
-
-                rangeTitle.visible()
-                rangeTitle.startAnimation(fadeIn)
             }
-        })
+            .start()
+        rangeValue.apply {
+            alpha = ZERO_F
+            visible()
+        }
+        rangeValue.animate()
+            .alpha(ONE_F)
+            .setDuration(DURATION_ANIMATION_FADE_IN_OUT)
+            .start()
 
-        if (shimmerLayout.isVisible) {
-            shimmerLayout.startAnimation(fadeOut)
+        rangeTitle.apply {
+            alpha = ZERO_F
+            visible()
         }
-        if (rangeTitleShimmer.isVisible) {
-            rangeTitleShimmer.startAnimation(fadeOut)
+        rangeTitle.animate()
+            .alpha(ONE_F)
+            .setDuration(DURATION_ANIMATION_FADE_IN_OUT)
+            .start()
+
+        updateAtTextView.apply {
+            alpha = ZERO_F
+            visible()
         }
+        updateAtTextView.animate()
+            .alpha(ONE_F)
+            .setDuration(DURATION_ANIMATION_FADE_IN_OUT)
+            .start()
     }
 
     private fun setPriceRangeData(priceRange: PriceRange) = with(binding) {
@@ -94,15 +157,24 @@ class PriceRangeView @JvmOverloads constructor(
             maxTextView.text = this.valueLabel
             maxLabelTextView.text = this.description
         }
-        rangeLabel.text = context.getString(R.string.price_view_pager_item_range)
+        rangeLabel.text = context.getString(R.string.price_view_item_range)
+        updateAtTextView.text = priceRange.updatedAtFormat
         dotView.visible()
     }
 
     private fun hidePriceRangeLoading() = with(binding) {
         shimmerLayout.stopShimmer()
-        shimmerLayout.gone()
+        shimmerLayout.invisible()
+        shimmerLayout.alpha = ONE_F
         rangeTitleShimmer.stopShimmer()
-        rangeTitleShimmer.gone()
+        rangeTitleShimmer.invisible()
+        rangeTitleShimmer.alpha = ONE_F
+        dateShimmerLayout.stopShimmer()
+        dateShimmerLayout.invisible()
+        dateShimmerLayout.alpha = ONE_F
     }
 
+    companion object {
+        private const val DURATION_ANIMATION_FADE_IN_OUT = 300L
+    }
 }

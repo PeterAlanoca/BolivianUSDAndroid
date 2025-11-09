@@ -1,12 +1,11 @@
 package com.bolivianusd.app.feature.price.data.remote.supabase.dto
 
+import com.bolivianusd.app.core.util.DateUtil
 import com.bolivianusd.app.core.util.ZERO
 import com.bolivianusd.app.core.util.ZERO_D
 import com.bolivianusd.app.core.util.emptyString
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
-import java.time.LocalDate
-import java.time.LocalDateTime
 
 @Serializable
 data class DailyCandleDto(
@@ -24,7 +23,7 @@ data class DailyCandleDto(
     @SerialName("low_price")
     val lowPrice: Double = ZERO_D,
     @SerialName("candle_date")
-    val candleDate: String = LocalDate.now().toString(),
+    val candleDate: String = DateUtil.getCurrentDateString(),
     @SerialName("created_at")
-    val createdAt: String = LocalDateTime.now().toString()
+    val createdAt: String = DateUtil.getCurrentDateIso()
 )

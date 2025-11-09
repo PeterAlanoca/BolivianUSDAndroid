@@ -6,13 +6,17 @@
     <dimen name="dimen_fifty">50dp</dimen>
     <dimen name="dimen_sixty">60dp</dimen>
 
+    <dimen name="size_24">24dp</dimen>
+
     <dimen name="radius_3">3dp</dimen>
     <dimen name="radius_5">5dp</dimen>
+    <dimen name="radius_10">10dp</dimen>
     <dimen name="radius_14">14dp</dimen>
 
     <dimen name="switch_radius">22dp</dimen>
     <dimen name="switch_height">22dp</dimen>
 
+    <dimen name="elevation_8">8dp</dimen>
     <dimen name="elevation_12">12dp</dimen>
 
     <dimen name="margin_1">1dp</dimen>
@@ -36,14 +40,21 @@
     <dimen name="negative_margin_5">-5dp</dimen>
     <dimen name="negative_margin_30">-30dp</dimen>
 
+    <dimen name="padding_0">0dp</dimen>
+    <dimen name="padding_6">6dp</dimen>
+    <dimen name="padding_10">10dp</dimen>
+    <dimen name="padding_12">12dp</dimen>
+    <dimen name="padding_14">14dp</dimen>
     <dimen name="padding_20">20dp</dimen>
 
     <dimen name="text_size_9">9sp</dimen>
     <dimen name="text_size_10">10sp</dimen>
     <dimen name="text_size_11">11sp</dimen>
     <dimen name="text_size_12">12sp</dimen>
+    <dimen name="text_size_13">13sp</dimen>
     <dimen name="text_size_14">14sp</dimen>
     <dimen name="text_size_16">16sp</dimen>
+    <dimen name="text_size_18">18sp</dimen>
     <dimen name="text_size_20">20sp</dimen>
     <dimen name="text_size_50">50sp</dimen>
 

@@ -5,6 +5,7 @@ import android.content.Context
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.MotionEvent
+import android.view.View
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import android.view.inputmethod.InputMethodManager
@@ -15,10 +16,12 @@ import com.bolivianusd.app.R
 import com.bolivianusd.app.core.extensions.getActivity
 import com.bolivianusd.app.core.extensions.getMaxLength
 import com.bolivianusd.app.core.extensions.gone
+import com.bolivianusd.app.core.extensions.invisible
 import com.bolivianusd.app.core.extensions.visible
-import com.bolivianusd.app.core.listeners.SimpleAnimationListener
 import com.bolivianusd.app.core.util.ONE_D
+import com.bolivianusd.app.core.util.ONE_F
 import com.bolivianusd.app.core.util.ZERO_D
+import com.bolivianusd.app.core.util.ZERO_F
 import com.bolivianusd.app.databinding.ViewDisplayBinding
 import com.bolivianusd.app.shared.domain.model.DollarType
 import com.bolivianusd.app.shared.domain.model.PriceRange
@@ -32,16 +35,15 @@ class DisplayView @JvmOverloads constructor(
     private val binding: ViewDisplayBinding by lazy {
         ViewDisplayBinding.inflate(LayoutInflater.from(context), this, true)
     }
-
+    private var currentFocusField: EditText? = null
+    private var onDollarTypeChanged: ((DollarType) -> Unit)? = null
+    private var onFormatError: (() -> Unit)? = null
+    private var onPriceRangeError: ((String) -> Unit)? = null
     private var exchangeRateValue = ZERO_D
     private var usdValue = ZERO_D
     private var bobValue = ZERO_D
-
-    private var currentFocusField: EditText? = null
-
-    private var onDollarTypeChanged: ((DollarType) -> Unit)? = null
-
-    var dollarType = DollarType.USDT
+    private var dollarType = DollarType.USDT
+    private var priceRange: PriceRange? = null
 
     init {
         initView()
@@ -50,28 +52,20 @@ class DisplayView @JvmOverloads constructor(
         disableSystemKeyboard()
     }
 
-    fun setData(priceRange: PriceRange) = with(binding) {
-        exchangeRateValue = priceRange.median.value.toDouble()
-        usdValue = ONE_D
-        bobValue = exchangeRateValue * usdValue
-
-        priceRangeTextView.text = priceRange.descriptionLabel
-        updateAtTextView.text = priceRange.updatedAtFormat
-        etExchangeRate.setAmountValue(exchangeRateValue)
-        etUsd.setAmountValue(usdValue)
-        usdLabel.text = priceRange.asset
-        etBob.setAmountValue(bobValue)
-        bobLabel.text = priceRange.fiat
-
-        currentFocusField = etUsd.editText
-        etUsd.editText.postDelayed({
-            etUsd.editText.requestFocus()
-        }, DELAY_REQUEST_FOCUS)
-        updateExchangeRateLabel()
-    }
-
     fun setOnDollarTypeChanged(onDollarTypeChanged: ((DollarType) -> Unit)) {
         this.onDollarTypeChanged = onDollarTypeChanged
+    }
+
+    fun setEnabledSwitchDollar(isEnabled: Boolean) = with(binding) {
+        dollarTypeSwitch.isEnabled = isEnabled
+    }
+
+    fun setOnFormatError(onFormatError: () -> Unit) {
+        this.onFormatError = onFormatError
+    }
+
+    fun setOnPriceRangeError(onPriceRangeError: (String) -> Unit) {
+       this.onPriceRangeError = onPriceRangeError
     }
 
     fun deleteNumberField() = with(binding) {
@@ -122,8 +116,40 @@ class DisplayView @JvmOverloads constructor(
         }
     }
 
-    fun showShimmerLoading() = with(binding) {
-        displayShimmer.visible()
+    fun showPriceRangeLoadingState() = with(binding) {
+        displayView.apply {
+            alpha = ZERO_F
+            invisible()
+        }
+        shimmerLayout.priceRangeShimmerLayout.apply {
+            alpha = ONE_F
+            visible()
+        }
+        shimmerLayout.dateShimmerLayout.apply {
+            alpha = ONE_F
+            visible()
+        }
+        shimmerLayout.shimmerExchangeRateLayout.apply {
+            alpha = ONE_F
+            visible()
+        }
+        shimmerLayout.dollarTypeShimmerSwitch.apply {
+            alpha = ONE_F
+            visible()
+        }
+        shimmerLayout.usdShimmerLayout.apply {
+            alpha = ONE_F
+            visible()
+        }
+        shimmerLayout.lottieAnimationShimmerLayout.apply {
+            alpha = ONE_F
+            visible()
+        }
+        shimmerLayout.bobShimmerLayout.apply {
+            alpha = ONE_F
+            visible()
+        }
+
         shimmerLayout.priceRangeShimmerLayout.startShimmer()
         shimmerLayout.dateShimmerLayout.startShimmer()
         shimmerLayout.shimmerExchangeRateLayout.startShimmer()
@@ -131,38 +157,90 @@ class DisplayView @JvmOverloads constructor(
         shimmerLayout.usdShimmerLayout.startShimmer()
         shimmerLayout.lottieAnimationShimmerLayout.startShimmer()
         shimmerLayout.bobShimmerLayout.startShimmer()
-        displayView.gone()
     }
 
-    fun showContentView() = with(binding) {
-        if (displayView.isVisible) {
+    fun showPriceRangeDataSuccess(priceRange: PriceRange) = with(binding) {
+        shimmerLayout.priceRangeShimmerLayout.animate().cancel()
+        shimmerLayout.dateShimmerLayout.animate().cancel()
+        shimmerLayout.shimmerExchangeRateLayout.animate().cancel()
+        shimmerLayout.dollarTypeShimmerSwitch.animate().cancel()
+        shimmerLayout.usdShimmerLayout.animate().cancel()
+        shimmerLayout.lottieAnimationShimmerLayout.animate().cancel()
+        shimmerLayout.bobShimmerLayout.animate().cancel()
+        setPriceRangeData(priceRange)
+        if (displayView.isVisible && !shimmerLayout.priceRangeShimmerLayout.isVisible) {
             return@with
         }
-        val fadeOut = AnimationUtils.loadAnimation(context, R.anim.anim_view_fade_out)
-        fadeOut.setAnimationListener(object : SimpleAnimationListener() {
-            override fun onAnimationEnd(animation: Animation?) {
+        shimmerLayout.priceRangeShimmerLayout.animate()
+            .alpha(ZERO_F)
+            .setDuration(DURATION_ANIMATION_FADE_IN_OUT)
+            .start()
+        shimmerLayout.dateShimmerLayout.animate()
+            .alpha(ZERO_F)
+            .setDuration(DURATION_ANIMATION_FADE_IN_OUT)
+            .start()
+        shimmerLayout.shimmerExchangeRateLayout.animate()
+            .alpha(ZERO_F)
+            .setDuration(DURATION_ANIMATION_FADE_IN_OUT)
+            .start()
+        shimmerLayout.dollarTypeShimmerSwitch.animate()
+            .alpha(ZERO_F)
+            .setDuration(DURATION_ANIMATION_FADE_IN_OUT)
+            .start()
+        shimmerLayout.usdShimmerLayout.animate()
+            .alpha(ZERO_F)
+            .setDuration(DURATION_ANIMATION_FADE_IN_OUT)
+            .start()
+        shimmerLayout.lottieAnimationShimmerLayout.animate()
+            .alpha(ZERO_F)
+            .setDuration(DURATION_ANIMATION_FADE_IN_OUT)
+            .start()
+        shimmerLayout.bobShimmerLayout.animate()
+            .alpha(ZERO_F)
+            .setDuration(DURATION_ANIMATION_FADE_IN_OUT)
+            .withEndAction {
                 hideShimmerLoading()
-                //setPriceRangeData(priceRange)
-                val fadeIn =
-                    AnimationUtils.loadAnimation(context, R.anim.anim_view_fade_in)
-                displayView.visible()
-                displayView.startAnimation(fadeIn)
             }
-        })
-        if (displayShimmer.isVisible) {
-            shimmerLayout.root.startAnimation(fadeOut)
+            .start()
+
+        displayView.apply {
+            alpha = ZERO_F
+            visible()
         }
+        displayView.animate()
+            .alpha(ONE_F)
+            .setDuration(DURATION_ANIMATION_FADE_IN_OUT)
+            .start()
+    }
+
+    private fun setPriceRangeData(priceRange: PriceRange) = with(binding) {
+        this@DisplayView.priceRange = priceRange
+        exchangeRateValue = priceRange.median.value.toDouble()
+        usdValue = ONE_D
+        bobValue = exchangeRateValue * usdValue
+
+        priceRangeTextView.text = priceRange.descriptionLabel
+        updateAtTextView.text = priceRange.updatedAtFormat
+        etExchangeRate.setAmountValue(exchangeRateValue)
+        etUsd.setAmountValue(usdValue)
+        usdLabel.text = priceRange.asset
+        etBob.setAmountValue(bobValue)
+        bobLabel.text = priceRange.fiat
+
+        currentFocusField = etUsd.editText
+        etUsd.editText.postDelayed({
+            etUsd.editText.requestFocus()
+        }, DELAY_REQUEST_FOCUS)
+        updateExchangeRateLabel()
+        calculateMaxAmount()
     }
 
     fun resetUIComponents() = with(binding) {
-        displayView.clearAnimation()
-        displayShimmer.clearAnimation()
-        displayView.gone()
-        displayShimmer.visible()
+        displayView.alpha = ONE_F
+        displayView.invisible()
     }
 
     private fun hideShimmerLoading() = with(binding) {
-        displayShimmer.gone()
         shimmerLayout.priceRangeShimmerLayout.stopShimmer()
         shimmerLayout.dateShimmerLayout.stopShimmer()
         shimmerLayout.shimmerExchangeRateLayout.stopShimmer()
@@ -170,7 +248,20 @@ class DisplayView @JvmOverloads constructor(
         shimmerLayout.usdShimmerLayout.stopShimmer()
         shimmerLayout.lottieAnimationShimmerLayout.stopShimmer()
         shimmerLayout.bobShimmerLayout.stopShimmer()
-        displayView.visible()
+        shimmerLayout.priceRangeShimmerLayout.alpha = ONE_F
+        shimmerLayout.priceRangeShimmerLayout.invisible()
+        shimmerLayout.dateShimmerLayout.alpha = ONE_F
+        shimmerLayout.dateShimmerLayout.invisible()
+        shimmerLayout.shimmerExchangeRateLayout.alpha = ONE_F
+        shimmerLayout.shimmerExchangeRateLayout.invisible()
+        shimmerLayout.dollarTypeShimmerSwitch.alpha = ONE_F
+        shimmerLayout.dollarTypeShimmerSwitch.invisible()
+        shimmerLayout.usdShimmerLayout.alpha = ONE_F
+        shimmerLayout.usdShimmerLayout.invisible()
+        shimmerLayout.lottieAnimationShimmerLayout.alpha = ONE_F
+        shimmerLayout.lottieAnimationShimmerLayout.invisible()
+        shimmerLayout.bobShimmerLayout.alpha = ONE_F
+        shimmerLayout.bobShimmerLayout.invisible()
     }
 
     private fun initView() = with(binding) {
@@ -183,31 +274,48 @@ class DisplayView @JvmOverloads constructor(
             dollarType = if (isChecked) DollarType.USD else DollarType.USDT
             onDollarTypeChanged?.invoke(dollarType)
         }
-        etExchangeRate.setOnAmountChangeListener { amount ->
-            validateRequestFocus()
-            etExchangeRate.post {
-                if (etExchangeRate.editText.hasFocus()) {
-                    exchangeRateValue = amount
-                    calculateFromExchangeRate()
+        etExchangeRate.apply {
+            setOnAmountChangeListener { amount ->
+                validateRequestFocus()
+                post {
+                    if (editText.hasFocus()) {
+                        exchangeRateValue = amount
+                        calculateFromExchangeRate()
+                        calculateMaxAmount()
+                        validatePriceRange()
+                    }
                 }
             }
-        }
-        etUsd.setOnAmountChangeListener { amount ->
-            validateRequestFocus()
-            etUsd.post {
-                if (etUsd.editText.hasFocus()) {
-                    usdValue = amount
-                    calculateFromUSD()
-                }
+            setOnFormatError {
+                showFormatError(exchangeRate)
             }
         }
-        etBob.setOnAmountChangeListener { amount ->
-            validateRequestFocus()
-            etBob.post {
-                if (etBob.editText.hasFocus()) {
-                    bobValue = amount
-                    calculateFromBOB()
+        etUsd.apply {
+            setOnAmountChangeListener { amount ->
+                validateRequestFocus()
+                post {
+                    if (editText.hasFocus()) {
+                        usdValue = amount
+                        calculateFromUSD()
+                    }
                 }
+            }
+            setOnFormatError {
+                showFormatError(usd)
+            }
+        }
+        etBob.apply {
+            setOnAmountChangeListener { amount ->
+                validateRequestFocus()
+                post {
+                    if (editText.hasFocus()) {
+                        bobValue = amount
+                        calculateFromBOB()
+                    }
+                }
+            }
+            setOnFormatError {
+                showFormatError(bob)
             }
         }
     }
@@ -237,47 +345,69 @@ class DisplayView @JvmOverloads constructor(
     }
 
     private fun calculateFromExchangeRate() {
-        // Cuando cambia la tasa de cambio, recalcular BOB basado en USD
         bobValue = exchangeRateValue * usdValue
+        binding.etBob.setAmountValue(ZERO_D)
         updateBobField()
     }
 
-
     private fun calculateFromUSD() {
-        // Cuando cambia USD, calcular BOB
         bobValue = exchangeRateValue * usdValue
         updateBobField()
     }
 
     private fun calculateFromBOB() {
-        // Cuando cambia BOB, calcular USD
-        usdValue = if (exchangeRateValue != 0.0) {
+        usdValue = if (exchangeRateValue != ZERO_D) {
             bobValue / exchangeRateValue
         } else {
-            0.0
+            ZERO_D
         }
         updateUsdField()
     }
 
+    private fun calculateMaxAmount() = with(binding) {
+        val maxUsd = USD_MAX_VALUE
+        val maxBob = exchangeRateValue * maxUsd
+        etExchangeRate.setMaxAmount(EXCHANGE_RATE_MAX_VALUE)
+        etUsd.setMaxAmount(maxUsd)
+        etBob.setMaxAmount(maxBob)
+    }
+
+    private fun validatePriceRange() {
+        priceRange?.let {
+            val minValue = it.min.value.toDouble()
+            val maxValue = it.max.value.toDouble()
+            val minLabel = it.min.valueLabel
+            val maxLabel = it.max.valueLabel
+            if (exchangeRateValue < minValue || exchangeRateValue > maxValue) {
+                val message = context.getString(R.string.calculator_view_pager_item_price_range_error, minLabel, maxLabel)
+                onPriceRangeError?.invoke(message)
+            }
+        }
+    }
+
     private fun updateBobField() = with(binding) {
-        // Actualizar campo BOB sin triggerear su listener
         if (!etBob.editText.hasFocus()) {
             etBob.setAmountValue(bobValue)
         }
     }
 
     private fun updateUsdField() = with(binding) {
-        // Actualizar campo USD sin triggerear su listener
         if (!etUsd.editText.hasFocus()) {
             etUsd.setAmountValue(usdValue)
         }
     }
 
     private fun updateExchangeRateField() = with(binding) {
-        // Actualizar campo tasa sin triggerear su listener
         if (!etExchangeRate.editText.hasFocus()) {
             etExchangeRate.setAmountValue(exchangeRateValue)
         }
+    }
+
+    private fun clearValues() = with(binding) {
+        usdValue = ZERO_D
+        bobValue = ZERO_D
+        etUsd.clearAmount()
+        etBob.clearAmount()
     }
 
     private fun appendNumber(amountEditText: AmountEditText, value: Int) {
@@ -378,6 +508,21 @@ class DisplayView @JvmOverloads constructor(
         imm.hideSoftInputFromWindow(windowToken, 0)
     }
 
+    private fun showFormatError(view: View) {
+        val animation = AnimationUtils.loadAnimation(context, R.anim.anim_shake_error)
+        animation.setAnimationListener(object : Animation.AnimationListener {
+            override fun onAnimationStart(animation: Animation?) {
+                onFormatError?.invoke()
+            }
+            override fun onAnimationRepeat(animation: Animation?) {}
+
+            override fun onAnimationEnd(animation: Animation?) {
+                clearValues()
+            }
+        })
+        view.startAnimation(animation)
+    }
+
     private fun hideSystemKeyboard() {
         val imm =
             context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
@@ -394,6 +539,9 @@ class DisplayView @JvmOverloads constructor(
 
     companion object {
         private const val DELAY_REQUEST_FOCUS = 250L
+        private const val USD_MAX_VALUE = 999999999.99
+        private const val EXCHANGE_RATE_MAX_VALUE = 9999.99
+        private const val DURATION_ANIMATION_FADE_IN_OUT = 300L
     }
 
 }

@@ -3,14 +3,12 @@ package com.bolivianusd.app.feature.calculator.presentation.view
 import android.content.Context
 import android.util.AttributeSet
 import android.view.LayoutInflater
-import android.view.animation.Animation
-import android.view.animation.AnimationUtils
 import android.widget.RelativeLayout
 import androidx.core.view.isVisible
-import com.bolivianusd.app.R
-import com.bolivianusd.app.core.extensions.gone
+import com.bolivianusd.app.core.extensions.invisible
 import com.bolivianusd.app.core.extensions.visible
-import com.bolivianusd.app.core.listeners.SimpleAnimationListener
+import com.bolivianusd.app.core.util.ONE_F
+import com.bolivianusd.app.core.util.ZERO_F
 import com.google.android.material.textview.MaterialTextView
 import com.bolivianusd.app.databinding.ViewKeyboardBinding
 
@@ -39,43 +37,51 @@ class KeyboardView @JvmOverloads constructor(
         setupClickListeners()
     }
 
-    fun showShimmerLoading() = with(binding) {
-        keyboardShimmer.visible()
-        shimmerLayout.root.startShimmer()
-        keyboardView.gone()
+    fun showPriceRangeLoadingState() = with(binding) {
+        keyboardView.apply {
+            alpha = ZERO_F
+            invisible()
+        }
+        shimmerLayout.root.apply {
+            alpha = ONE_F
+            visible()
+        }
+        shimmerLayout.shimmerLayout.startShimmer()
     }
 
     fun showContentView() = with(binding) {
-        if (keyboardView.isVisible) {
+        shimmerLayout.root.animate().cancel()
+        keyboardView.animate().cancel()
+        if (keyboardView.isVisible && !shimmerLayout.root.isVisible) {
             return@with
         }
-        val fadeOut = AnimationUtils.loadAnimation(context, R.anim.anim_view_fade_out)
-        fadeOut.setAnimationListener(object : SimpleAnimationListener() {
-            override fun onAnimationEnd(animation: Animation?) {
+        shimmerLayout.root.animate()
+            .alpha(ZERO_F)
+            .setDuration(DURATION_ANIMATION_FADE_IN_OUT)
+            .withEndAction {
                 hideShimmerLoading()
-                //setPriceRangeData(priceRange)
-                val fadeIn =
-                    AnimationUtils.loadAnimation(context, R.anim.anim_view_fade_in)
-                keyboardView.visible()
-                keyboardView.startAnimation(fadeIn)
             }
-        })
-        if (keyboardShimmer.isVisible) {
-            shimmerLayout.root.startAnimation(fadeOut)
+            .start()
+        keyboardView.apply {
+            alpha = ZERO_F
+            visible()
         }
+        keyboardView.animate()
+            .alpha(ONE_F)
+            .setDuration(DURATION_ANIMATION_FADE_IN_OUT)
+            .start()
     }
 
     fun resetUIComponents() = with(binding) {
         keyboardView.clearAnimation()
         shimmerLayout.root.clearAnimation()
-        keyboardView.gone()
-        keyboardShimmer.visible()
+        keyboardView.alpha = ONE_F
     }
 
     private fun hideShimmerLoading() = with(binding) {
-        keyboardShimmer.gone()
-        shimmerLayout.root.stopShimmer()
-        keyboardView.visible()
+        shimmerLayout.shimmerLayout.stopShimmer()
+        shimmerLayout.root.invisible()
+        shimmerLayout.root.alpha = ONE_F
     }
 
     private fun setupClickListeners() {
@@ -104,4 +110,7 @@ class KeyboardView @JvmOverloads constructor(
         onClearClickListener = listener
     }
 
+    companion object {
+        private const val DURATION_ANIMATION_FADE_IN_OUT = 300L
+    }
 }

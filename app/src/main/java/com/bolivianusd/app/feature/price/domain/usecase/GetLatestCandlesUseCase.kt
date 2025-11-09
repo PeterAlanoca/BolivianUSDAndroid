@@ -9,6 +9,8 @@ import kotlinx.coroutines.flow.Flow
 interface GetLatestCandlesUseCase {
     operator fun invoke(
         dollarType: DollarType,
-        tradeType: TradeType
+        tradeType: TradeType,
+        hasUserFocusFlow: Flow<Boolean>,
+        interval: Long = 3000L
     ): Flow<UiState<List<DailyCandle>>>
 }

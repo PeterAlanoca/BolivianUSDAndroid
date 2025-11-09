@@ -15,6 +15,10 @@ plugins {
     id("com.github.triplet.play") version "3.8.6"
 }
 
+val secretProperties = Properties().apply {
+    load(FileInputStream(rootProject.file("secret.properties")))
+}
+
 val keystoreProperties = Properties().apply {
     load(FileInputStream(rootProject.file("keystore.properties")))
 }
@@ -34,12 +38,18 @@ android {
 
     defaultConfig {
         applicationId = "com.bolivianusd.app"
-        minSdk = 23
-        targetSdk = 34
+        minSdk = 26
+        targetSdk = 35
         versionCode = System.getenv("BUILD_NUMBER")?.toIntOrNull() ?: 8
         versionName = "1.0"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         multiDexEnabled  = true
+
+        buildConfigField("String", "DATABASE_NAME", "\"app_database\"")
+        buildConfigField("Long", "REMOTE_CONFIG_FETCH_INTERVAL", "3600L")
+        buildConfigField("Long", "REMOTE_CONFIG_TIME_OUT", "60L")
+        buildConfigField("String", "CIPHER_KEY", "\"${secretProperties["cipherKey"]}\"")
+        buildConfigField("String", "CIPHER_IV", "\"${secretProperties["cipherIv"]}\"")
     }
 
     buildTypes {
@@ -58,16 +68,22 @@ android {
     productFlavors {
         create("production") {
             dimension = "env"
+            buildConfigField("String", "SUPABASE_URL", "\"${secretProperties["supabaseUrlProd"]}\"")
+            buildConfigField("String", "SUPABASE_KEY", "\"${secretProperties["supabaseKeyProd"]}\"")
         }
         create("certification") {
             dimension = "env"
             applicationIdSuffix = ".cert"
             versionNameSuffix = "-cert"
+            buildConfigField("String", "SUPABASE_URL", "${secretProperties["supabaseUrlCert"]}\"")
+            buildConfigField("String", "SUPABASE_KEY", "${secretProperties["supabaseKeyCert"]}\"")
         }
         create("develop") {
             dimension = "env"
             applicationIdSuffix = ".dev"
             versionNameSuffix = "-dev"
+            buildConfigField("String", "SUPABASE_URL", "\"${secretProperties["supabaseUrlDev"]}\"")
+            buildConfigField("String", "SUPABASE_KEY", "\"${secretProperties["supabaseKeyDev"]}\"")
         }
     }
     compileOptions {
@@ -79,6 +95,7 @@ android {
     }
     buildFeatures {
         viewBinding = true
+        buildConfig = true
     }
     lint {
         disable += "NullSafeMutableLiveData"
@@ -109,6 +126,7 @@ dependencies {
     implementation(libs.androidx.biometric)
     implementation(libs.androidx.lifecycle.livedata.ktx)
     implementation(libs.androidx.multidex)
+    implementation(libs.androidx.swiperefreshlayout)
 
     implementation(libs.hilt.android)
     kapt(libs.hilt.android.compiler)
@@ -121,6 +139,7 @@ dependencies {
     implementation(libs.circleimageview)
     implementation(libs.switchbutton)
     implementation(libs.shimmer)
+    implementation(libs.blurview)
 
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.analytics)
@@ -128,11 +147,17 @@ dependencies {
 
     implementation(libs.firebase.database)
     implementation(libs.firebase.firestore)
+    implementation(libs.firebase.config)
 
     implementation(platform(libs.supabase.bom))
     implementation(libs.supabase.postgrest.kt)
 
     implementation(libs.ktor.client.android)
+
+    implementation(libs.androidx.room.runtime)
+    implementation(libs.androidx.room.ktx)
+    kapt(libs.androidx.room.compiler)
+    testImplementation(libs.androidx.room.testing)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

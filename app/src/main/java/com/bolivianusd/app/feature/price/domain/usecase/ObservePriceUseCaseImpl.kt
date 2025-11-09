@@ -26,32 +26,7 @@ class ObservePriceUseCaseImpl @Inject constructor(
                     is DataState.Success -> UiState.Success(dataState.data)
                     is DataState.Error -> dataState.toUiStateError<Price>()
                 }
-            }
-            .onStart { emit(UiState.Loading) }
-
-        /*return priceRepository.observePrice(dollarType, tradeType)
-            .transform { dataState ->
-                emit(UiState.Loading)
-                when (dataState) {
-                    is DataState.Success -> emit(UiState.Success(dataState.data))
-                    is DataState.Error -> emit(
-                        UiState.Error(
-                            throwable = dataState.throwable,
-                            message = dataState.message ?: "Error al obtener precio"
-                        )
-                    )
-                }
-            }*/
+            }.onStart { emit(UiState.Loading) }
     }
 
-    /*override operator fun invoke(): Flow<UiState<Price>> = flow {
-        emit(UiState.Loading)
-        try {
-            priceRepository.observePrice().collect { price ->
-                emit(UiState.Success(price))
-            }
-        } catch (e: Exception) {
-            emit(UiState.Error(e))
-        }
-    }*/
 }

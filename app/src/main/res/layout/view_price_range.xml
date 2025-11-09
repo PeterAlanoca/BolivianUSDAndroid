@@ -8,14 +8,13 @@
 
     <com.facebook.shimmer.ShimmerFrameLayout
         android:id="@+id/rangeTitleShimmer"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:visibility="gone"
-        app:shimmer_duration="500"
-        app:shimmer_intensity="0.5"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent"
+        app:shimmer_duration="500"
+        app:shimmer_intensity="0.5">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -31,7 +30,7 @@
                 android:fontFamily="@font/sfuidisplay_bold"
                 android:includeFontPadding="false"
                 android:lineSpacingExtra="@dimen/line_spacing_extra_0"
-                android:text="@string/price_view_pager_item_range"
+                android:text="@string/price_view_item_range"
                 android:textColor="@color/cool_grey"
                 android:textSize="@dimen/text_size_16"
                 android:visibility="invisible"
@@ -96,15 +95,37 @@
 
     </com.facebook.shimmer.ShimmerFrameLayout>
 
+    <com.facebook.shimmer.ShimmerFrameLayout
+        android:id="@+id/dateShimmerLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/margin_20"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@+id/rangeTitleShimmer"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/rangeTitleShimmer"
+        app:shimmer_duration="500"
+        app:shimmer_intensity="0.5">
+
+        <com.google.android.material.textview.MaterialTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_shimmer_cool_grey"
+            android:fontFamily="@font/sfuidisplay_medium"
+            android:includeFontPadding="false"
+            android:text="@string/price_view_item_updated_at"
+            android:textColor="@color/cool_grey"
+            android:textSize="@dimen/text_size_14" />
+
+    </com.facebook.shimmer.ShimmerFrameLayout>
+
     <LinearLayout
         android:id="@+id/rangeTitle"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="@dimen/margin_20"
-        android:gravity="center_vertical"
         android:orientation="horizontal"
         android:visibility="gone"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:visibility="visible">
@@ -116,7 +137,7 @@
             android:fontFamily="@font/sfuidisplay_bold"
             android:includeFontPadding="false"
             android:lineSpacingExtra="@dimen/line_spacing_extra_0"
-            android:text="@string/price_view_pager_item_range"
+            android:text="@string/price_view_item_range"
             android:textColor="@color/white"
             android:textSize="@dimen/text_size_16" />
 
@@ -145,12 +166,28 @@
 
     </LinearLayout>
 
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/updateAtTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/margin_20"
+        android:fontFamily="@font/sfuidisplay_medium"
+        android:includeFontPadding="false"
+        android:textColor="@color/white_alpha_65"
+        android:textSize="@dimen/text_size_14"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@+id/rangeTitle"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/rangeTitle"
+        tools:text="@string/price_view_item_updated_at"
+        tools:visibility="visible" />
+
     <com.google.android.material.card.MaterialCardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="@dimen/margin_20"
-        android:layout_marginTop="@dimen/margin_12"
-        android:layout_marginBottom="@dimen/margin_25"
+        android:layout_marginTop="@dimen/margin_8"
+        android:layout_marginBottom="@dimen/margin_16"
         app:cardBackgroundColor="@color/rhino"
         app:cardCornerRadius="@dimen/radius_14"
         app:cardElevation="@dimen/elevation_12"
@@ -212,7 +249,7 @@
                         android:layout_marginTop="@dimen/margin_2"
                         android:fontFamily="@font/sfuidisplay_medium"
                         android:includeFontPadding="false"
-                        android:text="@string/price_view_pager_item_low"
+                        android:text="@string/price_view_item_low"
                         android:textColor="@color/cool_grey"
                         android:textSize="@dimen/text_size_14"
                         android:visibility="invisible"
@@ -271,7 +308,7 @@
                         android:layout_marginTop="@dimen/margin_2"
                         android:fontFamily="@font/sfuidisplay_medium"
                         android:includeFontPadding="false"
-                        android:text="@string/price_view_pager_item_middle"
+                        android:text="@string/price_view_item_middle"
                         android:textColor="@color/cool_grey"
                         android:textSize="@dimen/text_size_14"
                         android:visibility="invisible"
@@ -330,7 +367,7 @@
                         android:layout_marginTop="@dimen/margin_2"
                         android:fontFamily="@font/sfuidisplay_medium"
                         android:includeFontPadding="false"
-                        android:text="@string/price_view_pager_item_high"
+                        android:text="@string/price_view_item_high"
                         android:textColor="@color/cool_grey"
                         android:textSize="@dimen/text_size_14"
                         android:visibility="invisible"
@@ -390,7 +427,7 @@
                     android:layout_marginTop="@dimen/margin_2"
                     android:fontFamily="@font/sfuidisplay_medium"
                     android:includeFontPadding="false"
-                    android:text="@string/price_view_pager_item_low"
+                    android:text="@string/price_view_item_low"
                     android:textColor="@color/white_alpha_65"
                     android:textSize="@dimen/text_size_14" />
 
@@ -420,7 +457,7 @@
                     android:layout_marginTop="@dimen/margin_2"
                     android:fontFamily="@font/sfuidisplay_medium"
                     android:includeFontPadding="false"
-                    android:text="@string/price_view_pager_item_middle"
+                    android:text="@string/price_view_item_middle"
                     android:textColor="@color/white_alpha_65"
                     android:textSize="@dimen/text_size_14" />
 
@@ -450,7 +487,7 @@
                     android:layout_marginTop="@dimen/margin_2"
                     android:fontFamily="@font/sfuidisplay_medium"
                     android:includeFontPadding="false"
-                    android:text="@string/price_view_pager_item_high"
+                    android:text="@string/price_view_item_high"
                     android:textColor="@color/white_alpha_65"
                     android:textSize="@dimen/text_size_14" />
 

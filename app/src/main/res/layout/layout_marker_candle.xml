@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    tools:context=".feature.price.presentation.view.CandleMarkerView">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <eightbitlab.com.blurview.BlurTarget
+            android:id="@+id/blurTarget"
+            android:layout_width="@dimen/dimen_zero"
+            android:layout_height="@dimen/dimen_zero"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/bg_candle_marker_view" />
+
+        </eightbitlab.com.blurview.BlurTarget>
+
+        <com.bolivianusd.app.core.view.RoundedBlurView
+            android:id="@+id/blurView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:cornerRadiusBottomLeft="@dimen/radius_10"
+            app:cornerRadiusBottomRight="@dimen/radius_10"
+            app:cornerRadiusTopLeft="@dimen/radius_10"
+            app:cornerRadiusTopRight="@dimen/radius_10"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:paddingHorizontal="@dimen/padding_10"
+                android:paddingVertical="@dimen/padding_10">
+
+                <TextView
+                    android:id="@+id/dateTextView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textAlignment="center"
+                    android:fontFamily="@font/sfuidisplay_medium"
+                    android:textColor="@color/white_alpha_50"
+                    android:textSize="@dimen/text_size_10"
+                    tools:text="Fecha" />
+
+                <GridLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:columnCount="4"
+                    android:rowCount="2"
+                    android:useDefaultMargins="true"
+                    android:alignmentMode="alignBounds"
+                    android:columnOrderPreserved="true">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/price_view_item_open_"
+                        android:textColor="@color/white_alpha_50"
+                        android:textSize="@dimen/text_size_9"
+                        android:fontFamily="@font/sfuidisplay_medium" />
+
+                    <TextView
+                        android:id="@+id/openTextView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/green"
+                        android:textSize="@dimen/text_size_9"
+                        android:fontFamily="@font/sfuidisplay_bold"
+                        tools:text="1.2345" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/price_view_item_close_"
+                        android:textColor="@color/white_alpha_50"
+                        android:textSize="@dimen/text_size_9"
+                        android:fontFamily="@font/sfuidisplay_medium" />
+
+                    <TextView
+                        android:id="@+id/closeTextView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/red"
+                        android:textSize="@dimen/text_size_9"
+                        android:fontFamily="@font/sfuidisplay_bold"
+                        tools:text="1.2256" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/price_view_item_low_"
+                        android:textColor="@color/white_alpha_50"
+                        android:textSize="@dimen/text_size_9"
+                        android:fontFamily="@font/sfuidisplay_medium" />
+
+                    <TextView
+                        android:id="@+id/lowTextView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/red"
+                        android:textSize="@dimen/text_size_9"
+                        android:fontFamily="@font/sfuidisplay_bold"
+                        tools:text="1.2234" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/price_view_item_high_"
+                        android:textColor="@color/white_alpha_50"
+                        android:textSize="@dimen/text_size_9"
+                        android:fontFamily="@font/sfuidisplay_medium" />
+
+                    <TextView
+                        android:id="@+id/highTextView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/green"
+                        android:textSize="@dimen/text_size_9"
+                        android:fontFamily="@font/sfuidisplay_bold"
+                        tools:text="1.2456" />
+
+                </GridLayout>
+
+            </LinearLayout>
+
+        </com.bolivianusd.app.core.view.RoundedBlurView>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</FrameLayout>

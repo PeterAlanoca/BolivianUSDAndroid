@@ -15,4 +15,7 @@ class StateHolder<T>(initialValue: T) {
     fun update(transform: (T) -> T) {
         _state.value = transform(_state.value)
     }
+
+    val value: T
+        get() = state.value
 }
