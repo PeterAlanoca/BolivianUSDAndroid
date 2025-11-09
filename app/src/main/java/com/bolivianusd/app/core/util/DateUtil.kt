@@ -37,7 +37,7 @@ object DateUtil {
         val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.US)
         val calendar = Calendar.getInstance()
         val cal = calendar.clone() as Calendar
-        cal.add(Calendar.DAY_OF_MONTH, index - (totalItems - 1))
+        cal.add(Calendar.DAY_OF_MONTH, index - totalItems)
         return dateFormat.format(cal.time)
     }
 }
