@@ -4,8 +4,11 @@ import android.content.Context
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.animation.AccelerateDecelerateInterpolator
+import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.isVisible
+import com.bolivianusd.app.R
 import com.bolivianusd.app.core.extensions.clearText
 import com.bolivianusd.app.core.extensions.gone
 import com.bolivianusd.app.core.extensions.invisible
@@ -39,10 +42,16 @@ class PriceView @JvmOverloads constructor(
             val dollarType = if (isChecked) DollarType.USD else DollarType.USDT
             onDollarTypeChanged?.invoke(dollarType)
         }
+        priceValue.dollarTypeView.setOnClickListener {
+            if (!priceValue.dollarTypeSwitch.isEnabled) {
+                Toast.makeText(context, R.string.feature_disable_temp, Toast.LENGTH_SHORT).show()
+            }
+        }
     }
 
     private fun setupRollingTextView() = with(binding.priceValue) {
         priceTextView.animationDuration = DURATION_ANIMATION_PRICE
+        priceTextView.typeface = ResourcesCompat.getFont(context, R.font.sfuidisplay_medium)
         priceTextView.addCharOrder(CharOrder.Number)
         priceTextView.animationInterpolator = AccelerateDecelerateInterpolator()
     }
@@ -53,6 +62,7 @@ class PriceView @JvmOverloads constructor(
 
     fun setEnabledSwitchDollar(isEnabled: Boolean) = with(binding) {
         priceValue.dollarTypeSwitch.isEnabled = isEnabled
+        priceValue.dollarTypeView.isVisible = !isEnabled
     }
 
     fun showPriceLoadingState() = with(binding) {
