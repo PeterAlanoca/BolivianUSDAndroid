@@ -39,7 +39,7 @@ android {
     defaultConfig {
         applicationId = "com.bolivianusd.app"
         minSdk = 26
-        targetSdk = 34
+        targetSdk = 35
         versionCode = System.getenv("BUILD_NUMBER")?.toIntOrNull() ?: 8
         versionName = "1.0"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
